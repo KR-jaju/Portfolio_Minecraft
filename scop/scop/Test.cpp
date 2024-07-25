@@ -1,5 +1,15 @@
 #include "pch.h"
 #include "Test.h"
+#include "Pipeline.h"
+#include "VertexArrayObject.h"
+#include "Graphics.h"
+#include "PixelShader.h"
+#include "VertexShader.h"
+#include "SamplerState.h"
+#include "Texture.h"
+#include "RasterizerState.h"
+#include "BlendState.h"
+#include "ConstantBuffer.h"
 
 Test::Test(HWND hwnd, UINT width, UINT height)
 {

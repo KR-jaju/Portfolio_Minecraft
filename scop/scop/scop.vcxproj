@@ -156,6 +156,7 @@
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Pipeline.h" />
+    <ClInclude Include="PipeManager.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="RasterizerState.h" />
     <ClInclude Include="Resource.h" />
@@ -184,6 +185,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Pipeline.cpp" />
+    <ClCompile Include="PipeManager.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="RasterizerState.cpp" />
     <ClCompile Include="SamplerState.cpp" />

@@ -1,23 +1,12 @@
 #pragma once
 
-#include "PixelShader.h"
-#include "VertexShader.h"
-#include "SamplerState.h"
-#include "Texture.h"
-#include "VertexArrayObject.h"
-#include "RasterizerState.h"
-#include "BlendState.h"
-#include "ConstantBuffer.h"
-
-//struct PipelineInfo
-//{
-//	shared_ptr<InputLayout> inputLayout;
-//	shared_ptr<VertexShader> vertexShader;
-//	shared_ptr<PixelShader> pixelShader;
-//	shared_ptr<RasterizerState> rasterizerState;
-//	shared_ptr<BlendState> blendState;
-//	D3D11_PRIMITIVE_TOPOLOGY topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-//};
+class VertexShader;
+class PixelShader;
+class SamplerState;
+class Texture;
+class RasterizerState;
+class BlendState;
+class ConstantBuffer;
 
 enum class ShaderType {
 	VERTEX = (1 << 0),

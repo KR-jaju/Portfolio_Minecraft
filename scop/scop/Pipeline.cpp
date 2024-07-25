@@ -1,5 +1,13 @@
 #include "pch.h"
 #include "Pipeline.h"
+#include "PixelShader.h"
+#include "VertexShader.h"
+#include "SamplerState.h"
+#include "Texture.h"
+#include "VertexArrayObject.h"
+#include "RasterizerState.h"
+#include "BlendState.h"
+#include "ConstantBuffer.h"
 
 Pipeline::Pipeline(ComPtr<ID3D11DeviceContext> context)
 	: context(context)

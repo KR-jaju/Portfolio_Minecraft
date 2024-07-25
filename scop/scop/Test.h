@@ -1,7 +1,9 @@
 #pragma once
-#include "VertexArrayObject.h"
-#include "Pipeline.h"
-#include "Graphics.h"
+
+class Graphics;
+class Pipeline;
+class VertexArrayObject;
+class ConstantBuffer;
 
 class Test
 {
