@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "ShaderManager.h"
-#include "VertexShader.h"
-#include "PixelShader.h"
 
 ShaderManager::ShaderManager(ComPtr<ID3D11Device> device)
 	: device(device)

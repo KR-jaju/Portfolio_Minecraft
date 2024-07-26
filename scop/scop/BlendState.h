@@ -11,7 +11,7 @@ public:
 	float const* getBlendFactor() { return &(this->blend_factor); }
 	uint32 getSampleMask() { return this->sample_mask;  }
 	void create(
-		D3D11_RENDER_TARGET_BLEND_DESC blend_desc =
+		const D3D11_RENDER_TARGET_BLEND_DESC& blend_desc =
 		{
 			true,
 			D3D11_BLEND_SRC_ALPHA,
@@ -21,7 +21,7 @@ public:
 			D3D11_BLEND_ZERO, // f = (0,0,0)
 			D3D11_BLEND_OP_ADD, // operator
 			D3D11_COLOR_WRITE_ENABLE_ALL
-		}, float factor = 0.f
+		}, const float& factor = 0.f
 	);
 	ComPtr<ID3D11BlendState> getComPtr() const;
 private:

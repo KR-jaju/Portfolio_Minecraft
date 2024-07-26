@@ -16,14 +16,14 @@ ComPtr<ID3D11RasterizerState> RasterizerState::getComPtr() const
 }
 
 void RasterizerState::create(
-	const D3D11_FILL_MODE& fillMode, 
-	const D3D11_CULL_MODE& cullMode
+	const D3D11_FILL_MODE& fill_mode, 
+	const D3D11_CULL_MODE& cull_mode
 )
 {
 	D3D11_RASTERIZER_DESC desc;
 	ZeroMemory(&desc, sizeof(desc));
-	desc.FillMode = fillMode;
-	desc.CullMode = cullMode;
+	desc.FillMode = fill_mode;
+	desc.CullMode = cull_mode;
 	desc.FrontCounterClockwise = false;
 	HRESULT hr = this->device->CreateRasterizerState(
 		&desc,

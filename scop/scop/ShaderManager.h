@@ -1,7 +1,7 @@
 #pragma once
 
-class VertexShader;
-class PixelShader;
+#include "VertexShader.h"
+#include "PixelShader.h"
 
 class ShaderManager
 {

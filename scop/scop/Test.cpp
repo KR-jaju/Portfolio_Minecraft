@@ -1,15 +1,5 @@
 #include "pch.h"
 #include "Test.h"
-#include "Pipeline.h"
-#include "VertexArrayObject.h"
-#include "Graphics.h"
-#include "PixelShader.h"
-#include "VertexShader.h"
-#include "SamplerState.h"
-#include "Texture.h"
-#include "RasterizerState.h"
-#include "BlendState.h"
-#include "ConstantBuffer.h"
 
 Test::Test(HWND hwnd, UINT width, UINT height)
 {
@@ -68,7 +58,7 @@ void Test::setDrawBox()
 		make_shared<RasterizerState>(
 		this->graphic->getDevice()
 	);
-	raster->create(D3D11_FILL_WIREFRAME, D3D11_CULL_BACK);
+	raster->create(D3D11_FILL_SOLID, D3D11_CULL_BACK);
 	this->pipe->setRasterizerState(raster);
 
 	shared_ptr<PixelShader> pixel = make_shared<PixelShader>(
@@ -279,7 +269,7 @@ void Test::render()
 
 	this->pipe->updatePipeline();
 	this->pipe->drawIndexed(
-		this->indices.size(),
+		this->vao->getIndexBuffer()->getCount(),
 		0,
 		0
 	);
@@ -307,7 +297,7 @@ void Test::renderUV()
 	);
 
 	this->pipe->drawIndexed(
-		this->indices.size(),
+		this->vao->getIndexBuffer()->getCount(),
 		0,
 		0
 	);
@@ -320,7 +310,7 @@ void Test::update()
 	MVP mvp;
 	mvp.model = Mat::Identity;
 	mvp.view = XMMatrixLookAtLH(
-		vec3(0, 0, -2),
+		vec3(0, 0, -5),
 		vec3(0, 0, 1),
 		vec3(0, 1, 0)
 	);

@@ -15,7 +15,7 @@ ComPtr<ID3D11SamplerState> SamplerState::getComPtr() const
 	return this->sampler_state;
 }
 
-void SamplerState::create(D3D11_SAMPLER_DESC desc)
+void SamplerState::create(const D3D11_SAMPLER_DESC& desc)
 {
 	HRESULT hr = this->device->CreateSamplerState(
 		&desc,

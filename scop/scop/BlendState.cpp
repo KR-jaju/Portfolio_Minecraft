@@ -11,8 +11,8 @@ BlendState::~BlendState()
 }
 
 void BlendState::create(
-	D3D11_RENDER_TARGET_BLEND_DESC blend_desc, 
-	float factor
+	const D3D11_RENDER_TARGET_BLEND_DESC& blend_desc, 
+	const float& factor
 )
 {
 	this->blend_factor = factor;

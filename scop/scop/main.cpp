@@ -41,8 +41,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
     Test test(hWnd, 800, 650);
-    //test.setDrawBox();
-    test.setDrawTexSkel();
+    test.setDrawBox();
+    //test.setDrawTexSkel();
     MSG msg = {};
 
     // 기본 메시지 루프입니다:
@@ -60,7 +60,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             //game.Update();
             //game.Render();
             test.update();
-            test.renderUV();
+            test.render();
+            //test.renderUV();
         }
     }
 
