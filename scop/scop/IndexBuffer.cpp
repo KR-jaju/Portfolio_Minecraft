@@ -1,21 +1,11 @@
 #include "pch.h"
 #include "IndexBuffer.h"
 
-IndexBuffer::IndexBuffer(ComPtr<ID3D11Device> device)
+IndexBuffer::IndexBuffer(
+	ComPtr<ID3D11Device> device, 
+	vector<uint32> const& indices
+)
 	: device(device)
-{
-}
-
-IndexBuffer::~IndexBuffer()
-{
-}
-
-ComPtr<ID3D11Buffer> IndexBuffer::getComPtr() const
-{
-	return this->index_buffer;
-}
-
-void IndexBuffer::create(const vector<uint32>& indices)
 {
 	D3D11_BUFFER_DESC desc;
 	this->stride = sizeof(uint32);
@@ -34,6 +24,15 @@ void IndexBuffer::create(const vector<uint32>& indices)
 		this->index_buffer.GetAddressOf()
 	);
 	CHECK(hr);
+}
+
+IndexBuffer::~IndexBuffer()
+{
+}
+
+ComPtr<ID3D11Buffer> IndexBuffer::getComPtr() const
+{
+	return this->index_buffer;
 }
 
 uint32 IndexBuffer::getStride() const

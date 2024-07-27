@@ -1,18 +1,20 @@
 #pragma once
-#include "Shader.h"
-class PixelShader : public Shader
+
+class PixelShader
 {
 public:
-	PixelShader(ComPtr<ID3D11Device> device);
+	PixelShader(
+		ComPtr<ID3D11Device> device,
+		wstring const& path,
+		string const& entry_point,
+		string const& version
+	);
 	virtual ~PixelShader();
 	ComPtr<ID3D11PixelShader> getComPtr() const;
-	virtual void create(
-		const wstring& path,
-		const string& name,
-		const string& version
-	) override;
+	ComPtr<ID3DBlob> getBlob() const;
 private:
 	ComPtr<ID3D11Device> device;
+	ComPtr<ID3DBlob> blob;
 	ComPtr<ID3D11PixelShader> pixel_shader;
 };
 

@@ -4,28 +4,6 @@
 SamplerState::SamplerState(ComPtr<ID3D11Device> device)
 	: device(device)
 {
-}
-
-SamplerState::~SamplerState()
-{
-}
-
-ComPtr<ID3D11SamplerState> SamplerState::getComPtr() const
-{
-	return this->sampler_state;
-}
-
-void SamplerState::create(const D3D11_SAMPLER_DESC& desc)
-{
-	HRESULT hr = this->device->CreateSamplerState(
-		&desc,
-		this->sampler_state.GetAddressOf()
-	);
-	CHECK(hr);
-}
-
-void SamplerState::create()
-{
 	D3D11_SAMPLER_DESC desc;
 	ZeroMemory(&desc, sizeof(desc));
 	desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -40,4 +18,26 @@ void SamplerState::create()
 		this->sampler_state.GetAddressOf()
 	);
 	CHECK(hr);
+}
+
+SamplerState::SamplerState(
+	ComPtr<ID3D11Device> device,
+	D3D11_SAMPLER_DESC const& desc
+)
+	: device(device)
+{
+	HRESULT hr = this->device->CreateSamplerState(
+		&desc,
+		this->sampler_state.GetAddressOf()
+	);
+	CHECK(hr);
+}
+
+SamplerState::~SamplerState()
+{
+}
+
+ComPtr<ID3D11SamplerState> SamplerState::getComPtr() const
+{
+	return this->sampler_state;
 }

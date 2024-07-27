@@ -4,13 +4,6 @@
 Test::Test(HWND hwnd, UINT width, UINT height)
 {
 	this->graphic = make_shared<Graphics>(hwnd, width, height);
-	this->vao = make_shared<VertexArrayObject>(
-		this->graphic->getDevice(),
-		this->graphic->getContext()
-	);
-	this->pipe = make_shared<Pipeline>(
-		this->graphic->getContext()
-	);
 }
 
 Test::~Test()
@@ -20,8 +13,14 @@ Test::~Test()
 void Test::setDrawBox()
 {
 	this->geometryBox();
-	this->vao->createIndexBuffer(this->indices);
-	this->vao->createVertexBuffer(this->vertices);
+	this->index_buffer = make_shared<IndexBuffer>(
+		this->graphic->getDevice(),
+		this->indices
+	);
+	this->vertex_buffer = make_shared<VertexBuffer>(
+		this->graphic->getDevice(),
+		this->vertices
+	);
 	vector<D3D11_INPUT_ELEMENT_DESC> layout = {
 		{
 			"POSITION",
@@ -42,34 +41,32 @@ void Test::setDrawBox()
 			0
 		}
 	};
-	shared_ptr<VertexShader> vertex_shader =
+	this->vertex_shader =
 		make_shared<VertexShader>(
-			this->graphic->getDevice()
+			this->graphic->getDevice(),
+			L"VertexShader.hlsl",
+			"main",
+			"vs_5_0"
 		);
-	vertex_shader->create(
-		L"VertexShader.hlsl",
-		"main",
-		"vs_5_0"
+	this->input_layout = make_shared<InputLayout>(
+		this->graphic->getDevice(),
+		layout,
+		this->vertex_shader->getBlob()
 	);
-	this->vao->createInputLayout(layout, vertex_shader->getBlob());
-	this->pipe->setVertexShader(vertex_shader);
 
-	shared_ptr<RasterizerState> raster = 
+	this->rasterizer_state = 
 		make_shared<RasterizerState>(
-		this->graphic->getDevice()
+		this->graphic->getDevice(),
+			D3D11_FILL_SOLID,
+			D3D11_CULL_BACK
 	);
-	raster->create(D3D11_FILL_SOLID, D3D11_CULL_BACK);
-	this->pipe->setRasterizerState(raster);
 
-	shared_ptr<PixelShader> pixel = make_shared<PixelShader>(
-		this->graphic->getDevice()
-	);
-	pixel->create(
+	this->pixel_shader = make_shared<PixelShader>(
+		this->graphic->getDevice(),
 		L"PixelShader.hlsl",
 		"main",
 		"ps_5_0"
 	);
-	this->pipe->setPixelShader(pixel);
 
 	MVP mvp;
 	mvp.model = Mat::Identity;
@@ -84,19 +81,25 @@ void Test::setDrawBox()
 		0.01f,
 		1000.f
 	);
-	constant_buffer = make_shared<ConstantBuffer>(
+	this->constant_buffer = make_shared<ConstantBuffer>(
 		this->graphic->getDevice(),
-		this->graphic->getContext()
+		this->graphic->getContext(),
+		mvp
 	);
-	constant_buffer->create(mvp);
 }
 
 void Test::setDrawTexSkel()
 {
 	this->geometrySkel();
 	this->graphic->setClearColor(0.5f, 0.5f, 0.5f, 1.f);
-	this->vao->createIndexBuffer(this->indices);
-	this->vao->createVertexBuffer(this->vertices_uv);
+	this->index_buffer = make_shared<IndexBuffer>(
+		this->graphic->getDevice(),
+		this->indices
+	);
+	this->vertex_buffer = make_shared<VertexBuffer>(
+		this->graphic->getDevice(),
+		this->vertices_uv
+	);
 	vector<D3D11_INPUT_ELEMENT_DESC> layout = {
 		{
 			"POSITION",
@@ -117,72 +120,54 @@ void Test::setDrawTexSkel()
 			0
 		}
 	};
-	shared_ptr<VertexShader> vertex_shader;
-	vertex_shader = make_shared<VertexShader>(
-		this->graphic->getDevice()
-	);
-	vertex_shader->create(
+	this->vertex_shader = make_shared<VertexShader>(
+		this->graphic->getDevice(),
 		L"VertexShaderUV.hlsl",
 		"main",
 		"vs_5_0"
 	);
-	this->pipe->setVertexShader(vertex_shader);
-	this->vao->createInputLayout(
+	this->input_layout = make_shared<InputLayout>(
+		this->graphic->getDevice(),
 		layout,
-		vertex_shader->getBlob()
+		this->vertex_shader->getBlob()
 	);
 
-	shared_ptr<PixelShader> pixel_shader;
-	pixel_shader = make_shared<PixelShader>(
-		this->graphic->getDevice()
-	);
-	pixel_shader->create(
+	this->pixel_shader = make_shared<PixelShader>(
+		this->graphic->getDevice(),
 		L"PixelShaderUV.hlsl",
 		"main",
 		"ps_5_0"
 	);
-	this->pipe->setPixelShader(pixel_shader);
 
-	shared_ptr<RasterizerState> r_state;
-	r_state = make_shared<RasterizerState>(
-		this->graphic->getDevice()
-	);
-	r_state->create(
+	this->rasterizer_state = make_shared<RasterizerState>(
+		this->graphic->getDevice(),
 		D3D11_FILL_SOLID,
 		D3D11_CULL_BACK
 	);
-	this->pipe->setRasterizerState(r_state);
 
-	shared_ptr<SamplerState> sampler_state =
+	this->sampler_state =
 		make_shared<SamplerState>(
 			this->graphic->getDevice()
 		);
-	sampler_state->create();
-	this->pipe->setSamplerState(sampler_state);
 	
-	shared_ptr<Texture> texture = make_shared<Texture>(
-		this->graphic->getDevice()
-	);
-	texture->create(
+	this->texture = make_shared<Texture>(
+		this->graphic->getDevice(),
 		L"Skeleton.png"
 	);
-	this->pipe->setTexture(texture);
 
-	shared_ptr<BlendState> blend_state = make_shared<BlendState>(
+	this->blend_state = make_shared<BlendState>(
 		this->graphic->getDevice()
 	);
-	blend_state->create();
-	this->pipe->setBlendState(blend_state);
 
-	this->constant_buffer = make_shared<ConstantBuffer>(
-		this->graphic->getDevice(),
-		this->graphic->getContext()
-	);
 	MVP mvp;
 	mvp.model = Mat::Identity;
 	mvp.view = Mat::Identity;
 	mvp.proj = Mat::Identity;
-	constant_buffer->create(mvp);
+	this->constant_buffer = make_shared<ConstantBuffer>(
+		this->graphic->getDevice(),
+		this->graphic->getContext(),
+		mvp
+	);
 }
 
 void Test::geometryBox()
@@ -265,11 +250,49 @@ void Test::render()
 {
 	this->graphic->renderBegin();
 
-	this->vao->setInputAsembler();
+	this->graphic->getContext()->IASetInputLayout(
+		this->input_layout->getComPtr().Get()
+	);
+	uint32 stride = this->vertex_buffer->getStride();
+	uint32 offset = this->vertex_buffer->getOffset();
+	this->graphic->getContext()->IASetVertexBuffers(
+		0,
+		1,
+		this->vertex_buffer->getComPtr().GetAddressOf(),
+		&stride,
+		&offset
+	);
+	this->graphic->getContext()->IASetIndexBuffer(
+		this->index_buffer->getComPtr().Get(),
+		DXGI_FORMAT_R32_UINT,
+		0
+	);
 
-	this->pipe->updatePipeline();
-	this->pipe->drawIndexed(
-		this->vao->getIndexBuffer()->getCount(),
+	this->graphic->getContext()->VSSetShader(
+		this->vertex_shader->getComPtr().Get(),
+		nullptr,
+		0
+	);
+
+	this->graphic->getContext()->VSSetConstantBuffers(
+		0,
+		1,
+		this->constant_buffer->getComPtr().GetAddressOf()
+	);
+
+	this->graphic->getContext()->RSSetState(
+		this->rasterizer_state->getComPtr().Get()
+	);
+
+	this->graphic->getContext()->PSSetShader(
+		this->pixel_shader->getComPtr().Get(),
+		nullptr,
+		0
+	);
+
+
+	this->graphic->getContext()->DrawIndexed(
+		this->index_buffer->getCount(),
 		0,
 		0
 	);
@@ -281,23 +304,69 @@ void Test::renderUV()
 {
 	this->graphic->renderBegin();
 
-	this->vao->setInputAsembler();
-
-	this->pipe->updatePipeline();
-
-	this->pipe->setPipeTexture(
-		0,
-		static_cast<uint32>(ShaderType::PIXEL),
-		1
+	//IA
+	this->graphic->getContext()->IASetInputLayout(
+		this->input_layout->getComPtr().Get()
 	);
-	this->pipe->setPipeSamplerState(
+	uint32 stride = this->vertex_buffer->getStride();
+	uint32 offset = this->vertex_buffer->getOffset();
+	this->graphic->getContext()->IASetVertexBuffers(
 		0,
-		static_cast<uint32>(ShaderType::PIXEL),
-		1
+		1,
+		this->vertex_buffer->getComPtr().GetAddressOf(),
+		&stride,
+		&offset
+	);
+	this->graphic->getContext()->IASetIndexBuffer(
+		this->index_buffer->getComPtr().Get(),
+		DXGI_FORMAT_R32_UINT,
+		0
 	);
 
-	this->pipe->drawIndexed(
-		this->vao->getIndexBuffer()->getCount(),
+
+	//VS
+	this->graphic->getContext()->VSSetShader(
+		this->vertex_shader->getComPtr().Get(),
+		nullptr,
+		0
+	);
+	this->graphic->getContext()->VSSetConstantBuffers(
+		0,
+		1,
+		this->constant_buffer->getComPtr().GetAddressOf()
+	);
+
+	//RS
+	this->graphic->getContext()->RSSetState(
+		this->rasterizer_state->getComPtr().Get()
+	);
+
+	//PS
+	this->graphic->getContext()->PSSetShader(
+		this->pixel_shader->getComPtr().Get(),
+		nullptr,
+		0
+	);
+	this->graphic->getContext()->PSSetSamplers(
+		0,
+		1,
+		this->sampler_state->getComPtr().GetAddressOf()
+	);
+	this->graphic->getContext()->PSSetShaderResources(
+		0,
+		1,
+		this->texture->getComPtr().GetAddressOf()
+	);
+
+	//OM
+	this->graphic->getContext()->OMSetBlendState(
+		this->blend_state->getComPtr().Get(),
+		this->blend_state->getBlendFactor(),
+		this->blend_state->getSampleMask()
+	);
+
+	this->graphic->getContext()->DrawIndexed(
+		this->index_buffer->getCount(),
 		0,
 		0
 	);
@@ -324,12 +393,11 @@ void Test::update()
 	);
 	mvp.proj = mvp.proj.Transpose();
 
-	constant_buffer->update(mvp);
-	this->pipe->setPipeConstantBuffer(
-		0,
-		static_cast<uint32>(ShaderType::VERTEX),
-		this->constant_buffer
-	);
+	this->constant_buffer->update(mvp);
+}
+
+void Test::setContext()
+{
 }
 
 void Test::geometrySkel()
