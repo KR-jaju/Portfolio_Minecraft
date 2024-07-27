@@ -1,26 +1,29 @@
 #pragma once
-class VertexBuffer
+
+template<typename Data>
+class Buffer
 {
 public:
-	template<typename DATA>
-	VertexBuffer(
+	Buffer(
 		ComPtr<ID3D11Device> device,
-		vector<DATA> const& vertices
+		Data const* data_array,
+		uint32 count,
+		UINT const& bind_flag
 	)
 		: device(device)
 	{
-		this->stride = sizeof(DATA);
-		this->count = static_cast<uint32>(vertices.size());
-
+		this->stride = sizeof(Data);
+		this->count = count;
+		
 		D3D11_BUFFER_DESC desc;
 		ZeroMemory(&desc, sizeof(desc));
 		desc.ByteWidth = this->stride * this->count;
 		desc.Usage = D3D11_USAGE_IMMUTABLE;
-		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		desc.BindFlags = bind_flag;
 
 		D3D11_SUBRESOURCE_DATA data;
 		ZeroMemory(&data, sizeof(data));
-		data.pSysMem = vertices.data();
+		data.pSysMem = data_array;
 		HRESULT hr = this->device->CreateBuffer(
 			&desc,
 			&data,
@@ -28,11 +31,12 @@ public:
 		);
 		CHECK(hr);
 	}
-	~VertexBuffer();
-	ComPtr<ID3D11Buffer> getComPtr() const;
-	uint32 getStride() const;
-	uint32 getCount() const;
-	uint32 getOffset() const;
+	~Buffer() {};
+	ComPtr<ID3D11Buffer> getComPtr() const { return this->buffer; }
+	uint32 getStride() const { return this->stride; }
+	uint32 getOffset() const { return this->offset; }
+	uint32 getCount() const { return this->count; }
+
 private:
 	ComPtr<ID3D11Device> device;
 	ComPtr<ID3D11Buffer> buffer;
@@ -40,4 +44,3 @@ private:
 	uint32 offset = 0;
 	uint32 count = 0;
 };
-

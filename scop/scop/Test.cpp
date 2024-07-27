@@ -13,13 +13,17 @@ Test::~Test()
 void Test::setDrawBox()
 {
 	this->geometryBox();
-	this->index_buffer = make_shared<IndexBuffer>(
+	this->index_buffer = make_shared<Buffer<uint32>>(
 		this->graphic->getDevice(),
-		this->indices
+		this->indices.data(),
+		this->indices.size(),
+		D3D11_BIND_INDEX_BUFFER
 	);
-	this->vertex_buffer = make_shared<VertexBuffer>(
+	this->vertex_buffer = make_shared<Buffer<Vertex>>(
 		this->graphic->getDevice(),
-		this->vertices
+		this->vertices.data(),
+		static_cast<uint32>(this->vertices.size()),
+		D3D11_BIND_VERTEX_BUFFER
 	);
 	vector<D3D11_INPUT_ELEMENT_DESC> layout = {
 		{
@@ -92,13 +96,17 @@ void Test::setDrawTexSkel()
 {
 	this->geometrySkel();
 	this->graphic->setClearColor(0.5f, 0.5f, 0.5f, 1.f);
-	this->index_buffer = make_shared<IndexBuffer>(
+	this->index_buffer = make_shared<Buffer<uint32>>(
 		this->graphic->getDevice(),
-		this->indices
+		this->indices.data(),
+		(uint32)(this->indices.size()),
+		D3D11_BIND_INDEX_BUFFER
 	);
-	this->vertex_buffer = make_shared<VertexBuffer>(
+	this->vertex_uv_buffer = make_shared<Buffer<VertexUV>>(
 		this->graphic->getDevice(),
-		this->vertices_uv
+		this->vertices_uv.data(),
+		(uint32)(this->vertices_uv.size()),
+		D3D11_BIND_VERTEX_BUFFER
 	);
 	vector<D3D11_INPUT_ELEMENT_DESC> layout = {
 		{
@@ -308,12 +316,12 @@ void Test::renderUV()
 	this->graphic->getContext()->IASetInputLayout(
 		this->input_layout->getComPtr().Get()
 	);
-	uint32 stride = this->vertex_buffer->getStride();
-	uint32 offset = this->vertex_buffer->getOffset();
+	uint32 stride = this->vertex_uv_buffer->getStride();
+	uint32 offset = this->vertex_uv_buffer->getOffset();
 	this->graphic->getContext()->IASetVertexBuffers(
 		0,
 		1,
-		this->vertex_buffer->getComPtr().GetAddressOf(),
+		this->vertex_uv_buffer->getComPtr().GetAddressOf(),
 		&stride,
 		&offset
 	);

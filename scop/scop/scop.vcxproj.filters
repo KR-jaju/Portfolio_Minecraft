@@ -84,12 +84,6 @@
     <ClInclude Include="SimpleMath.h">
       <Filter>헤더 파일\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="IndexBuffer.h">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="VertexBuffer.h">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
       <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
     </ClInclude>
@@ -120,6 +114,9 @@
     <ClInclude Include="RasterizerState.h">
       <Filter>소스 파일\Engine\Pipeline\2_Rasterizer</Filter>
     </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -136,12 +133,6 @@
     </ClCompile>
     <ClCompile Include="SimpleMath.cpp">
       <Filter>헤더 파일\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="IndexBuffer.cpp">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexBuffer.cpp">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
     </ClCompile>
     <ClCompile Include="ConstantBuffer.cpp">
       <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
@@ -172,6 +163,9 @@
     </ClCompile>
     <ClCompile Include="RasterizerState.cpp">
       <Filter>소스 파일\Engine\Pipeline\2_Rasterizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffer.cpp">
+      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
