@@ -1,16 +1,11 @@
 #include "pch.h"
 #include "Texture.h"
 
-Texture::Texture(ComPtr<ID3D11Device> device)
+Texture::Texture(
+	ComPtr<ID3D11Device> device, 
+	wstring const& path
+)
 	: device(device)
-{
-}
-
-Texture::~Texture()
-{
-}
-
-void Texture::create(const wstring& path)
 {
 	TexMetadata meta_data;
 	ScratchImage img;
@@ -31,6 +26,10 @@ void Texture::create(const wstring& path)
 	);
 
 	CHECK(hr);
+}
+
+Texture::~Texture()
+{
 }
 
 ComPtr<ID3D11ShaderResourceView> Texture::getComPtr() const

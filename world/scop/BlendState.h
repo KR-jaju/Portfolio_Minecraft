@@ -6,12 +6,9 @@
 class BlendState
 {
 public:
-	BlendState(ComPtr<ID3D11Device> device);
-	~BlendState();
-	float const* getBlendFactor() { return &(this->blend_factor); }
-	uint32 getSampleMask() { return this->sample_mask;  }
-	void create(
-		const D3D11_RENDER_TARGET_BLEND_DESC& blend_desc =
+	BlendState(
+		ComPtr<ID3D11Device> device,
+		D3D11_RENDER_TARGET_BLEND_DESC const& blend_desc =
 		{
 			true,
 			D3D11_BLEND_SRC_ALPHA,
@@ -21,8 +18,12 @@ public:
 			D3D11_BLEND_ZERO, // f = (0,0,0)
 			D3D11_BLEND_OP_ADD, // operator
 			D3D11_COLOR_WRITE_ENABLE_ALL
-		}, const float& factor = 0.f
+		}, 
+		float const& factor = 0.f
 	);
+	~BlendState();
+	float const* getBlendFactor() { return &(this->blend_factor); }
+	uint32 getSampleMask() { return this->sample_mask;  }
 	ComPtr<ID3D11BlendState> getComPtr() const;
 private:
 	ComPtr<ID3D11Device> device;

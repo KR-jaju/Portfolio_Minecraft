@@ -1,24 +1,12 @@
 #include "pch.h"
 #include "RasterizerState.h"
 
-RasterizerState::RasterizerState(ComPtr<ID3D11Device> device)
-	: device(device)
-{
-}
-
-RasterizerState::~RasterizerState()
-{
-}
-
-ComPtr<ID3D11RasterizerState> RasterizerState::getComPtr() const
-{
-	return this->rasterizer_state;
-}
-
-void RasterizerState::create(
-	const D3D11_FILL_MODE& fill_mode, 
-	const D3D11_CULL_MODE& cull_mode
+RasterizerState::RasterizerState(
+	ComPtr<ID3D11Device> device, 
+	D3D11_FILL_MODE const& fill_mode, 
+	D3D11_CULL_MODE const& cull_mode
 )
+	: device(device)
 {
 	D3D11_RASTERIZER_DESC desc;
 	ZeroMemory(&desc, sizeof(desc));
@@ -32,4 +20,12 @@ void RasterizerState::create(
 	CHECK(hr);
 }
 
+RasterizerState::~RasterizerState()
+{
+}
+
+ComPtr<ID3D11RasterizerState> RasterizerState::getComPtr() const
+{
+	return this->rasterizer_state;
+}
 

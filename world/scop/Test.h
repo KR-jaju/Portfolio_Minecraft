@@ -1,11 +1,16 @@
 #pragma once
 
-#include "VertexArrayObject.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "InputLayout.h"
 #include "Graphics.h"
-#include "PipelinePartManager.h"
-#include "PipeManager.h"
-#include "Pipeline.h"
 #include "ConstantBuffer.h"
+#include "VertexShader.h"
+#include "PixelShader.h"
+#include "Texture.h"
+#include "RasterizerState.h"
+#include "BlendState.h"
+#include "SamplerState.h"
 
 class Test
 {
@@ -17,23 +22,27 @@ public:
 	void render();
 	void renderUV();
 	void update();
-
+	void setContext();
 private:
 	void geometrySkel();
 	void geometryBox();
 
 private:
 	// 밖에서 정의됨
-	shared_ptr<PipelinePartManager> pipe_part;
 	shared_ptr<Graphics> graphic;
-	shared_ptr<PipeManager> pipe_manager;
 	
 	// 실제 object들이 render 하기 위해 갖고 있을 부분
-	shared_ptr<Pipeline> pipe;
-	shared_ptr<VertexArrayObject> vao;
+	shared_ptr<VertexBuffer> vertex_buffer;
+	shared_ptr<IndexBuffer> index_buffer;
+	shared_ptr<InputLayout> input_layout;
 	shared_ptr<ConstantBuffer> constant_buffer;
+	shared_ptr<VertexShader> vertex_shader;
+	shared_ptr<PixelShader> pixel_shader;
+	shared_ptr<Texture> texture;
+	shared_ptr<RasterizerState> rasterizer_state;
+	shared_ptr<SamplerState> sampler_state;
+	shared_ptr<BlendState> blend_state;
 
-	// test를 위해 필요 -> buffer를 만들면 실질적으로 필요 x
 	vector<Vertex> vertices;
 	vector<uint32> indices;
 	vector<VertexUV> vertices_uv;

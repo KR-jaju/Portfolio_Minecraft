@@ -2,15 +2,14 @@
 class ConstantBuffer
 {
 public:
+	template<typename DATA>
 	ConstantBuffer(
 		ComPtr<ID3D11Device> device,
-		ComPtr<ID3D11DeviceContext> deviceContext
-	);
-	~ConstantBuffer();
-	ComPtr<ID3D11Buffer> getComPtr() const;
-
-	template<typename DATA>
-	void create(const DATA& resource) {
+		ComPtr<ID3D11DeviceContext> deviceContext,
+		DATA const& resource
+	)
+		: device(device), context(deviceContext)
+	{
 		D3D11_BUFFER_DESC desc;
 		ZeroMemory(&desc, sizeof(desc));
 		desc.Usage = D3D11_USAGE_DYNAMIC;
@@ -30,6 +29,8 @@ public:
 		);
 		CHECK(hr);
 	}
+	~ConstantBuffer();
+	ComPtr<ID3D11Buffer> getComPtr() const;
 
 	template<typename DATA>
 	void update(const DATA& resource) {

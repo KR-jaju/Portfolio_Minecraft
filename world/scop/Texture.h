@@ -2,9 +2,11 @@
 class Texture
 {
 public:
-	Texture(ComPtr<ID3D11Device> device);
+	Texture(
+		ComPtr<ID3D11Device> device,
+		wstring const& path
+	);
 	~Texture();
-	void create(const wstring& path);
 	ComPtr<ID3D11ShaderResourceView> getComPtr() const;
 private:
 	ComPtr<ID3D11Device> device;

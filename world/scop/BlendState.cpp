@@ -1,19 +1,13 @@
 #include "pch.h"
 #include "BlendState.h"
 
-BlendState::BlendState(ComPtr<ID3D11Device> device)
-	: device(device)
-{
-}
 
-BlendState::~BlendState()
-{
-}
-
-void BlendState::create(
-	const D3D11_RENDER_TARGET_BLEND_DESC& blend_desc, 
-	const float& factor
+BlendState::BlendState(
+	ComPtr<ID3D11Device> device, 
+	D3D11_RENDER_TARGET_BLEND_DESC const& blend_desc, 
+	float const& factor
 )
+	: device(device)
 {
 	this->blend_factor = factor;
 
@@ -27,6 +21,11 @@ void BlendState::create(
 		&desc,
 		this->blend_state.GetAddressOf()
 	);
+	CHECK(hr);
+}
+
+BlendState::~BlendState()
+{
 }
 
 ComPtr<ID3D11BlendState> BlendState::getComPtr() const
