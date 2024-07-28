@@ -197,3 +197,4 @@ _Pvt_Extensions
 *.pch
 *.cso
 *.exe
+**/Binaries/
