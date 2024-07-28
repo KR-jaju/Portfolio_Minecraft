@@ -191,6 +191,9 @@ _Pvt_Extensions
 .paket/paket.exe
 # FAKE - F# Make
 .fake/
+
 # my add
 *.ipch
 *.pch
+*.cso
+*.exe
