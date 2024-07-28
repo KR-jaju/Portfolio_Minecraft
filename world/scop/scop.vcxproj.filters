@@ -58,6 +58,12 @@
     <Filter Include="소스 파일\Engine\Pipeline\5_Texture\Sampler">
       <UniqueIdentifier>{d5d1504c-6c36-4dd5-8c69-6c4ba4b14648}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World">
+      <UniqueIdentifier>{6c067bf6-d10b-4f88-818f-d5e6b1e21389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Chunk">
+      <UniqueIdentifier>{42a1b12b-847c-4e60-81e8-ba52cae5e09c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -83,12 +89,6 @@
     </ClInclude>
     <ClInclude Include="SimpleMath.h">
       <Filter>헤더 파일\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="IndexBuffer.h">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="VertexBuffer.h">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
       <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
@@ -120,6 +120,12 @@
     <ClInclude Include="RasterizerState.h">
       <Filter>소스 파일\Engine\Pipeline\2_Rasterizer</Filter>
     </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Chunk.h">
+      <Filter>소스 파일\World\Chunk</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -136,12 +142,6 @@
     </ClCompile>
     <ClCompile Include="SimpleMath.cpp">
       <Filter>헤더 파일\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="IndexBuffer.cpp">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexBuffer.cpp">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
     </ClCompile>
     <ClCompile Include="ConstantBuffer.cpp">
       <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
@@ -172,6 +172,12 @@
     </ClCompile>
     <ClCompile Include="RasterizerState.cpp">
       <Filter>소스 파일\Engine\Pipeline\2_Rasterizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffer.cpp">
+      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Chunk.cpp">
+      <Filter>소스 파일\World\Chunk</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

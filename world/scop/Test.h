@@ -1,7 +1,6 @@
 #pragma once
 
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
+#include "Buffer.h"
 #include "InputLayout.h"
 #include "Graphics.h"
 #include "ConstantBuffer.h"
@@ -32,8 +31,9 @@ private:
 	shared_ptr<Graphics> graphic;
 	
 	// 실제 object들이 render 하기 위해 갖고 있을 부분
-	shared_ptr<VertexBuffer> vertex_buffer;
-	shared_ptr<IndexBuffer> index_buffer;
+	shared_ptr<Buffer<Vertex>> vertex_buffer;
+	shared_ptr<Buffer<VertexUV>> vertex_uv_buffer;
+	shared_ptr<Buffer<uint32>> index_buffer;
 	shared_ptr<InputLayout> input_layout;
 	shared_ptr<ConstantBuffer> constant_buffer;
 	shared_ptr<VertexShader> vertex_shader;
