@@ -5,6 +5,7 @@
 #include "scop.h"
 #include "Game.h"
 
+#include "Chunk.h"
 #include "Test.h"
 
 #define MAX_LOADSTRING 100
@@ -40,9 +41,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     game.Init(hWnd, 2);*/
 
 
-    Test test(hWnd, 800, 650);
+    //Test test(hWnd, 800, 650);
     //test.setDrawBox();
-    test.setDrawTexSkel();
+    //test.setDrawTexSkel();
+
+    Chunk chunk;
+    chunk.setStartPos(0, 0, 0);
+    chunk.setBlockInChunk(0, 1, 0, 1);
+    chunk.setVerticesAndIndicesForTest();
+    chunk.initRenderForTest(hWnd, 800, 650);
+
     MSG msg = {};
 
     // 기본 메시지 루프입니다:
@@ -63,9 +71,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             //test.render();
             //test.renderUV();
         }
-        test.update();
+        chunk.renderTest();
+        //test.update();
         //test.render();
-        test.renderUV();
+        //test.renderUV();
     }
 
     return (int) msg.wParam;

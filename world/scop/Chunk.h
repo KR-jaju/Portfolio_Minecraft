@@ -11,24 +11,62 @@
 #include "BlendState.h"
 #include "SamplerState.h"
 
+enum class Face {
+	Top,
+	Bottom,
+	Front,
+	Back,
+	Left,
+	Right
+};
 
 class Chunk
 {
 public:
 	Chunk();
 	~Chunk();
-	void setVertexAndIndex();
+	void setVerticesAndIndices();
+	void setBlockInChunk(int x, int y, int z, int type);
 	int getBlock(int x, int y, int z) const;
-	void setBlock(int x, int y, int z, int type);
 	void putChunk(float x, float y, float z);
+	void setStartPos(float x, float y, float z);
 
 public: // 미확정 용
 	void renderTest();
-	void initRender(HWND hwnd, UINT width, UINT height);
+	void initRenderForTest(HWND hwnd, UINT width, UINT height);
+	void setVerticesAndIndicesForTest();
+	vector<Vertex> getBlockVertexForTest(
+		int x,
+		int y,
+		int z
+	) const;
 
 private:
+	vector<VertexUV> getBlockVertexUV(
+		int x, 
+		int y, 
+		int z
+	) const;
+	vector<uint32> getBlockIndices(
+		int x,
+		int y,
+		int z,
+		uint32& start
+	) const;
 	bool checkBoundary(int x, int y, int z) const;
 	vector<bool> checkBlock(int x, int y, int z) const;
+	vector<vec3> getBlockFaceVertexPos(
+		float move_x,
+		float move_y,
+		float move_z,
+		Face face_flag
+	) const;
+	vector<vec2> getBlockFaceTexcoords(
+		vec2 start, 
+		vec2 end, 
+		Face face_flag
+	) const;
+	vector<uint32> getBlockFaceIndices(uint32 start) const;
 
 private:
 	int chunk[16][256][16];
@@ -39,10 +77,13 @@ private:
 	weak_ptr<Chunk> right;
 	vector<VertexUV> vertices;
 	vector<uint32> indices;
-	Mat model;
+	vec3 start_pos;
+
+private:
+	// for test
+	vector<Vertex> t_vertices;
 
 private: // 미확정 용
-	// 밖에서 정의됨
 	shared_ptr<Graphics> graphic;
 
 	shared_ptr<Buffer<Vertex>> vertex_buffer;
