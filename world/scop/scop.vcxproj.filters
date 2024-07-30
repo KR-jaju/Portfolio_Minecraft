@@ -64,6 +64,15 @@
     <Filter Include="소스 파일\World\Chunk">
       <UniqueIdentifier>{42a1b12b-847c-4e60-81e8-ba52cae5e09c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\Block">
+      <UniqueIdentifier>{1c1212bc-c614-49e6-b2fa-0bc3653620c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Block\InactiveBlock">
+      <UniqueIdentifier>{14b6fc32-3b7c-471a-af60-1c93bc2fdc37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Block\ActiveBlock">
+      <UniqueIdentifier>{4abbb7dd-979b-402d-9756-c3cbc4d229e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -126,6 +135,12 @@
     <ClInclude Include="Chunk.h">
       <Filter>소스 파일\World\Chunk</Filter>
     </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>소스 파일\World\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>소스 파일\World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -178,6 +193,12 @@
     </ClCompile>
     <ClCompile Include="Chunk.cpp">
       <Filter>소스 파일\World\Chunk</Filter>
+    </ClCompile>
+    <ClCompile Include="Block.cpp">
+      <Filter>소스 파일\World\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>소스 파일\World</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

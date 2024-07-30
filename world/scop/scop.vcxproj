@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BlendState.h" />
+    <ClInclude Include="Block.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="ConstantBuffer.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="scop.h" />
+    <ClInclude Include="Terrain.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="SimpleMath.h" />
@@ -170,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BlendState.cpp" />
+    <ClCompile Include="Block.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
@@ -184,6 +187,7 @@
     <ClCompile Include="RasterizerState.cpp" />
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
