@@ -11,15 +11,16 @@ Chunk::~Chunk()
 
 void Chunk::setVerticesAndIndices()
 {
-	VertexUV vertex;
+	VertexBlockUV vertex;
 	uint32 index = 0;
 	for (int z = 0; z < 16; z++) {
 		for (int y = 0; y < 256; y++) {
 			for (int x = 0; x < 16; x++) {
 				if (this->chunk[x][y][z] == 0)
 					continue;
-				vector<VertexUV> block_vertices =
-					this->getBlockVertexUV(x, y, z);
+				vector<VertexBlockUV> block_vertices =
+					this->getBlockVertexBlockUV(x, y, z, 
+						this->chunk[x][y][z]);
 				vector<uint32> block_indices =
 					this->getBlockIndices(x, y, z, index);
 				this->vertices.insert(
@@ -65,20 +66,21 @@ void Chunk::setStartPos(float x, float y, float z)
 	this->start_pos = vec3(x, y, z);
 }
 
-vector<VertexUV> Chunk::getBlockVertexUV(
+vector<VertexBlockUV> Chunk::getBlockVertexBlockUV(
 	int x, 
 	int y, 
-	int z
+	int z,
+	int type
 ) const
 {
-	vector<VertexUV> cube_vertices;
+	vector<VertexBlockUV> cube_vertices;
 	vector<bool> put_able_arr = this->checkBlock(x, y, z);
 	vec2 start = vec2(0.f, 0.f);
 	vec2 end = vec2(1.f, 1.f);
 
 	for (int i = 0; i < put_able_arr.size(); i++) {
 		Face flag = static_cast<Face>(i);
-		VertexUV tmp_vertex;
+		VertexBlockUV tmp_vertex;
 		vector<vec3> positions;
 		vector<vec2> texcoords;
 		if (put_able_arr[i]) {
@@ -89,8 +91,10 @@ vector<VertexUV> Chunk::getBlockVertexUV(
 				flag
 			);
 			for (int j = 0; j < 4; j++) {
+				tmp_vertex.type = type;
 				tmp_vertex.pos = positions[j];
 				tmp_vertex.uv = texcoords[j];
+				tmp_vertex.dir = i;
 				cube_vertices.push_back(tmp_vertex);
 			}
 		}
@@ -308,7 +312,7 @@ void Chunk::initRenderForTest(HWND hwnd, UINT width, UINT height)
 	cout << "vertices size: " << this->t_vertices.size() << endl;
 	this->graphic = make_shared<Graphics>(hwnd, width, height);
 	
-	this->vertex_buffer = make_shared<Buffer<Vertex>>(
+	this->vertex_buffer = make_shared<Buffer<VertexBlock>>(
 		this->graphic->getDevice(),
 		this->t_vertices.data(),
 		this->t_vertices.size(),
@@ -323,18 +327,27 @@ void Chunk::initRenderForTest(HWND hwnd, UINT width, UINT height)
 
 	this->vertex_shader = make_shared<VertexShader>(
 		this->graphic->getDevice(),
-		L"VertexShader.hlsl",
+		L"TestVertexShader.hlsl",
 		"main",
 		"vs_5_0"
 	);
 
 	vector<D3D11_INPUT_ELEMENT_DESC> layout = {
 		{
+			"TYPE",
+			0,
+			DXGI_FORMAT_R32_SINT,
+			0,
+			0,
+			D3D11_INPUT_PER_VERTEX_DATA,
+			0
+		},
+		{
 			"POSITION",
 			0,
 			DXGI_FORMAT_R32G32B32_FLOAT,
 			0,
-			0,
+			4,
 			D3D11_INPUT_PER_VERTEX_DATA,
 			0
 		},
@@ -343,7 +356,7 @@ void Chunk::initRenderForTest(HWND hwnd, UINT width, UINT height)
 			0,
 			DXGI_FORMAT_R32G32B32A32_FLOAT,
 			0,
-			12,
+			16,
 			D3D11_INPUT_PER_VERTEX_DATA,
 			0
 		}
@@ -357,7 +370,7 @@ void Chunk::initRenderForTest(HWND hwnd, UINT width, UINT height)
 
 	this->pixel_shader = make_shared<PixelShader>(
 		this->graphic->getDevice(),
-		L"PixelShader.hlsl",
+		L"TestPixelShader.hlsl",
 		"main",
 		"ps_5_0"
 	);
@@ -431,15 +444,15 @@ void Chunk::initRenderForTest(HWND hwnd, UINT width, UINT height)
 
 void Chunk::setVerticesAndIndicesForTest()
 {
-	Vertex vertex;
 	uint32 index = 0;
 	for (int z = 0; z < 16; z++) {
 		for (int y = 0; y < 256; y++) {
 			for (int x = 0; x < 16; x++) {
 				if (this->chunk[x][y][z] == 0)
 					continue;
-				vector<Vertex> block_vertices =
-					this->getBlockVertexForTest(x, y, z);
+				vector<VertexBlock> block_vertices =
+					this->getBlockVertexForTest(x, y, z, 
+						this->chunk[x][y][z]);
 				vector<uint32> block_indices =
 					this->getBlockIndices(x, y, z, index);
 				this->t_vertices.insert(
@@ -468,19 +481,20 @@ void Chunk::renderTest()
 	this->graphic->renderEnd();
 }
 
-vector<Vertex> Chunk::getBlockVertexForTest(
+vector<VertexBlock> Chunk::getBlockVertexForTest(
 	int x, 
 	int y, 
-	int z
+	int z,
+	int type
 ) const
 {
-	vector<Vertex> block;
+	vector<VertexBlock> block;
 	vector<bool> set_able_arr = this->checkBlock(x, y, z);
 	for (int i = 0; i < 6; i++) {
 		Face flag = static_cast<Face>(i);
 		vector<vec3> positions;
 		color col;
-		Vertex vertex;
+		VertexBlock vertex;
 		if (set_able_arr[i]) {
 			positions = this->getBlockFaceVertexPos(x, y, z, flag);
 			if (i == 0)
@@ -496,8 +510,9 @@ vector<Vertex> Chunk::getBlockVertexForTest(
 			else
 				col = color(0, 1, 1, 1);
 			for (int j = 0; j < 4; j++) {
+				vertex.type = type;
 				vertex.pos = positions[j];
-				vertex.color = col;
+				vertex.col = col;
 				block.push_back(vertex);
 			}
 		}

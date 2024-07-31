@@ -20,6 +20,8 @@ enum class Face {
 	Right
 };
 
+// size 1, no interaction
+
 class Chunk
 {
 public:
@@ -35,17 +37,19 @@ public: // 미확정 용
 	void renderTest();
 	void initRenderForTest(HWND hwnd, UINT width, UINT height);
 	void setVerticesAndIndicesForTest();
-	vector<Vertex> getBlockVertexForTest(
+	vector<VertexBlock> getBlockVertexForTest(
 		int x,
 		int y,
-		int z
+		int z,
+		int type
 	) const;
 
 private:
-	vector<VertexUV> getBlockVertexUV(
+	vector<VertexBlockUV> getBlockVertexBlockUV(
 		int x, 
 		int y, 
-		int z
+		int z,
+		int type
 	) const;
 	vector<uint32> getBlockIndices(
 		int x,
@@ -75,19 +79,19 @@ private:
 	weak_ptr<Chunk> back;
 	weak_ptr<Chunk> left;
 	weak_ptr<Chunk> right;
-	vector<VertexUV> vertices;
+	vector<VertexBlockUV> vertices;
 	vector<uint32> indices;
 	vec3 start_pos;
 
 private:
 	// for test
-	vector<Vertex> t_vertices;
+	vector<VertexBlock> t_vertices;
 
 private: // 미확정 용
 	shared_ptr<Graphics> graphic;
 
-	shared_ptr<Buffer<Vertex>> vertex_buffer;
-	shared_ptr<Buffer<VertexUV>> vertex_uv_buffer;
+	shared_ptr<Buffer<VertexBlock>> vertex_buffer;
+	shared_ptr<Buffer<VertexBlockUV>> vertex_uv_buffer;
 	shared_ptr<Buffer<uint32>> index_buffer;
 	shared_ptr<InputLayout> input_layout;
 	shared_ptr<ConstantBuffer> constant_buffer;
