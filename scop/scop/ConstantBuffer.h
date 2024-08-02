@@ -2,25 +2,22 @@
 class ConstantBuffer
 {
 public:
-	template<typename DATA>
+	template<typename Data>
 	ConstantBuffer(
 		ComPtr<ID3D11Device> device,
-		ComPtr<ID3D11DeviceContext> deviceContext,
-		DATA const& resource
+		ComPtr<ID3D11DeviceContext> context,
+		Data const& resource
 	)
-		: device(device), context(deviceContext)
+		: device(device), context(context)
 	{
-		D3D11_BUFFER_DESC desc;
-		ZeroMemory(&desc, sizeof(desc));
+		D3D11_BUFFER_DESC desc = {};
 		desc.Usage = D3D11_USAGE_DYNAMIC;
 		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		desc.ByteWidth = sizeof(DATA);
+		desc.ByteWidth = sizeof(Data);
 		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-		D3D11_SUBRESOURCE_DATA data;
-		ZeroMemory(&data, sizeof(data));
+		D3D11_SUBRESOURCE_DATA data = {};
 		data.pSysMem = &resource;
-
 
 		HRESULT hr = this->device->CreateBuffer(
 			&desc,
@@ -29,21 +26,23 @@ public:
 		);
 		CHECK(hr);
 	}
+	ConstantBuffer(ConstantBuffer const&) = delete;
 	~ConstantBuffer();
+	ConstantBuffer& operator=(ConstantBuffer const&) = delete;
 	ComPtr<ID3D11Buffer> getComPtr() const;
 
-	template<typename DATA>
-	void update(const DATA& resource) {
-		D3D11_MAPPED_SUBRESOURCE subResource;
-		ZeroMemory(&subResource, sizeof(subResource));
+	template<typename Data>
+	void update(const Data& resource) {
+		D3D11_MAPPED_SUBRESOURCE subresource;
+		ZeroMemory(&subresource, sizeof(subresource));
 		this->context->Map(
 			this->buffer.Get(),
 			0,
 			D3D11_MAP_WRITE_DISCARD,
 			0,
-			&subResource
+			&subresource
 		);
-		memcpy(subResource.pData, &resource, sizeof(resource));
+		memcpy(subresource.pData, &resource, sizeof(resource));
 		this->context->Unmap(
 			this->buffer.Get(),
 			0
