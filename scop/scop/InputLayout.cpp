@@ -4,21 +4,20 @@
 
 InputLayout::InputLayout(
 	ComPtr<ID3D11Device> device, 
-	vector<D3D11_INPUT_ELEMENT_DESC> const& descs, 
+	D3D11_INPUT_ELEMENT_DESC const* descs, 
+	uint32 count,
 	ComPtr<ID3DBlob> vertexShaderBlob
 )
 	: device(device)
 {
-	uint32 size = static_cast<uint32>(descs.size());
 	HRESULT hr = this->device->CreateInputLayout(
-		descs.data(),
-		size,
+		descs,
+		count,
 		vertexShaderBlob->GetBufferPointer(),
 		vertexShaderBlob->GetBufferSize(),
 		this->input_layout.GetAddressOf()
 	);
 	CHECK(hr);
-
 }
 
 InputLayout::~InputLayout()
