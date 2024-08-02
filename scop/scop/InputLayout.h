@@ -2,11 +2,6 @@
 class InputLayout
 {
 public:
-	/*InputLayout(
-		ComPtr<ID3D11Device> device,
-		vector<D3D11_INPUT_ELEMENT_DESC> const& descs,
-		ComPtr<ID3DBlob> vertexShaderBlob
-	);*/
 	InputLayout(
 		ComPtr<ID3D11Device> device,
 		D3D11_INPUT_ELEMENT_DESC const* descs,
