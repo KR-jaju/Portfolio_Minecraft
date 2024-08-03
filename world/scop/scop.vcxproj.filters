@@ -222,6 +222,15 @@
     <Image Include="Skeleton.png">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="grass_bottom.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="grass_side.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="grass_top.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelShader.hlsl" />

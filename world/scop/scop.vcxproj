@@ -198,6 +198,9 @@
     <ResourceCompile Include="scop.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="grass_bottom.png" />
+    <Image Include="grass_side.png" />
+    <Image Include="grass_top.png" />
     <Image Include="scop.ico" />
     <Image Include="Skeleton.png" />
     <Image Include="small.ico" />

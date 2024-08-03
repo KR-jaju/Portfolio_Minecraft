@@ -6,15 +6,17 @@
 
 Block::Block(
 	ComPtr<ID3D11Device> device, 
-	vector<wstring> const& path_arr
+	vector<wstring> const& path_arr,
+	int type
 )
 {
 	for (int i = 0; i < path_arr.size(); i++) {
-		this->texture[i] = make_shared<Texture>(
+		this->texture.push_back(make_shared<Texture>(
 			device,
 			path_arr[i]
-		);
+		));
 	}
+	this->type = type;
 }
 
 Block::~Block()
@@ -63,6 +65,13 @@ vector<vec3> Block::getBlockFacePos(
 		vertices_pos.push_back(vec3(x - 0.5f, y + 0.5f, z + 0.5f));
 		vertices_pos.push_back(vec3(x - 0.5f, y + 0.5f, z - 0.5f));
 		vertices_pos.push_back(vec3(x - 0.5f, y - 0.5f, z - 0.5f));
+		for (int i = 0; i < vertices_pos.size(); i++) {
+			cout << "vertex pos: ";
+			cout << vertices_pos[i].x << ' ';
+			cout << vertices_pos[i].y << ' ';
+			cout << vertices_pos[i].z << endl;
+		}
+		cout << endl;
 		return vertices_pos;
 	}
 	if (BlockFace_flag == BlockFace::Right) {
@@ -122,10 +131,27 @@ vector<vec2> Block::getBlockFaceTexcoord(vec2 start, vec2 end, BlockFace BlockFa
 	return texcoord;
 }
 
+vector<uint32> Block::getBlockFaceIndices(uint32 start) const
+{
+	vector<uint32> indices = {
+		start,
+		start + 1,
+		start + 2,
+		start,
+		start + 2,
+		start + 3
+	};
+	return indices;
+}
+
 void Block::registerSRV(ComPtr<ID3D11DeviceContext> context)
 {
-	vector<ID3D11ShaderResourceView*> view_arr;
-	for (int i = 0; i < 6; i++)
-		view_arr.push_back(this->texture[i]->getComPtr().Get());
-	context->PSSetShaderResources(0, 6, view_arr.data());
+	for (int i = 0; i < this->texture.size(); i++)
+		this->view_arr.push_back(this->texture[i]->getComPtr().Get());
+	cout << "array size: " << this->view_arr.size() << endl;
+	context->PSSetShaderResources(
+		0, 
+		this->view_arr.size(), 
+		view_arr.data()
+	);
 }

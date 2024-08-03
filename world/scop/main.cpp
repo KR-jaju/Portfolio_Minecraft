@@ -5,8 +5,11 @@
 #include "scop.h"
 #include "Game.h"
 
+// test
 #include "Chunk.h"
 #include "Test.h"
+#include "Graphics.h"
+// test 
 
 #define MAX_LOADSTRING 100
 HWND hWnd;
@@ -44,11 +47,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     //Test test(hWnd, 800, 650);
     //test.setDrawBox();
     //test.setDrawTexSkel();
+    shared_ptr<Graphics> g_test = make_shared<Graphics>(
+        hWnd,
+        800,
+        650
+    );
 
-    Chunk chunk;
+    Chunk chunk(g_test);
     chunk.setStartPos(0, 0, 0);
-    chunk.setBlockInChunk(0, 1, 0, 1);
-    chunk.setVerticesAndIndicesForTest();
+    chunk.setBlockInChunk(0, 0, 0, 1);
+    chunk.setBlockInChunk(2, 0, 0, 1);
+    chunk.setVerticesAndIndices();
     chunk.initRenderForTest(hWnd, 800, 650);
 
     MSG msg = {};

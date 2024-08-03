@@ -1,8 +1,20 @@
 #include "pch.h"
 #include "Chunk.h"
 
-Chunk::Chunk()
+Chunk::Chunk(shared_ptr<Graphics> graphic)
 {
+	this->graphic = graphic;
+	vector<wstring> path_arr = {
+		L"grass_top.png",
+		L"grass_bottom.png",
+		L"grass_side.png"
+	};
+
+	this->block = make_shared<Block>(
+		this->graphic->getDevice(),
+		path_arr,
+		1
+	);
 }
 
 Chunk::~Chunk()
@@ -79,13 +91,18 @@ vector<VertexBlockUV> Chunk::getBlockVertexBlockUV(
 	vec2 end = vec2(1.f, 1.f);
 
 	for (int i = 0; i < put_able_arr.size(); i++) {
-		Face flag = static_cast<Face>(i);
+		BlockFace flag = static_cast<BlockFace>(i);
 		VertexBlockUV tmp_vertex;
 		vector<vec3> positions;
 		vector<vec2> texcoords;
 		if (put_able_arr[i]) {
-			positions = this->getBlockFaceVertexPos(x, y, z, flag);
-			texcoords = this->getBlockFaceTexcoords(
+			positions = this->block->getBlockFacePos(
+				this->start_pos.x + x, 
+				this->start_pos.y + y, 
+				this->start_pos.z + z, 
+				flag
+			);
+			texcoords = this->block->getBlockFaceTexcoord(
 				start,
 				end,
 				flag
@@ -114,7 +131,7 @@ vector<uint32> Chunk::getBlockIndices(
 	for (int i = 0; i < 6; i++) {
 		vector<uint32> face_indices;
 		if (able_set_arr[i]) {
-			face_indices = this->getBlockFaceIndices(start);
+			face_indices = this->block->getBlockFaceIndices(start);
 			start += 4;
 			block_indices.insert(
 				block_indices.end(),
@@ -182,140 +199,19 @@ vector<bool> Chunk::checkBlock(int x, int y, int z) const
 	return block_check_arr;
 }
 
-vector<vec3> Chunk::getBlockFaceVertexPos(
-	float move_x,
-	float move_y,
-	float move_z,
-	Face face_flag
-) const
-{
-	vector<vec3> vertices_pos;
-	float x = move_x + this->start_pos.x;
-	float y = move_y + this->start_pos.y;
-	float z = move_z + this->start_pos.z;
-
-	if (face_flag == Face::Top) {
-		vertices_pos.push_back(vec3(x - 0.5f, y + 0.5f, z - 0.5f));
-		vertices_pos.push_back(vec3(x - 0.5f, y + 0.5f, z - 0.5f));
-		vertices_pos.push_back(vec3(x + 0.5f, y + 0.5f, z + 0.5f));
-		vertices_pos.push_back(vec3(x + 0.5f, y + 0.5f, z - 0.5f));
-		return vertices_pos;
-	}
-	if (face_flag == Face::Bottom) {
-		vertices_pos.push_back(vec3(x - 0.5f, y - 0.5f, z - 0.5f));
-		vertices_pos.push_back(vec3(x + 0.5f, y - 0.5f, z - 0.5f));
-		vertices_pos.push_back(vec3(x + 0.5f, y - 0.5f, z + 0.5f));
-		vertices_pos.push_back(vec3(x - 0.5f, y - 0.5f, z + 0.5f));
-		return vertices_pos;
-	}
-	if (face_flag == Face::Front) {
-		vertices_pos.push_back(vec3(x - 0.5f, y - 0.5f, z - 0.5f));
-		vertices_pos.push_back(vec3(x - 0.5f, y + 0.5f, z - 0.5f));
-		vertices_pos.push_back(vec3(x + 0.5f, y + 0.5f, z - 0.5f));
-		vertices_pos.push_back(vec3(x + 0.5f, y - 0.5f, z - 0.5f));
-		return vertices_pos;
-	}
-	if (face_flag == Face::Back) {
-		vertices_pos.push_back(vec3(x - 0.5f, y - 0.5f, z + 0.5f));
-		vertices_pos.push_back(vec3(x + 0.5f, y - 0.5f, z + 0.5f));
-		vertices_pos.push_back(vec3(x + 0.5f, y + 0.5f, z + 0.5f));
-		vertices_pos.push_back(vec3(x - 0.5f, y + 0.5f, z + 0.5f));
-		return vertices_pos;
-	}
-	if (face_flag == Face::Left) {
-		vertices_pos.push_back(vec3(x - 0.5f, y - 0.5f, z + 0.5f));
-		vertices_pos.push_back(vec3(x - 0.5f, y + 0.5f, z + 0.5f));
-		vertices_pos.push_back(vec3(x - 0.5f, y + 0.5f, z - 0.5f));
-		vertices_pos.push_back(vec3(x - 0.5f, y - 0.5f, z - 0.5f));
-		return vertices_pos;
-	}
-	if (face_flag == Face::Right) {
-		vertices_pos.push_back(vec3(x + 0.5f, y - 0.5f, z + 0.5f));
-		vertices_pos.push_back(vec3(x + 0.5f, y - 0.5f, z - 0.5f));
-		vertices_pos.push_back(vec3(x + 0.5f, y + 0.5f, z - 0.5f));
-		vertices_pos.push_back(vec3(x + 0.5f, y + 0.5f, z + 0.5f));
-	}
-	return vertices_pos;
-}
-
-vector<vec2> Chunk::getBlockFaceTexcoords(
-	vec2 start, 
-	vec2 end,
-	Face face_flag
-) const
-{
-	vector<vec2> texcoord;
-
-	if (face_flag == Face::Top) {
-		texcoord.push_back(vec2(start.x, end.y));
-		texcoord.push_back(start);
-		texcoord.push_back(vec2(end.x, start.y));
-		texcoord.push_back(end);
-		return texcoord;
-	}
-	if (face_flag == Face::Bottom) {
-		texcoord.push_back(start);
-		texcoord.push_back(vec2(end.x, start.y));
-		texcoord.push_back(end);
-		texcoord.push_back(vec2(start.x, end.y));
-		return texcoord;
-	}
-	if (face_flag == Face::Front) {
-		texcoord.push_back(vec2(start.x, end.y));
-		texcoord.push_back(start);
-		texcoord.push_back(vec2(end.x, start.y));
-		texcoord.push_back(end);
-		return texcoord;
-	}
-	if (face_flag == Face::Back) {
-		texcoord.push_back(end);
-		texcoord.push_back(vec2(start.x, end.y));
-		texcoord.push_back(start);
-		texcoord.push_back(vec2(end.x, start.y));
-		return texcoord;
-	}
-	if (face_flag == Face::Left) {
-		texcoord.push_back(vec2(start.x, end.y));
-		texcoord.push_back(start);
-		texcoord.push_back(vec2(end.x, start.y));
-		texcoord.push_back(end);
-		return texcoord;
-	}
-	if (face_flag == Face::Right) {
-		texcoord.push_back(end);
-		texcoord.push_back(vec2(start.x, end.y));
-		texcoord.push_back(start);
-		texcoord.push_back(vec2(end.x, start.y));
-	}
-	return texcoord;
-}
-
-vector<uint32> Chunk::getBlockFaceIndices(uint32 start) const
-{
-	vector<uint32> indices = {
-		start,
-		start + 1,
-		start + 2,
-		start,
-		start + 2,
-		start + 3
-	};
-	return indices;
-}
-
 
 // temp code
 
 
 void Chunk::initRenderForTest(HWND hwnd, UINT width, UINT height)
 {
-	cout << "vertices size: " << this->t_vertices.size() << endl;
-	this->graphic = make_shared<Graphics>(hwnd, width, height);
+	cout << "vertices size: " << this->vertices.size() << endl;
 	
-	this->vertex_buffer = make_shared<Buffer<VertexBlock>>(
+
+	this->vertex_uv_buffer = make_shared<Buffer<VertexBlockUV>>(
 		this->graphic->getDevice(),
-		this->t_vertices.data(),
-		this->t_vertices.size(),
+		this->vertices.data(),
+		this->vertices.size(),
 		D3D11_BIND_VERTEX_BUFFER
 	);
 	this->index_buffer = make_shared<Buffer<uint32>>(
@@ -327,7 +223,7 @@ void Chunk::initRenderForTest(HWND hwnd, UINT width, UINT height)
 
 	this->vertex_shader = make_shared<VertexShader>(
 		this->graphic->getDevice(),
-		L"TestVertexShader.hlsl",
+		L"WorldVertexShader.hlsl",
 		"main",
 		"vs_5_0"
 	);
@@ -352,11 +248,20 @@ void Chunk::initRenderForTest(HWND hwnd, UINT width, UINT height)
 			0
 		},
 		{
-			"COLOR",
+			"TEXCOORD",
 			0,
-			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			DXGI_FORMAT_R32G32_FLOAT,
 			0,
 			16,
+			D3D11_INPUT_PER_VERTEX_DATA,
+			0
+		},
+		{
+			"DIRECTION",
+			0,
+			DXGI_FORMAT_R32_SINT,
+			0,
+			24,
 			D3D11_INPUT_PER_VERTEX_DATA,
 			0
 		}
@@ -370,9 +275,17 @@ void Chunk::initRenderForTest(HWND hwnd, UINT width, UINT height)
 
 	this->pixel_shader = make_shared<PixelShader>(
 		this->graphic->getDevice(),
-		L"TestPixelShader.hlsl",
+		L"WorldPixelShader.hlsl",
 		"main",
 		"ps_5_0"
+	);
+
+	this->sampler_state = make_shared<SamplerState>(
+		this->graphic->getDevice()
+	);
+
+	this->blend_state = make_shared<BlendState>(
+		this->graphic->getDevice()
 	);
 
 	this->rasterizer_state = make_shared<RasterizerState>(
@@ -384,8 +297,8 @@ void Chunk::initRenderForTest(HWND hwnd, UINT width, UINT height)
 	MVP mvp;
 	mvp.model = Mat::Identity;
 	mvp.view = XMMatrixLookAtLH(
-		vec3(0, 0, -5),
-		vec3(0, 0, 1),
+		vec3(-3, 0, 0),
+		vec3(1, 0, 0),
 		vec3(0, 1, 0)
 	);
 	mvp.view = mvp.view.Transpose();
@@ -405,12 +318,12 @@ void Chunk::initRenderForTest(HWND hwnd, UINT width, UINT height)
 	this->graphic->getContext()->IASetInputLayout(
 		this->input_layout->getComPtr().Get()
 	);
-	uint32 stride = this->vertex_buffer->getStride();
+	uint32 stride = this->vertex_uv_buffer->getStride();
 	uint32 offset = 0;
 	this->graphic->getContext()->IASetVertexBuffers(
 		0,
 		1,
-		this->vertex_buffer->getComPtr().GetAddressOf(),
+		this->vertex_uv_buffer->getComPtr().GetAddressOf(),
 		&stride,
 		&offset
 	);
@@ -435,6 +348,19 @@ void Chunk::initRenderForTest(HWND hwnd, UINT width, UINT height)
 		this->pixel_shader->getComPtr().Get(),
 		nullptr,
 		0
+	);
+	this->graphic->getContext()->PSSetSamplers(
+		0,
+		1,
+		this->sampler_state->getComPtr().GetAddressOf()
+	);
+	this->block->registerSRV(
+		this->graphic->getContext()
+	);
+	this->graphic->getContext()->OMSetBlendState(
+		this->blend_state->getComPtr().Get(),
+		this->blend_state->getBlendFactor(),
+		this->blend_state->getSampleMask()
 	);
 
 	this->graphic->setClearColor(0.3f, 0.3f, 0.3f, 1.f);
@@ -491,12 +417,12 @@ vector<VertexBlock> Chunk::getBlockVertexForTest(
 	vector<VertexBlock> block;
 	vector<bool> set_able_arr = this->checkBlock(x, y, z);
 	for (int i = 0; i < 6; i++) {
-		Face flag = static_cast<Face>(i);
+		BlockFace flag = static_cast<BlockFace>(i);
 		vector<vec3> positions;
 		color col;
 		VertexBlock vertex;
 		if (set_able_arr[i]) {
-			positions = this->getBlockFaceVertexPos(x, y, z, flag);
+			positions = this->block->getBlockFacePos(x, y, z, flag);
 			if (i == 0)
 				col = color(1, 0, 0, 1);
 			else if (i == 1)

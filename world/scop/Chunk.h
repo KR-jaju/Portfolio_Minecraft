@@ -11,6 +11,8 @@
 #include "BlendState.h"
 #include "SamplerState.h"
 
+#include "Block.h"
+
 enum class Face {
 	Top,
 	Bottom,
@@ -25,7 +27,7 @@ enum class Face {
 class Chunk
 {
 public:
-	Chunk();
+	Chunk(shared_ptr<Graphics> graphic);
 	~Chunk();
 	void setVerticesAndIndices();
 	void setBlockInChunk(int x, int y, int z, int type);
@@ -59,18 +61,6 @@ private:
 	) const;
 	bool checkBoundary(int x, int y, int z) const;
 	vector<bool> checkBlock(int x, int y, int z) const;
-	vector<vec3> getBlockFaceVertexPos(
-		float move_x,
-		float move_y,
-		float move_z,
-		Face face_flag
-	) const;
-	vector<vec2> getBlockFaceTexcoords(
-		vec2 start, 
-		vec2 end, 
-		Face face_flag
-	) const;
-	vector<uint32> getBlockFaceIndices(uint32 start) const;
 
 private:
 	int chunk[16][256][16];
@@ -101,5 +91,7 @@ private: // 미확정 용
 	shared_ptr<RasterizerState> rasterizer_state;
 	shared_ptr<SamplerState> sampler_state;
 	shared_ptr<BlendState> blend_state;
+
+	shared_ptr<Block> block;
 };
 
