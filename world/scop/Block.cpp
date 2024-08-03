@@ -1,21 +1,12 @@
 #include "pch.h"
 #include "Block.h"
 #include "Texture.h"
+#include "TextureArray.h"
 
 
 
-Block::Block(
-	ComPtr<ID3D11Device> device, 
-	vector<wstring> const& path_arr,
-	int type
-)
+Block::Block(int type)
 {
-	for (int i = 0; i < path_arr.size(); i++) {
-		this->texture.push_back(make_shared<Texture>(
-			device,
-			path_arr[i]
-		));
-	}
 	this->type = type;
 }
 
@@ -65,13 +56,6 @@ vector<vec3> Block::getBlockFacePos(
 		vertices_pos.push_back(vec3(x - 0.5f, y + 0.5f, z + 0.5f));
 		vertices_pos.push_back(vec3(x - 0.5f, y + 0.5f, z - 0.5f));
 		vertices_pos.push_back(vec3(x - 0.5f, y - 0.5f, z - 0.5f));
-		for (int i = 0; i < vertices_pos.size(); i++) {
-			cout << "vertex pos: ";
-			cout << vertices_pos[i].x << ' ';
-			cout << vertices_pos[i].y << ' ';
-			cout << vertices_pos[i].z << endl;
-		}
-		cout << endl;
 		return vertices_pos;
 	}
 	if (BlockFace_flag == BlockFace::Right) {
@@ -144,13 +128,15 @@ vector<uint32> Block::getBlockFaceIndices(uint32 start) const
 	return indices;
 }
 
-void Block::registerSRV(ComPtr<ID3D11DeviceContext> context)
+void Block::registerSRV(
+	ComPtr<ID3D11Device> device, 
+	ComPtr<ID3D11DeviceContext> context, 
+	vector<wstring> const& path_arr
+)
 {
-	for (int i = 0; i < this->texture.size(); i++)
-		this->view_arr.push_back(this->texture[i]->getComPtr().Get());
-	context->PSSetShaderResources(
-		0, 
-		this->view_arr.size(), 
-		view_arr.data()
+	this->texture_arr = make_shared<TextureArray>(
+		device,
+		context,
+		path_arr
 	);
 }

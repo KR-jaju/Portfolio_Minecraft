@@ -4,17 +4,9 @@
 Chunk::Chunk(shared_ptr<Graphics> graphic)
 {
 	this->graphic = graphic;
-	vector<wstring> path_arr = {
-		L"grass_top.png",
-		L"grass_bottom.png",
-		L"grass_side.png"
-	};
 
-	this->block = make_shared<Block>(
-		this->graphic->getDevice(),
-		path_arr,
-		1
-	);
+	// test
+	this->block = make_shared<Block>(1);
 }
 
 Chunk::~Chunk()
@@ -354,8 +346,16 @@ void Chunk::initRenderForTest(HWND hwnd, UINT width, UINT height)
 		1,
 		this->sampler_state->getComPtr().GetAddressOf()
 	);
+
+	vector<wstring> path_arr = {
+		L"grass_top.png",
+		L"grass_bottom.png",
+		L"grass_side.png"
+	};
 	this->block->registerSRV(
-		this->graphic->getContext()
+		this->graphic->getDevice(),
+		this->graphic->getContext(),
+		path_arr
 	);
 	this->graphic->getContext()->OMSetBlendState(
 		this->blend_state->getComPtr().Get(),

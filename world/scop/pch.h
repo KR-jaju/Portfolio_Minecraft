@@ -1,7 +1,13 @@
 #pragma once
+// utils wictexture위해 추가
+#include <InitGuid.h>
+#include <dinput.h>
+#include <dsound.h>
+
 #include <windows.h>
 #include "DirectXMath.h"
 #include "SimpleMath.h"
+#include "WICTextureLoader.h"
 
 using int8 = __int8;
 using int16 = __int16;

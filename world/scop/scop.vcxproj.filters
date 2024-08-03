@@ -147,6 +147,12 @@
     <ClInclude Include="Terrain.h">
       <Filter>소스 파일\World</Filter>
     </ClInclude>
+    <ClInclude Include="TextureArray.h">
+      <Filter>소스 파일\Engine\Pipeline\5_Texture\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="WICTextureLoader.h">
+      <Filter>헤더 파일\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -205,6 +211,12 @@
     </ClCompile>
     <ClCompile Include="Terrain.cpp">
       <Filter>소스 파일\World</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureArray.cpp">
+      <Filter>소스 파일\Engine\Pipeline\5_Texture\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="WICTextureLoader.cpp">
+      <Filter>헤더 파일\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
