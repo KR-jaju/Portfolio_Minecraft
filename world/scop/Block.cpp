@@ -34,7 +34,7 @@ vector<vec3> Block::getBlockFacePos(
 
 	if (BlockFace_flag == BlockFace::Top) {
 		vertices_pos.push_back(vec3(x - 0.5f, y + 0.5f, z - 0.5f));
-		vertices_pos.push_back(vec3(x - 0.5f, y + 0.5f, z - 0.5f));
+		vertices_pos.push_back(vec3(x - 0.5f, y + 0.5f, z + 0.5f));
 		vertices_pos.push_back(vec3(x + 0.5f, y + 0.5f, z + 0.5f));
 		vertices_pos.push_back(vec3(x + 0.5f, y + 0.5f, z - 0.5f));
 		return vertices_pos;
@@ -148,7 +148,6 @@ void Block::registerSRV(ComPtr<ID3D11DeviceContext> context)
 {
 	for (int i = 0; i < this->texture.size(); i++)
 		this->view_arr.push_back(this->texture[i]->getComPtr().Get());
-	cout << "array size: " << this->view_arr.size() << endl;
 	context->PSSetShaderResources(
 		0, 
 		this->view_arr.size(), 
