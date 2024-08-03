@@ -198,3 +198,4 @@ _Pvt_Extensions
 *.cso
 *.exe
 **/Binaries/
+**/bedrock-samples-main/
