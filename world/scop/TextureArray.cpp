@@ -84,16 +84,15 @@ TextureArray::TextureArray(
 	);
 	CHECK(hr);
 
-	context->PSSetShaderResources(
-		0, 
-		1, 
-		this->shader_resource_view.GetAddressOf()
-	);
-
 	// 리소스 해제
-	for (auto tex : textures) {
+	for (ID3D11Texture2D* tex : textures) {
 		if (tex) {
 			tex->Release();
 		}
 	}
+}
+
+ComPtr<ID3D11ShaderResourceView> TextureArray::getComPtr()
+{
+	return this->shader_resource_view;
 }

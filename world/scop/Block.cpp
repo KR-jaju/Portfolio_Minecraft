@@ -139,4 +139,9 @@ void Block::registerSRV(
 		context,
 		path_arr
 	);
+	context->PSSetShaderResources(
+		0,
+		1,
+		this->texture_arr->getComPtr().GetAddressOf()
+	);
 }

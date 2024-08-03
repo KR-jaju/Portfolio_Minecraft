@@ -56,6 +56,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     Chunk chunk(g_test);
     chunk.setStartPos(0, 0, 0);
     chunk.setBlockInChunk(0, 0, 0, 1);
+    //chunk.setBlockInChunk(1, 0, 0, 1);
     chunk.setBlockInChunk(2, 0, 0, 1);
     chunk.setVerticesAndIndices();
     chunk.initRenderForTest(hWnd, 800, 650);

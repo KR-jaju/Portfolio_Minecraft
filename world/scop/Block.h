@@ -39,9 +39,9 @@ private:
 	int type;
 	vector<shared_ptr<Texture>> texture;
 	vector<ID3D11ShaderResourceView*> view_arr;
-	shared_ptr<TextureArray> texture_arr;
 	
-	//tmp
+	//tmp 당분간 -> chunk, terrain이 완성 될 때 까지
+	shared_ptr<TextureArray> texture_arr;
 	vector<wstring> path_arr;
 };
 

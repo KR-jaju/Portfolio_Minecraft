@@ -1,6 +1,6 @@
 SamplerState sampler0 : register(s0);
-//Texture2D g_texture[3] : register(t0);
 Texture2DArray texture_arr : register(t0);
+
 struct PS_INPUT
 {
     int type : TYPE;
@@ -13,7 +13,7 @@ float4 main(PS_INPUT input) : SV_TARGET
 {
     float4 color;
     float3 uvw;
-    float offset = (input.type - 1) * 6;
+    float offset = (input.type - 1) * 3;
     
     if (input.dir == 0 || input.dir == 1)
         uvw = float3(input.uv, input.dir + offset);
