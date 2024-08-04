@@ -1,18 +1,5 @@
 #pragma once
 
-#include "Buffer.h"
-#include "InputLayout.h"
-#include "Graphics.h"
-#include "ConstantBuffer.h"
-#include "VertexShader.h"
-#include "PixelShader.h"
-#include "Texture.h"
-#include "RasterizerState.h"
-#include "BlendState.h"
-#include "SamplerState.h"
-
-#include "Block.h"
-
 enum class Face {
 	Top,
 	Bottom,
@@ -22,29 +9,39 @@ enum class Face {
 	Right
 };
 
-// size 1, no interaction
+class PixelShader;
+class VertexShader;
+template<typename T> class Buffer;
+class Graphics;
+class ConstantBuffer;
+class RasterizerState;
+class BlendState;
+class InputLayout;
+class SamplerState;
 
 class Chunk
 {
 public:
-	Chunk(shared_ptr<Graphics> graphic);
+	Chunk();
 	~Chunk();
 	void setVerticesAndIndices();
+	void setRender(
+		shared_ptr<Graphics> graphic,
+		shared_ptr<RasterizerState> reaterizer_state, 
+		shared_ptr<SamplerState> sampler_state,
+		wstring const& vertex_shader_path,
+		wstring const& pixel_shader_path,
+		shared_ptr<BlendState> blend_state
+	);
+	void Render(Mat view, Mat proj);
 	void setBlockInChunk(int x, int y, int z, int type);
 	int getBlock(int x, int y, int z) const;
-	void putChunk(float x, float y, float z);
 	void setStartPos(float x, float y, float z);
-
-public: // 미확정 용
-	void renderTest();
-	void initRenderForTest(HWND hwnd, UINT width, UINT height);
-	void setVerticesAndIndicesForTest();
-	vector<VertexBlock> getBlockVertexForTest(
-		int x,
-		int y,
-		int z,
-		int type
-	) const;
+	void setLeft(Chunk* chunk);
+	void setRight(Chunk* chunk);
+	void setFront(Chunk* chunk);
+	void setBack(Chunk* chunk);
+	int getBlockCnt();
 
 private:
 	vector<VertexBlockUV> getBlockVertexBlockUV(
@@ -61,37 +58,44 @@ private:
 	) const;
 	bool checkBoundary(int x, int y, int z) const;
 	vector<bool> checkBlock(int x, int y, int z) const;
+	vector<vec3> getBlockFacePos(
+		float x,
+		float y,
+		float z,
+		Face block_face
+	) const;
 
+	vector<vec2> getBlockFaceTexcoord(
+		vec2 start,
+		vec2 end,
+		Face block_face
+	) const;
+	vector<uint32> getBlockFaceIndices(uint32 start) const;
+	
 private:
 	int chunk[16][256][16];
 	int height_map[16][16];
-	weak_ptr<Chunk> front;
-	weak_ptr<Chunk> back;
-	weak_ptr<Chunk> left;
-	weak_ptr<Chunk> right;
+	int block_cnt;
+	Chunk* front;
+	Chunk* back;
+	Chunk* left;
+	Chunk* right;
+	shared_ptr<Buffer<VertexBlockUV>> vertex_buffer;
 	vector<VertexBlockUV> vertices;
+	shared_ptr<Buffer<uint32>> index_buffer;
 	vector<uint32> indices;
+	vector<D3D11_INPUT_ELEMENT_DESC> layout;
+	shared_ptr<ConstantBuffer> constant_buffer;
 	vec3 start_pos;
+	MVP mvp;
 
 private:
-	// for test
-	vector<VertexBlock> t_vertices;
-
-private: // 미확정 용
 	shared_ptr<Graphics> graphic;
-
-	shared_ptr<Buffer<VertexBlock>> vertex_buffer;
-	shared_ptr<Buffer<VertexBlockUV>> vertex_uv_buffer;
-	shared_ptr<Buffer<uint32>> index_buffer;
-	shared_ptr<InputLayout> input_layout;
-	shared_ptr<ConstantBuffer> constant_buffer;
 	shared_ptr<VertexShader> vertex_shader;
 	shared_ptr<PixelShader> pixel_shader;
-	shared_ptr<Texture> texture;
-	shared_ptr<RasterizerState> rasterizer_state;
+	shared_ptr<InputLayout> input_layout;
 	shared_ptr<SamplerState> sampler_state;
+	shared_ptr<RasterizerState> rasterizer_state;
 	shared_ptr<BlendState> blend_state;
-
-	shared_ptr<Block> block;
 };
 

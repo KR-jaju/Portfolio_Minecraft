@@ -53,13 +53,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         650
     );
 
-    Chunk chunk(g_test);
+    /*Chunk chunk();
     chunk.setStartPos(0, 0, 0);
     chunk.setBlockInChunk(0, 0, 0, 1);
-    //chunk.setBlockInChunk(1, 0, 0, 1);
     chunk.setBlockInChunk(2, 0, 0, 1);
     chunk.setVerticesAndIndices();
-    chunk.initRenderForTest(hWnd, 800, 650);
+    chunk.initRenderForTest(hWnd, 800, 650);*/
 
     MSG msg = {};
 
@@ -81,7 +80,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             //test.render();
             //test.renderUV();
         }
-        chunk.renderTest();
+        //chunk.renderTest();
         //test.update();
         //test.render();
         //test.renderUV();
