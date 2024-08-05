@@ -4,8 +4,8 @@ class RasterizerState
 public:
 	RasterizerState(
 		ComPtr<ID3D11Device> device,
-		D3D11_FILL_MODE const& fill_mode,
-		D3D11_CULL_MODE const& cull_mode
+		D3D11_FILL_MODE fill_mode,
+		D3D11_CULL_MODE cull_mode
 	);
 	RasterizerState(RasterizerState const&) = delete;
 	~RasterizerState();
