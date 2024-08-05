@@ -9,7 +9,9 @@ public:
 		string const& entry_point,
 		string const& version
 	);
+	VertexShader(VertexShader const&) = delete;
 	virtual ~VertexShader();
+	VertexShader& operator=(VertexShader const&) = delete;
 	ComPtr<ID3D11VertexShader> getComPtr() const;
 	ComPtr<ID3DBlob> getBlob() const;
 private:
