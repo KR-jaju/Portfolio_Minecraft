@@ -14,6 +14,7 @@ public:
 private:
 	void createDeviceAndSwapChain();
 	void createRenderTargetView();
+	void createDepthStencilView();
 	void setViewPort();
 
 private:
@@ -26,6 +27,8 @@ private:
 	ComPtr<IDXGISwapChain> swap_chain;
 
 	ComPtr<ID3D11RenderTargetView> render_target_view;
+	ComPtr<ID3D11DepthStencilView> depth_stencil_view;
+	ComPtr<ID3D11Texture2D> texture_2d;
 	D3D11_VIEWPORT view_port = { 0 };
 	float clear_color[4] = { 0.f, 0.f, 0.f, 1.f };
 };
