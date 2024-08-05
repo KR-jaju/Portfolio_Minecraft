@@ -420,7 +420,8 @@ void Chunk::setRender
 	};
 	this->input_layout = make_shared<InputLayout>(
 		graphic->getDevice(),
-		layout,
+		layout.data(),
+		layout.size(),
 		vertex_shader->getBlob()
 	);
 	this->pixel_shader = make_shared<PixelShader>(

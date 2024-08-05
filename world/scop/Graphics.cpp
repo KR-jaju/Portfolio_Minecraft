@@ -118,8 +118,8 @@ void Graphics::createDepthStencilView()
 	ZeroMemory(&desc, sizeof(desc));
 	desc.Width = this->width;
 	desc.Height = this->height;
-	desc.MipLevels = 1;
 	desc.ArraySize = 1;
+	desc.MipLevels = 1;
 	desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
@@ -128,25 +128,26 @@ void Graphics::createDepthStencilView()
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0;
 
-	HRESULT hr = this->device->CreateTexture2D(
+	this->device->CreateTexture2D(
 		&desc,
 		0,
 		this->texture_2d.GetAddressOf()
 	);
-	CHECK(hr);
 
-	D3D11_DEPTH_STENCIL_VIEW_DESC depth_stencil_desc;
-	ZeroMemory(&depth_stencil_desc, sizeof(depth_stencil_desc));
-	depth_stencil_desc.Format = desc.Format;
-	depth_stencil_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	depth_stencil_desc.Texture2D.MipSlice = 0;
-
-	hr = this->device->CreateDepthStencilView(
+	D3D11_DEPTH_STENCIL_VIEW_DESC depth_stencil_view_desc;
+	ZeroMemory(
+		&depth_stencil_view_desc, 
+		sizeof(depth_stencil_view_desc)
+	);
+	depth_stencil_view_desc.Format = desc.Format;
+	depth_stencil_view_desc.ViewDimension =
+		D3D11_DSV_DIMENSION_TEXTURE2D;
+	depth_stencil_view_desc.Texture2D.MipSlice = 0;
+	this->device->CreateDepthStencilView(
 		this->texture_2d.Get(),
-		&depth_stencil_desc,
+		&depth_stencil_view_desc,
 		this->depth_stencil_view.GetAddressOf()
 	);
-	CHECK(hr);
 }
 
 void Graphics::setViewPort()
