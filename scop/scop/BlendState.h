@@ -21,7 +21,9 @@ public:
 		}, 
 		float const& factor = 0.f
 	);
+	BlendState(BlendState const&) = delete;
 	~BlendState();
+	BlendState& operator=(BlendState const&) = delete;
 	float const* getBlendFactor() { return &(this->blend_factor); }
 	uint32 getSampleMask() { return this->sample_mask;  }
 	ComPtr<ID3D11BlendState> getComPtr() const;
