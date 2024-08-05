@@ -7,7 +7,9 @@ public:
 		ComPtr<ID3D11Device> device,
 		D3D11_SAMPLER_DESC const& desc
 	);
+	SamplerState(SamplerState const&) = delete;
 	~SamplerState();
+	SamplerState& operator=(SamplerState const&) = delete;
 	ComPtr<ID3D11SamplerState> getComPtr() const;
 private:
 	ComPtr<ID3D11Device> device;
