@@ -88,6 +88,7 @@ private:
 	shared_ptr<ConstantBuffer> constant_buffer;
 	vec3 start_pos;
 	MVP mvp;
+	
 
 private:
 	shared_ptr<Graphics> graphic;

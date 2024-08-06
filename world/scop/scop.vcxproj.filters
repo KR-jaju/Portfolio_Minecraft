@@ -79,6 +79,9 @@
     <Filter Include="소스 파일\World\WorldShaderFIle\TestShader">
       <UniqueIdentifier>{9e24a969-5ed7-4adb-88c6-cad6af249f2b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\Noise">
+      <UniqueIdentifier>{6f0ac322-30ef-458f-a540-cff2819a55ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -153,6 +156,9 @@
     <ClInclude Include="WICTextureLoader.h">
       <Filter>헤더 파일\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="PerlinNoise.h">
+      <Filter>소스 파일\World\Noise</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -217,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="WICTextureLoader.cpp">
       <Filter>헤더 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="PerlinNoise.cpp">
+      <Filter>소스 파일\World\Noise</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
