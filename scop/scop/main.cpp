@@ -24,7 +24,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_ LPWSTR    lpCmdLine,
     _In_ int       nCmdShow)
 {
-    Window  window(hInstance, nCmdShow);
+    Window  window(hInstance, nCmdShow, L"WindowClassName");
     MSG msg = {};
     Test test(window.getHandle(), 800, 650);
 

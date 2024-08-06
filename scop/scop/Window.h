@@ -4,7 +4,7 @@
 
 class Window {
 public:
-	Window(HINSTANCE instance, int nCmdShow, std::wstring const& class_name = L"Default", std::wstring const& title = L"Default Window");
+	Window(HINSTANCE instance, int nCmdShow, std::wstring const& class_name, std::wstring const& title = L"Default Window");
 	Window(Window const&) = delete;
 	Window& operator=(Window const&) = delete;
 	void	setCallback(std::unique_ptr<WindowCallback>&& callback);
