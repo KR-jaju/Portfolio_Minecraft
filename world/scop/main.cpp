@@ -6,9 +6,7 @@
 #include "Game.h"
 
 // test
-#include "Chunk.h"
-#include "Test.h"
-#include "Graphics.h"
+#include "Terrain.h"
 // test 
 
 #define MAX_LOADSTRING 100
@@ -47,23 +45,28 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     //Test test(hWnd, 800, 650);
     //test.setDrawBox();
     //test.setDrawTexSkel();
-    shared_ptr<Graphics> g_test = make_shared<Graphics>(
-        hWnd,
-        800,
-        650
-    );
 
-    /*Chunk chunk();
-    chunk.setStartPos(0, 0, 0);
-    chunk.setBlockInChunk(0, 0, 0, 1);
-    chunk.setBlockInChunk(2, 0, 0, 1);
-    chunk.setVerticesAndIndices();
-    chunk.initRenderForTest(hWnd, 800, 650);*/
+    Terrain terrain(hWnd, 800, 650);
+    Mat view = XMMatrixLookToLH(
+        vec3(8, 30, -10),
+        vec3(0, -1, 1),
+        vec3(0, 1, 0)
+    );
+    Mat proj = XMMatrixPerspectiveFovLH(
+        XMConvertToRadians(70),
+        800.f / 650.f,
+        0.01f,
+        1000.f
+    );
+    terrain.setCam(view, proj);
+    terrain.createHeightMap();
+    terrain.terrainsetVerticesAndIndices();
+    terrain.setRender();
 
     MSG msg = {};
 
     // 기본 메시지 루프입니다:
-    while (1) //msg.message != WM_QUIT)
+    while (msg.message != WM_QUIT)
     {
         if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
@@ -79,13 +82,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             //test.update();
             //test.render();
             //test.renderUV();
+            //terrain.Render();
         }
+        terrain.Render();
         //chunk.renderTest();
         //test.update();
         //test.render();
         //test.renderUV();
     }
-
     return (int) msg.wParam;
 }
 

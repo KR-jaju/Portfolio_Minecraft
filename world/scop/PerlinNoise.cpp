@@ -11,8 +11,8 @@ PerlinNoise::~PerlinNoise()
 
 float PerlinNoise::getNoise2D
 (
-    int x, 
-    int y, 
+    float x, 
+    float y, 
     int octav, 
     float delta_amplitude
 ) const
@@ -44,7 +44,6 @@ float PerlinNoise::perlin(float x, float y, float z) const
 {
     int x0 = (static_cast<int>(floor(x))) & 255;
     int y0 = (static_cast<int>(floor(y))) & 255;
-
     x -= floor(x);
     y -= floor(y);
     z -= floor(z);

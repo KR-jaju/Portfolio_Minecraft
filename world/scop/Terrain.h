@@ -17,14 +17,15 @@ public:
 	void setViewAndProj(Mat const& view, Mat const& proj);
 	void setRender();
 	void Render();
+	void setCam(Mat view, Mat proj);
 	void createHeightMap();
-	void terainsetVerticesAndIndices();
+	void terrainsetVerticesAndIndices();
 private:
 	Mat view;
 	Mat proj;
 	map<vec3, uint32> object_book;
-	Chunk terrain[30][30];
-	int height_map[480][480];
+	shared_ptr<Chunk> terrain[30][30];
+	int16 height_map[480][480];
 	PerlinNoise perlin_noise;
 
 private:

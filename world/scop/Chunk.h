@@ -18,6 +18,7 @@ class RasterizerState;
 class BlendState;
 class InputLayout;
 class SamplerState;
+class TextureArray;
 
 class Chunk
 {
@@ -27,14 +28,18 @@ public:
 	void setVerticesAndIndices();
 	void setRender(
 		shared_ptr<Graphics> graphic,
-		shared_ptr<RasterizerState> reaterizer_state, 
+		shared_ptr<RasterizerState> rasterizer_state, 
 		shared_ptr<SamplerState> sampler_state,
 		wstring const& vertex_shader_path,
 		wstring const& pixel_shader_path,
 		shared_ptr<BlendState> blend_state
 	);
-	void Render(Mat view, Mat proj);
-	void setBlockInChunk(int x, int y, int z, int type);
+	void Render(
+		Mat view, 
+		Mat proj,
+		shared_ptr<TextureArray> const& texture_array
+	);
+	void setBlockInChunk(int x, int y, int z, int16 type);
 	int getBlock(int x, int y, int z) const;
 	void setStartPos(float x, float y, float z);
 	void setLeft(Chunk* chunk);
@@ -42,6 +47,7 @@ public:
 	void setFront(Chunk* chunk);
 	void setBack(Chunk* chunk);
 	int getBlockCnt();
+	void showChunk(); // test
 
 private:
 	vector<VertexBlockUV> getBlockVertexBlockUV(
@@ -73,8 +79,7 @@ private:
 	vector<uint32> getBlockFaceIndices(uint32 start) const;
 	
 private:
-	int chunk[16][256][16];
-	int height_map[16][16];
+	int16 chunk[16][256][16];
 	int block_cnt;
 	Chunk* front;
 	Chunk* back;

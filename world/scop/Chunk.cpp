@@ -10,6 +10,8 @@
 #include "RasterizerState.h"
 #include "BlendState.h"
 #include "SamplerState.h"
+#include "TextureArray.h"
+#include <algorithm>
 
 Chunk::Chunk()
 {
@@ -21,6 +23,7 @@ Chunk::Chunk()
 	this->mvp.proj = Mat::Identity;
 	this->mvp.view = Mat::Identity;
 	this->block_cnt = 0;
+	fill(&this->chunk[0][0][0], &this->chunk[0][0][0] + 16 * 256 * 16, 0);
 }
 
 Chunk::~Chunk()
@@ -58,7 +61,7 @@ void Chunk::setVerticesAndIndices()
 
 
 
-void Chunk::setBlockInChunk(int x, int y, int z, int type)
+void Chunk::setBlockInChunk(int x, int y, int z, int16 type)
 {
 	this->chunk[x][y][z] = type;
 	this->block_cnt++;
@@ -105,6 +108,19 @@ void Chunk::setBack(Chunk* chunk)
 int Chunk::getBlockCnt()
 {
 	return this->block_cnt;
+}
+
+void Chunk::showChunk()
+{
+	for (int i = 0; i < 256; i++) {
+		for (int j = 0; j < 16; j++) {
+			for (int k = 0; k < 16; k++) {
+				cout << this->chunk[j][i][k] << ' ';
+			}
+			cout << endl;
+		}
+		cout << endl;
+	}
 }
 
 vector<VertexBlockUV> Chunk::getBlockVertexBlockUV(
@@ -352,28 +368,30 @@ vector<uint32> Chunk::getBlockFaceIndices(uint32 start) const
 void Chunk::setRender
 (
 	shared_ptr<Graphics> graphic,
-	shared_ptr<RasterizerState> reaterizer_state,
+	shared_ptr<RasterizerState> rasterizer_state,
 	shared_ptr<SamplerState> sampler_state,
 	wstring const& vertex_shader_path,
 	wstring const& pixel_shader_path,
 	shared_ptr<BlendState> blend_state
 )
 {
+	cout << this->vertices.size() << ' ' << this->indices.size() << endl;
 	this->graphic = graphic;
 	this->rasterizer_state = rasterizer_state;
 	this->sampler_state = sampler_state;
 	this->vertex_buffer = make_shared<Buffer<VertexBlockUV>>(
 		graphic->getDevice(),
 		this->vertices.data(),
-		this->vertices.size(),
+		static_cast<uint32>(this->vertices.size()),
 		D3D11_BIND_VERTEX_BUFFER
 	);
 	this->index_buffer = make_shared<Buffer<uint32>>(
 		graphic->getDevice(),
 		this->indices.data(),
-		this->indices.size(),
+		static_cast<uint32>(this->indices.size()),
 		D3D11_BIND_INDEX_BUFFER
 	);
+
 	this->vertex_shader = make_shared<VertexShader>(
 		this->graphic->getDevice(),
 		vertex_shader_path,
@@ -419,7 +437,7 @@ void Chunk::setRender
 		}
 	};
 	this->input_layout = make_shared<InputLayout>(
-		graphic->getDevice(),
+		this->graphic->getDevice(),
 		layout.data(),
 		layout.size(),
 		vertex_shader->getBlob()
@@ -433,7 +451,12 @@ void Chunk::setRender
 	this->blend_state = blend_state;
 }
 
-void Chunk::Render(Mat view, Mat proj)
+void Chunk::Render
+(
+	Mat view, 
+	Mat proj, 
+	shared_ptr<TextureArray> const& texture_array
+)
 {
 	this->mvp.view = view.Transpose();
 	this->mvp.proj = proj.Transpose();
@@ -442,6 +465,7 @@ void Chunk::Render(Mat view, Mat proj)
 		this->graphic->getContext(),
 		this->mvp
 	);
+	this->constant_buffer->update(this->mvp);
 
 	uint32 stride = this->vertex_buffer->getStride();
 	uint32 offset = this->vertex_buffer->getOffset();
@@ -452,6 +476,9 @@ void Chunk::Render(Mat view, Mat proj)
 		&stride,
 		&offset
 	);
+	this->graphic->getContext()->IASetPrimitiveTopology(
+		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
+	);
 	this->graphic->getContext()->IASetInputLayout(
 		this->input_layout->getComPtr().Get()
 	);
@@ -461,6 +488,7 @@ void Chunk::Render(Mat view, Mat proj)
 		0
 	);
 
+	// vs
 	this->graphic->getContext()->VSSetShader(
 		this->vertex_shader->getComPtr().Get(),
 		nullptr,
@@ -472,6 +500,12 @@ void Chunk::Render(Mat view, Mat proj)
 		this->constant_buffer->getComPtr().GetAddressOf()
 	);
 
+	// rs
+	this->graphic->getContext()->RSSetState(
+		this->rasterizer_state->getComPtr().Get()
+	);
+
+	//ps
 	this->graphic->getContext()->PSSetShader(
 		this->pixel_shader->getComPtr().Get(),
 		nullptr,
@@ -482,10 +516,20 @@ void Chunk::Render(Mat view, Mat proj)
 		1,
 		this->sampler_state->getComPtr().GetAddressOf()
 	);
+	this->graphic->getContext()->PSSetShaderResources(
+		0,
+		1,
+		texture_array->getComPtr().GetAddressOf()
+	);
 
 	this->graphic->getContext()->OMSetBlendState(
 		this->blend_state->getComPtr().Get(),
 		this->blend_state->getBlendFactor(),
 		this->blend_state->getSampleMask()
+	);
+	this->graphic->getContext()->DrawIndexed(
+		this->index_buffer->getCount(),
+		0,
+		0
 	);
 }

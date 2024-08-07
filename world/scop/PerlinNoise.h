@@ -5,8 +5,8 @@ public:
     PerlinNoise();
     ~PerlinNoise();
     float getNoise2D(
-        int x, 
-        int y, 
+        float x, 
+        float y, 
         int octav, 
         float delta_amplitude
     ) const;

@@ -25,26 +25,6 @@ void Test::setDrawBox()
 		static_cast<uint32>(this->vertices.size()),
 		D3D11_BIND_VERTEX_BUFFER
 	);
-	//vector<D3D11_INPUT_ELEMENT_DESC> layout = {
-	//	{
-	//		"POSITION",
-	//		0,
-	//		DXGI_FORMAT_R32G32B32_FLOAT,
-	//		0,
-	//		0,
-	//		D3D11_INPUT_PER_VERTEX_DATA,
-	//		0
-	//	},
-	//	{
-	//		"COLOR",
-	//		0,
-	//		DXGI_FORMAT_R32G32B32A32_FLOAT,
-	//		0,
-	//		12,
-	//		D3D11_INPUT_PER_VERTEX_DATA,
-	//		0
-	//	}
-	//};
 	vector<D3D11_INPUT_ELEMENT_DESC> layout = {
 	{
 		"POSITION",
@@ -335,7 +315,8 @@ void Test::renderUV()
 	this->graphic->renderBegin();
 
 	//IA
-	this->graphic->getContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	this->graphic->getContext()->IASetPrimitiveTopology(
+		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	this->graphic->getContext()->IASetInputLayout(
 		this->input_layout->getComPtr().Get()
 	);
