@@ -4,18 +4,20 @@ class PerlinNoise {
 public:
     PerlinNoise();
     ~PerlinNoise();
-    float getNoise2D(
-        float x, 
-        float y, 
+    double getNoise2D(
+        double x, 
+        double y, 
         int octav, 
-        float delta_amplitude
+        double delta_amplitude
     ) const;
 
 private:
-    float fade(float t) const;
-    float lerp(float a, float b, float u) const;
-    float perlin(float x, float y, float z) const;
-    float gradiant(int hash, float x, float y, float z) const;
+    double fade(double t) const;
+    double lerp(double a, double b, double u) const;
+    double perlin(double x, double y, double z) const;
+    double perlin2D(double x, double y) const;
+    double gradiant2D(int hash, double x, double y) const;
+    double gradiant(int hash, double x, double y, double z) const;
 
 private:
     int permutation[512] = { 151,160,137,91,90,15,

@@ -23,7 +23,11 @@ Chunk::Chunk()
 	this->mvp.proj = Mat::Identity;
 	this->mvp.view = Mat::Identity;
 	this->block_cnt = 0;
-	fill(&this->chunk[0][0][0], &this->chunk[0][0][0] + 16 * 256 * 16, 0);
+	fill(
+		&this->chunk[0][0][0], 
+		&this->chunk[0][0][0] + 16 * 256 * 16, 
+		0
+	);
 }
 
 Chunk::~Chunk()
@@ -69,14 +73,6 @@ void Chunk::setBlockInChunk(int x, int y, int z, int16 type)
 
 int Chunk::getBlock(int x, int y, int z) const
 {
-	if (x < 0)
-		return this->left->getBlock(15, y, z);
-	if (x > 15)
-		return this->right->getBlock(0, y, z);
-	if (z < 0)
-		return this->front->getBlock(x, y, 15);
-	if (z > 15)
-		return this->back->getBlock(x, y, 0);
 	return this->chunk[x][y][z];
 }
 
@@ -199,6 +195,13 @@ bool Chunk::checkBoundary(int x, int y, int z) const
 	return true;
 }
 
+void defineTrueFalse(vector<bool>& vec, int flag) {
+	if (flag)
+		vec.push_back(false);
+	else
+		vec.push_back(true);
+}
+
 vector<bool> Chunk::checkBlock(int x, int y, int z) const
 {
 	vector<bool> block_check_arr;
@@ -209,36 +212,49 @@ vector<bool> Chunk::checkBlock(int x, int y, int z) const
 		int nx = x + dx[i];
 		int ny = y + dy[i];
 		int nz = z + dz[i];
-		if (this->checkBoundary(nx, ny, nz)) {
-			if (this->chunk[nx][ny][nz])
-				block_check_arr.push_back(false);
-			else
-				block_check_arr.push_back(true);
-		}
-		else if (ny < 0 || ny >= 256) {
+		if (this->checkBoundary(nx, ny, nz))
+			defineTrueFalse(block_check_arr, this->chunk[nx][ny][nz]);
+		else if (ny < 0 || ny >= 256)
 			block_check_arr.push_back(true);
-		}
-		else if (nx < 0 || nx >= 16) {
-			int block_flag = 0;
-			if (nx < 0 && this->left)
-				block_flag = this->left->getBlock(15, ny, nz);
-			else if (this->right)
-				block_flag = this->right->getBlock(0, ny, nz);
-			if (block_flag == 0)
+		else if (nx < 0) {
+			if (this->left == nullptr)
 				block_check_arr.push_back(true);
-			else
-				block_check_arr.push_back(false);
+			else {
+				defineTrueFalse(
+					block_check_arr, 
+					this->left->getBlock(15, ny, nz)
+				);
+			}
 		}
-		else {
-			int block_flag = 0;
-			if (nz < 0 && this->front)
-				block_flag = this->front->getBlock(nx, ny, 15);
-			else if (this->back)
-				block_flag = this->back->getBlock(nx, ny, 0);
-			if (block_flag == 0)
+		else if (nx >= 16) {
+			if (this->right == nullptr)
 				block_check_arr.push_back(true);
-			else
-				block_check_arr.push_back(false);
+			else {
+				defineTrueFalse(
+					block_check_arr,
+					this->right->getBlock(0, ny, nz)
+				);
+			}
+		}
+		else if (nz < 0) {
+			if (this->back == nullptr)
+				block_check_arr.push_back(true);
+			else {
+				defineTrueFalse(
+					block_check_arr,
+					this->back->getBlock(nx, ny, 15)
+				);
+			}
+		}
+		else if (nz >= 16) {
+			if (this->front == nullptr)
+				block_check_arr.push_back(true);
+			else {
+				defineTrueFalse(
+					block_check_arr,
+					this->front->getBlock(nx, ny, 0)
+				);
+			}
 		}
 	}
 	return block_check_arr;
@@ -375,7 +391,6 @@ void Chunk::setRender
 	shared_ptr<BlendState> blend_state
 )
 {
-	cout << this->vertices.size() << ' ' << this->indices.size() << endl;
 	this->graphic = graphic;
 	this->rasterizer_state = rasterizer_state;
 	this->sampler_state = sampler_state;

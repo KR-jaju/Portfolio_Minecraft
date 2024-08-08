@@ -48,8 +48,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     Terrain terrain(hWnd, 800, 650);
     Mat view = XMMatrixLookToLH(
-        vec3(8, 30, -10),
-        vec3(0, -1, 1),
+        vec3(0, 50, 50),
+        XMVector3Normalize(vec3(0, -1, -1.f)),
         vec3(0, 1, 0)
     );
     Mat proj = XMMatrixPerspectiveFovLH(

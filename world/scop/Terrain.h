@@ -20,6 +20,7 @@ public:
 	void setCam(Mat view, Mat proj);
 	void createHeightMap();
 	void terrainsetVerticesAndIndices();
+
 private:
 	Mat view;
 	Mat proj;
@@ -34,5 +35,8 @@ private:
 	vector <shared_ptr<BlendState>> blend_state_arr;
 	shared_ptr<TextureArray> texture_array;
 	shared_ptr<SamplerState> sampler_state;
+
+	int size_w = 8;
+	int size_h = 8;
 };
 

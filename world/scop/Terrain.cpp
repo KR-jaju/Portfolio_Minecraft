@@ -7,24 +7,25 @@
 #include "BlendState.h"
 #include "SamplerState.h"
 
+
 Terrain::Terrain(HWND hwnd, uint32 width, uint32 height)
 {
 	int dy[4] = { -1, 0, 1, 0 };
 	int dx[4] = { 0, 1, 0, -1 };
 
-	float sx = -240.f;
-	float sz = 234.f;
-	for (int i = 0; i < 30; i++) {
-		for (int j = 0; j < 30; j++)
+	float sx = -16.f * this->size_w * 0.5f;
+	float sz = -16.f * this->size_h * 0.5f;
+	for (int i = 0; i < this->size_h; i++) {
+		for (int j = 0; j < this->size_w; j++)
 			this->terrain[i][j] = make_shared<Chunk>();
 	}
-	for (int i = 0; i < 30; i++) {
-		for (int j = 0; j < 30; j++) {
+	for (int i = 0; i < this->size_h; i++) {
+		for (int j = 0; j < this->size_w; j++) {
 			this->terrain[i][j]->setStartPos(sx, 0, sz);
 			for (int k = 0; k < 4; k++) {
 				int ny = i + dy[k];
 				int nx = j + dx[k];
-				if (ny < 0 || ny >= 30 || nx < 0 || nx >= 30)
+				if (ny < 0 || ny >= this->size_h || nx < 0 || nx >= this->size_w)
 					continue;
 				if (dy[k] == -1) {
 					this->terrain[i][j]->setBack(this->terrain[ny][nx].get());
@@ -41,12 +42,10 @@ Terrain::Terrain(HWND hwnd, uint32 width, uint32 height)
 			}
 			sx += 16.f;
 		}
-		sz -= 16.f;
+		sx = -16.f * this->size_w * 0.5f;
+		sz += 16.f;
 	}
-	// test
-	{
-		this->terrain[0][0]->setStartPos(0, 0, 0);
-	}
+
 	this->graphic = make_shared<Graphics>(
 		hwnd,
 		width,
@@ -95,8 +94,10 @@ void Terrain::setViewAndProj
 void Terrain::setRender()
 {
 	// temp
-	/*for (int i = 0; i < 30; i++) {
-		for (int j = 0; j < 30; j++) {
+	for (int i = 0; i < this->size_h; i++) {
+		for (int j = 0; j < this->size_w; j++) {
+			if (this->terrain[i][j]->getBlockCnt() == 0)
+				continue;
 			this->terrain[i][j]->setRender(
 				this->graphic,
 				this->rasterizer_state,
@@ -106,33 +107,23 @@ void Terrain::setRender()
 				this->blend_state_arr[0]
 			);
 		}
-	}*/
-	this->terrain[0][0]->setRender(
-		this->graphic,
-		this->rasterizer_state,
-		this->sampler_state,
-		L"WorldVertexShader.hlsl",
-		L"WorldPixelShader.hlsl",
-		this->blend_state_arr[0]
-	);
+	}
 }
 
 void Terrain::Render()
 {
-	// test
 	this->graphic->renderBegin();
-	/*for (int i = 0; i < 30; i++) {
-		for (int j = 0; j < 30; j++) {
+	for (int i = 0; i < this->size_h; i++) {
+		for (int j = 0; j < this->size_w; j++) {
 			if (this->terrain[i][j]->getBlockCnt() == 0)
 				continue;
-			this->terrain[i][j]->Render(this->view, this->proj);
+			this->terrain[i][j]->Render(
+				this->view, 
+				this->proj,
+				this->texture_array
+			);
 		}
-	}*/
-	this->terrain[0][0]->Render(
-		this->view, 
-		this->proj, 
-		this->texture_array
-	);
+	}
 	this->graphic->renderEnd();
 }
 
@@ -144,57 +135,37 @@ void Terrain::setCam(Mat view, Mat proj)
 
 void Terrain::createHeightMap()
 {
-	int idx_y = 0;
-	int idx_x = 0;
-	/*for (int i = 0; i < 480; i++) {
-		for (int j = 0; j < 480; j++) {
-			float res = this->perlin_noise.getNoise2D(
-				i / 4.f + 0.1, j / 4.f + 0.1, 5, 0.5);
-			res = ((res + 1.f) * 0.5f) * 255;
-			this->height_map[i][j] = static_cast<int16>(res);
-			this->terrain[idx_y][idx_x]->setBlockInChunk(
-				j % 16, res, i % 16, 1);
-			if (j == 15)
-				idx_x += 1;
-		}
-		idx_x = 0;
-		if (i == 15)
-			idx_y += 1;
-	}*/
-	// test
-	{
-		for (int i = 0; i < 16; i++) {
-			for (int j = 0; j < 16; j++) {
-				float res = this->perlin_noise.getNoise2D(
-					i / 1.0005f, j / 1.0005f, 5, 0.5f);
-				res = ((res + 1.f) * 0.5f) * 30.f;
-				this->height_map[i][j] = static_cast<int16>(res);
-				for (int k = 0; k < this->height_map[i][j]; k++) {
-					this->terrain[0][0]->setBlockInChunk(j % 16, k, i % 16, 1);
+	for (int i = 0; i < this->size_h; i++) {
+		for (int j = 0; j < this->size_w; j++) {
+			for (int z = 0; z < 16; z++) {
+				for (int x = 0; x < 16; x++) {
+					double res = this->perlin_noise.getNoise2D(
+						(x + 16 * j) / 50.f,
+						(z + 16 * i) / 50.f,
+						5,
+						0.5f
+					);
+					res = ((res + 1.f) * 0.5f) * 30.f;
+					this->height_map[i][j] = static_cast<int16>(res);
+					for (int y = 0; y < this->height_map[i][j]; y++) {
+						this->terrain[i][j]->setBlockInChunk(
+							x,
+							y,
+							15 - z,
+							1
+						);
+					}
 				}
 			}
 		}
-		//this->terrain[0][0]->showChunk();
-		//this->terrain[0][0]->setBlockInChunk(0, 0, 0, 1);
 	}
-	/*{
-		for (int i = 0; i < 40; i++) {
-			for (int j = 0; j < 40; j++) {
-				cout << this->height_map[i][j] << ' ';
-			}
-			cout << endl;
-		}
-		cout << endl;
-	}*/
 }
 
 void Terrain::terrainsetVerticesAndIndices()
 {
-	for (int i = 0; i < 30; i++) {
-		for (int j = 0; j < 30; j++) {
+	for (int i = 0; i < this->size_h; i++) {
+		for (int j = 0; j < this->size_w; j++) {
 			this->terrain[i][j]->setVerticesAndIndices();
 		}
 	}
-	//this->terrain[0][0]->setVerticesAndIndices();
-	//this->terrain[0][0]->setStartPos()
 }
