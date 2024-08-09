@@ -22,7 +22,7 @@ public:
 	void terrainsetVerticesAndIndices();
 
 private:
-	vector<pair<int, int>> coordinationToIndex(float x, float y, float z) const;
+	vector<pair<int, int>> coordinateToIndex(float x, float y, float z) const;
 
 private:
 	Mat view;

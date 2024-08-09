@@ -168,7 +168,7 @@ void Terrain::terrainsetVerticesAndIndices()
 	}
 }
 
-vector<pair<int, int>> Terrain::coordinationToIndex(
+vector<pair<int, int>> Terrain::coordinateToIndex(
 	float x, 
 	float y, 
 	float z
