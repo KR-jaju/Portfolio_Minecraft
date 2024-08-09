@@ -42,6 +42,7 @@ public:
 	void setBlockInChunk(int x, int y, int z, int16 type);
 	int getBlock(int x, int y, int z) const;
 	void setStartPos(float x, float y, float z);
+	vec3 getStartPos() const;
 	void setLeft(Chunk* chunk);
 	void setRight(Chunk* chunk);
 	void setFront(Chunk* chunk);

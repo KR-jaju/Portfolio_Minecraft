@@ -19,9 +19,6 @@ Chunk::Chunk()
 	this->back = nullptr;
 	this->left = nullptr;
 	this->right = nullptr;
-	this->mvp.model = Mat::Identity;
-	this->mvp.proj = Mat::Identity;
-	this->mvp.view = Mat::Identity;
 	this->block_cnt = 0;
 	fill(
 		&this->chunk[0][0][0], 
@@ -78,7 +75,12 @@ int Chunk::getBlock(int x, int y, int z) const
 
 void Chunk::setStartPos(float x, float y, float z)
 {
-	this->start_pos = vec3(x, y, z);
+	this->start_pos = vec3(x, y, z) + vec3(0.5f, 0.5f, -0.5f);
+}
+
+vec3 Chunk::getStartPos() const
+{
+	return this->start_pos;
 }
 
 void Chunk::setLeft(Chunk* chunk)
@@ -137,12 +139,7 @@ vector<VertexBlockUV> Chunk::getBlockVertexBlockUV(
 		vector<vec3> positions;
 		vector<vec2> texcoords;
 		if (put_able_arr[i]) {
-			positions = this->getBlockFacePos(
-				this->start_pos.x + x, 
-				this->start_pos.y + y, 
-				this->start_pos.z + z, 
-				flag
-			);
+			positions = this->getBlockFacePos(x, y, z, flag);
 			texcoords = this->getBlockFaceTexcoord(
 				start,
 				end,
@@ -207,7 +204,7 @@ vector<bool> Chunk::checkBlock(int x, int y, int z) const
 	vector<bool> block_check_arr;
 	int dx[] = {0, 0, 0, 0, -1, 1};
 	int dy[] = {1, -1, 0, 0, 0, 0};
-	int dz[] = {0, 0, -1, 1, 0, 0};
+	int dz[] = {0, 0, 1, -1, 0, 0};
 	for (int i = 0; i < 6; i++) {
 		int nx = x + dx[i];
 		int ny = y + dy[i];
@@ -237,8 +234,9 @@ vector<bool> Chunk::checkBlock(int x, int y, int z) const
 			}
 		}
 		else if (nz < 0) {
-			if (this->back == nullptr)
+			if (this->back == nullptr) {
 				block_check_arr.push_back(true);
+			}
 			else {
 				defineTrueFalse(
 					block_check_arr,
@@ -269,7 +267,9 @@ vector<vec3> Chunk::getBlockFacePos
 ) const
 {
 	vector<vec3> vertices_pos;
-
+	x = this->start_pos.x + x;
+	y = this->start_pos.y + y;
+	z = this->start_pos.z - z;
 	if (block_face == Face::Top) {
 		vertices_pos.push_back(vec3(x - 0.5f, y + 0.5f, z - 0.5f));
 		vertices_pos.push_back(vec3(x - 0.5f, y + 0.5f, z + 0.5f));

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Chunk.h"
 #include "PerlinNoise.h"
 
 class Graphics;
@@ -8,6 +7,7 @@ class RasterizerState;
 class TextureArray;
 class BlendState;
 class SamplerState;
+class Chunk;
 
 class Terrain
 {
@@ -20,6 +20,9 @@ public:
 	void setCam(Mat view, Mat proj);
 	void createHeightMap();
 	void terrainsetVerticesAndIndices();
+
+private:
+	vector<pair<int, int>> coordinationToIndex(float x, float y, float z) const;
 
 private:
 	Mat view;

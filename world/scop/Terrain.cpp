@@ -6,6 +6,8 @@
 #include "RasterizerState.h"
 #include "BlendState.h"
 #include "SamplerState.h"
+#include "Chunk.h"
+#include <fstream>
 
 
 Terrain::Terrain(HWND hwnd, uint32 width, uint32 height)
@@ -14,7 +16,7 @@ Terrain::Terrain(HWND hwnd, uint32 width, uint32 height)
 	int dx[4] = { 0, 1, 0, -1 };
 
 	float sx = -16.f * this->size_w * 0.5f;
-	float sz = -16.f * this->size_h * 0.5f;
+	float sz = 16.f * this->size_h * 0.5f;
 	for (int i = 0; i < this->size_h; i++) {
 		for (int j = 0; j < this->size_w; j++)
 			this->terrain[i][j] = make_shared<Chunk>();
@@ -43,7 +45,7 @@ Terrain::Terrain(HWND hwnd, uint32 width, uint32 height)
 			sx += 16.f;
 		}
 		sx = -16.f * this->size_w * 0.5f;
-		sz += 16.f;
+		sz -= 16.f;
 	}
 
 	this->graphic = make_shared<Graphics>(
@@ -51,7 +53,7 @@ Terrain::Terrain(HWND hwnd, uint32 width, uint32 height)
 		width,
 		height
 	);
-	this->graphic->setClearColor(0.3, 0.3, 0.3, 1.f);
+	this->graphic->setClearColor(0.3f, 0.3f, 0.3f, 1.f);
 	this->rasterizer_state = make_shared<RasterizerState>(
 		this->graphic->getDevice(),
 		D3D11_FILL_SOLID,
@@ -140,20 +142,16 @@ void Terrain::createHeightMap()
 			for (int z = 0; z < 16; z++) {
 				for (int x = 0; x < 16; x++) {
 					double res = this->perlin_noise.getNoise2D(
-						(x + 16 * j) / 50.f,
-						(z + 16 * i) / 50.f,
+						(x + 16 * j) / 100.f,
+						(z + 16 * i) / 100.f,
 						5,
-						0.5f
+						1.2f
 					);
 					res = ((res + 1.f) * 0.5f) * 30.f;
 					this->height_map[i][j] = static_cast<int16>(res);
 					for (int y = 0; y < this->height_map[i][j]; y++) {
 						this->terrain[i][j]->setBlockInChunk(
-							x,
-							y,
-							15 - z,
-							1
-						);
+							x, y, z, 1);
 					}
 				}
 			}
@@ -168,4 +166,34 @@ void Terrain::terrainsetVerticesAndIndices()
 			this->terrain[i][j]->setVerticesAndIndices();
 		}
 	}
+}
+
+vector<pair<int, int>> Terrain::coordinationToIndex(
+	float x, 
+	float y, 
+	float z
+) const
+{
+	vector<pair<int, int>> res;
+	int idx_x;
+	int idx_xx;
+	int idx_y;
+	int idx_z;
+	int idx_zz;
+	vec3 start = this->terrain[0][0]->getStartPos();
+	vec3 end = this->terrain[this->size_h - 1][this->size_w - 1]->
+		getStartPos() + vec3(16.f, 0.f, -16.f);
+	if (x < start.x || x > end.x || z > start.z || z < end.z || y < 0 || y > 255)
+		return res;
+	x -= start.x;
+	x = abs(x);
+	idx_x = static_cast<int>(x) / 16;
+	idx_xx = static_cast<int>(x) % 16;
+	res.push_back({ idx_x, idx_xx });
+	idx_y = static_cast<int>(y) % 256;
+	res.push_back({ idx_y, -1 });
+	idx_z = static_cast<int>(z) / 16;
+	idx_zz = static_cast<int>(z) % 16;
+	res.push_back({ idx_z, idx_zz });
+	return res;
 }
