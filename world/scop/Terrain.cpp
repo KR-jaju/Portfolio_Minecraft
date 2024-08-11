@@ -166,6 +166,7 @@ void Terrain::terrainsetVerticesAndIndices()
 			this->terrain[i][j]->setVerticesAndIndices();
 		}
 	}
+	cout << "end vertices and indices" << endl;
 }
 
 vector<pair<int, int>> Terrain::coordinateToIndex(

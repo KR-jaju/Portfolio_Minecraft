@@ -5,8 +5,10 @@
 #include "scop.h"
 #include "Game.h"
 
+
 // test
 #include "Terrain.h"
+#include "time.h"
 // test 
 
 #define MAX_LOADSTRING 100
@@ -59,8 +61,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         1000.f
     );
     terrain.setCam(view, proj);
+    clock_t start, finish;
+    start = clock();
     terrain.createHeightMap();
+    finish = clock();
+    cout << "time(ms) map: " << static_cast<double>(finish - start) << endl;
+    start = clock();
     terrain.terrainsetVerticesAndIndices();
+    finish = clock();
+    cout << "time(ms) vertices and indices: " << static_cast<double>(finish - start) << endl;
     terrain.setRender();
 
     MSG msg = {};

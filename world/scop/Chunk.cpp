@@ -11,7 +11,8 @@
 #include "BlendState.h"
 #include "SamplerState.h"
 #include "TextureArray.h"
-#include <algorithm>
+#include <fstream>
+#include <sstream>
 
 Chunk::Chunk()
 {
@@ -58,6 +59,7 @@ void Chunk::setVerticesAndIndices()
 			}
 		}
 	}
+	this->updateFile();
 }
 
 
@@ -119,6 +121,138 @@ void Chunk::showChunk()
 		}
 		cout << endl;
 	}
+}
+
+void Chunk::readFile(string const& path)
+{
+	ifstream ifile;
+	int flag = 0;
+	char buffer[200];
+	VertexBlockUV vertex;
+
+	fill(
+		&this->chunk[0][0][0],
+		&this->chunk[0][0][0] + 16 * 256 * 16,
+		0
+	);
+	this->vertices = {};
+	this->indices = {};
+	ifile.open(path.c_str());
+	ifile.getline(buffer, 200);
+	string str, token;
+	for (int i = 0; i < 16; i++) {
+		for (int j = 0; j < 256; j++) {
+			ifile.getline(buffer, 200);
+			str = buffer;
+			stringstream stream(str);
+			int idx = 0;
+			while (getline(stream, token, ',')) {
+				this->chunk[i][j][idx] = stoi(token);
+				idx++;
+			}
+		}
+	}
+	ifile.getline(buffer, 200);
+	str = buffer;
+	int total = stoi(str);
+	if (total) {
+		for (int i = 0; i < total; i++) {
+			ifile.getline(buffer, 200);
+			str = buffer;
+			stringstream stream(str);
+			int idx = 0;
+			while (getline(stream, token, ',')) {
+				if (idx == 0)
+					vertex.type = stoi(token);
+				else if (idx == 1)
+					vertex.pos.x = stof(token);
+				else if (idx == 2)
+					vertex.pos.y = stof(token);
+				else if (idx == 3)
+					vertex.pos.z = stof(token);
+				else if (idx == 4)
+					vertex.uv.x = stof(token);
+				else if (idx == 5)
+					vertex.uv.y = stof(token);
+				else
+					vertex.dir = stoi(token);
+				idx++;
+			}
+			this->vertices.push_back(vertex);
+		}
+	}
+	ifile.getline(buffer, 200);
+	str = buffer;
+	total = stoi(str);
+	if (total) {
+		for (int i = 0; i < total; i++) {
+			ifile.getline(buffer, 200);
+			str = buffer;
+			stringstream stream(str);
+			while (getline(stream, token, ','))
+				this->indices.push_back(stoi(token));
+		}
+	}
+	ifile.getline(buffer, 200);
+	str = buffer;
+	this->block_cnt = stoi(str);
+}
+
+void Chunk::updateFile() const
+{
+	string file_name = "../chunk_files/";
+	file_name = file_name + to_string(this->start_pos.x) + "_"
+		+ to_string(this->start_pos.y) + "_"
+		+ to_string(this->start_pos.z) + ".txt";
+	ofstream ofile;
+	ofile.open(file_name);
+	string str = "chunk\n";
+	ofile.write(str.c_str(), str.size());
+	char c;
+	for (int i = 0; i < 16; i++) {
+		for (int j = 0; j < 256; j++) {
+			for (int k = 0; k < 16; k++) {
+				str = to_string(this->chunk[i][j][k]);
+				if (k == 15)
+					str += '\n';
+				else
+					str += ',';
+				ofile.write(str.c_str(), str.size());
+			}
+			ofile.write(&c, 1);
+		}
+	}
+	str = to_string(this->vertices.size()) + '\n';
+	ofile.write(str.c_str(), str.size());
+	for (int i = 0; i < this->vertices.size(); i++) {
+		str = to_string(this->vertices[i].type) + ' ';
+		str += to_string(this->vertices[i].pos.x) + ',';
+		str += to_string(this->vertices[i].pos.y) + ',';
+		str += to_string(this->vertices[i].pos.z) + ' ';
+		str += to_string(this->vertices[i].uv.x) + ',';
+		str += to_string(this->vertices[i].uv.y) + ' ';
+		str += to_string(this->vertices[i].dir) + '\n';
+		ofile.write(str.c_str(), str.size());
+	}
+	str = to_string(this->indices.size()) + "\n";
+	ofile.write(str.c_str(), str.size());
+	int cnt = 0;
+	str = "";
+	for (int i = 0; i < this->indices.size(); i++) {
+		str += to_string(this->indices[i]);
+		cnt++;
+		if (cnt == 3) {
+			str += '\n';
+			ofile.write(str.c_str(), str.size());
+			str = "";
+			cnt = 0;
+		}
+		else
+			str += ',';
+	}
+	str = to_string(this->block_cnt);
+	ofile.write(str.c_str(), str.size());
+	ofile.close();
 }
 
 vector<VertexBlockUV> Chunk::getBlockVertexBlockUV(
