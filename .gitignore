@@ -199,4 +199,4 @@ _Pvt_Extensions
 *.exe
 **/Binaries/
 **/bedrock-samples-main/
-**/chunk_files/
+chunk_files/
