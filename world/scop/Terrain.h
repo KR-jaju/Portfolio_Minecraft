@@ -1,5 +1,6 @@
 #pragma once
 
+#include <set>
 #include "PerlinNoise.h"
 
 class Graphics;
@@ -21,12 +22,17 @@ public:
 	void createHeightMap();
 	void terrainsetVerticesAndIndices();
 
+	// test func
+	void readTerrainForTest();
+	// test func end
+
 private:
 	vector<pair<int, int>> coordinateToIndex(float x, float y, float z) const;
 
 private:
 	Mat view;
 	Mat proj;
+	set<string> file_book;
 	map<vec3, uint32> object_book;
 	shared_ptr<Chunk> terrain[30][30];
 	int16 height_map[480][480];
@@ -39,7 +45,7 @@ private:
 	shared_ptr<TextureArray> texture_array;
 	shared_ptr<SamplerState> sampler_state;
 
-	int size_w = 8;
-	int size_h = 8;
+	int size_w = 1;
+	int size_h = 1;
 };
 

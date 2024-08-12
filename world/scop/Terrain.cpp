@@ -14,6 +14,7 @@ Terrain::Terrain(HWND hwnd, uint32 width, uint32 height)
 {
 	int dy[4] = { -1, 0, 1, 0 };
 	int dx[4] = { 0, 1, 0, -1 };
+	string file_name;
 
 	float sx = -16.f * this->size_w * 0.5f;
 	float sz = 16.f * this->size_h * 0.5f;
@@ -24,6 +25,10 @@ Terrain::Terrain(HWND hwnd, uint32 width, uint32 height)
 	for (int i = 0; i < this->size_h; i++) {
 		for (int j = 0; j < this->size_w; j++) {
 			this->terrain[i][j]->setStartPos(sx, 0, sz);
+			file_name = "../chunk_files/";
+			file_name += to_string(sx + 0.5) + "_";
+			file_name += to_string(sz - 0.5) + ".txt";
+			file_book.insert(file_name);
 			for (int k = 0; k < 4; k++) {
 				int ny = i + dy[k];
 				int nx = j + dx[k];
@@ -164,9 +169,26 @@ void Terrain::terrainsetVerticesAndIndices()
 	for (int i = 0; i < this->size_h; i++) {
 		for (int j = 0; j < this->size_w; j++) {
 			this->terrain[i][j]->setVerticesAndIndices();
+			this->terrain[i][j]->updateFile();
 		}
 	}
-	cout << "end vertices and indices" << endl;
+}
+
+void Terrain::readTerrainForTest()
+{
+	for (int i = 0; i < this->size_h; i++) {
+		for (int j = 0; j < this->size_w; j++)
+			this->terrain[i][j] = make_shared<Chunk>();
+	}
+	for (int i = 0; i < this->size_h; i++) {
+		for (int j = 0; j < this->size_w; j++) {
+			string str = *(this->file_book.begin());
+			set<string>::iterator it = this->file_book.find(str);
+			if (it != this->file_book.end()) {
+				this->terrain[i][j]->readFile(str);
+			}
+		}
+	}
 }
 
 vector<pair<int, int>> Terrain::coordinateToIndex(

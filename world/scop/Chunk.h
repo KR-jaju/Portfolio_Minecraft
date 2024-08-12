@@ -50,9 +50,9 @@ public:
 	int getBlockCnt();
 	void showChunk(); // test
 	void readFile(string const& path);
+	void updateFile() const;
 
 private:
-	void updateFile() const;
 	vector<VertexBlockUV> getBlockVertexBlockUV(
 		int x, 
 		int y, 
