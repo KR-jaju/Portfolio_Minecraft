@@ -35,16 +35,16 @@ Terrain::Terrain(HWND hwnd, uint32 width, uint32 height)
 				if (ny < 0 || ny >= this->size_h || nx < 0 || nx >= this->size_w)
 					continue;
 				if (dy[k] == -1) {
-					this->terrain[i][j]->setBack(this->terrain[ny][nx].get());
+					this->terrain[i][j]->setChunk(this->terrain[ny][nx].get(), "back");
 				}
 				else if (dy[k] == 1) {
-					this->terrain[i][j]->setFront(this->terrain[ny][nx].get());
+					this->terrain[i][j]->setChunk(this->terrain[ny][nx].get(), "front");
 				}
 				else if (dx[k] == -1) {
-					this->terrain[i][j]->setLeft(this->terrain[ny][nx].get());
+					this->terrain[i][j]->setChunk(this->terrain[ny][nx].get(), "left");
 				}
 				else if (dx[k] == 1) {
-					this->terrain[i][j]->setRight(this->terrain[ny][nx].get());
+					this->terrain[i][j]->setChunk(this->terrain[ny][nx].get(), "right");
 				}
 			}
 			sx += 16.f;
@@ -146,15 +146,17 @@ void Terrain::createHeightMap()
 		for (int j = 0; j < this->size_w; j++) {
 			for (int z = 0; z < 16; z++) {
 				for (int x = 0; x < 16; x++) {
+					int nx = x + 16 * j;
+					int nz = z + 16 * i;
 					double res = this->perlin_noise.getNoise2D(
-						(x + 16 * j) / 100.f,
-						(z + 16 * i) / 100.f,
+						(nx) / 100.f,
+						(nz) / 100.f,
 						5,
 						1.2f
 					);
 					res = ((res + 1.f) * 0.5f) * 30.f;
-					this->height_map[i][j] = static_cast<int16>(res);
-					for (int y = 0; y < this->height_map[i][j]; y++) {
+					this->height_map[nz][nx] = static_cast<int16>(res);
+					for (int y = 0; y < this->height_map[nz][nx]; y++) {
 						this->terrain[i][j]->setBlockInChunk(
 							x, y, z, 1);
 					}
@@ -180,14 +182,28 @@ void Terrain::readTerrainForTest()
 		for (int j = 0; j < this->size_w; j++)
 			this->terrain[i][j] = make_shared<Chunk>();
 	}
+	set<string>::iterator it = this->file_book.begin();
 	for (int i = 0; i < this->size_h; i++) {
 		for (int j = 0; j < this->size_w; j++) {
-			string str = *(this->file_book.begin());
-			set<string>::iterator it = this->file_book.find(str);
-			if (it != this->file_book.end()) {
+			string str = *(it);
+			set<string>::iterator itt = this->file_book.find(str);
+			if (itt != this->file_book.end()) {
 				this->terrain[i][j]->readFile(str);
 			}
+			it++;
 		}
+	}
+}
+
+void Terrain::updateTerrainForTest()
+{
+	vector<Index3> arr;
+	cout << "height: " << this->height_map[15][15] << endl;
+	for (int i = 0; i < this->height_map[15][15]; i++)
+		arr.push_back({ 15, i, 15 });
+	for (int i = 0; i < this->size_h; i++) {
+		for (int j = 0; j < this->size_w; j++)
+			this->terrain[i][j]->deleteBlock(arr);
 	}
 }
 

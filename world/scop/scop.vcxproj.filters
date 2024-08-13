@@ -82,27 +82,15 @@
     <Filter Include="소스 파일\World\Noise">
       <UniqueIdentifier>{6f0ac322-30ef-458f-a540-cff2819a55ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\Utils">
+      <UniqueIdentifier>{14b21239-b4ba-4ea6-be9a-477e2f0b8ba9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\etc">
+      <UniqueIdentifier>{fe1ffa22-c76d-4dfb-9b0a-5ce31e97791e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="scop.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="World.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="SimpleMath.h">
@@ -159,18 +147,27 @@
     <ClInclude Include="PerlinNoise.h">
       <Filter>소스 파일\World\Noise</Filter>
     </ClInclude>
+    <ClInclude Include="WorldUtils.h">
+      <Filter>소스 파일\World\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>헤더 파일\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>헤더 파일\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="scop.h">
+      <Filter>헤더 파일\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일\etc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="SimpleMath.cpp">
@@ -227,6 +224,9 @@
     <ClCompile Include="PerlinNoise.cpp">
       <Filter>소스 파일\World\Noise</Filter>
     </ClCompile>
+    <ClCompile Include="WorldUtils.cpp">
+      <Filter>소스 파일\World\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="scop.rc">
@@ -256,7 +256,6 @@
   <ItemGroup>
     <FxCompile Include="PixelShader.hlsl" />
     <FxCompile Include="VertexShader.hlsl" />
-    <FxCompile Include="VertexShaderUV.hlsl" />
     <FxCompile Include="PixelShaderUV.hlsl" />
     <FxCompile Include="TestVertexShader.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\TestShader</Filter>
@@ -270,6 +269,7 @@
     <FxCompile Include="WorldPixelShader.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle</Filter>
     </FxCompile>
+    <FxCompile Include="VertexShaderUV.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

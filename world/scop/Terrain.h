@@ -1,13 +1,8 @@
 #pragma once
 
-#include <set>
+#include "WorldUtils.h"
 #include "PerlinNoise.h"
 
-class Graphics;
-class RasterizerState;
-class TextureArray;
-class BlendState;
-class SamplerState;
 class Chunk;
 
 class Terrain
@@ -24,6 +19,7 @@ public:
 
 	// test func
 	void readTerrainForTest();
+	void updateTerrainForTest();
 	// test func end
 
 private:

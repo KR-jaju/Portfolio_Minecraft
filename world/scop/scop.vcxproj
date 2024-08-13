@@ -153,7 +153,6 @@
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="Game.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="pch.h" />
@@ -171,7 +170,7 @@
     <ClInclude Include="TextureArray.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="WICTextureLoader.h" />
-    <ClInclude Include="World.h" />
+    <ClInclude Include="WorldUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BlendState.cpp" />
@@ -179,7 +178,6 @@
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
-    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="pch.cpp">
@@ -198,7 +196,7 @@
     <ClCompile Include="TextureArray.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="WICTextureLoader.cpp" />
-    <ClCompile Include="World.cpp" />
+    <ClCompile Include="WorldUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="scop.rc" />

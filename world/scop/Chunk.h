@@ -1,24 +1,6 @@
 #pragma once
 
-enum class Face {
-	Top,
-	Bottom,
-	Front,
-	Back,
-	Left,
-	Right
-};
-
-class PixelShader;
-class VertexShader;
-template<typename T> class Buffer;
-class Graphics;
-class ConstantBuffer;
-class RasterizerState;
-class BlendState;
-class InputLayout;
-class SamplerState;
-class TextureArray;
+#include "WorldUtils.h"
 
 class Chunk
 {
@@ -26,6 +8,7 @@ public:
 	Chunk();
 	~Chunk();
 	void setVerticesAndIndices();
+	void updateVerticesAndIndices();
 	void setRender(
 		shared_ptr<Graphics> graphic,
 		shared_ptr<RasterizerState> rasterizer_state, 
@@ -40,15 +23,13 @@ public:
 		shared_ptr<TextureArray> const& texture_array
 	);
 	void setBlockInChunk(int x, int y, int z, int16 type);
+	void addBlock(Index3, int16 type);
+	void deleteBlock(vector<Index3> const& block_arr);
 	int getBlock(int x, int y, int z) const;
 	void setStartPos(float x, float y, float z);
 	vec3 getStartPos() const;
-	void setLeft(Chunk* chunk);
-	void setRight(Chunk* chunk);
-	void setFront(Chunk* chunk);
-	void setBack(Chunk* chunk);
+	void setChunk(Chunk* chunk, string const& str);
 	int getBlockCnt();
-	void showChunk(); // test
 	void readFile(string const& path);
 	void updateFile() const;
 
@@ -57,16 +38,19 @@ private:
 		int x, 
 		int y, 
 		int z,
-		int type
+		int type,
+		vector<int> const& check_arr
 	) const;
 	vector<uint32> getBlockIndices(
 		int x,
 		int y,
 		int z,
-		uint32& start
+		uint32& start,
+		vector<int> const& check_arr
 	) const;
 	bool checkBoundary(int x, int y, int z) const;
-	vector<bool> checkBlock(int x, int y, int z) const;
+	vector<int> checkBlock(int x, int y, int z) const;
+	vector<int> checkBlockReverse(int x, int y, int z) const;
 	vector<vec3> getBlockFacePos(
 		float x,
 		float y,
@@ -96,7 +80,7 @@ private:
 	shared_ptr<ConstantBuffer> constant_buffer;
 	vec3 start_pos;
 	MVP mvp;
-	
+	set<Index3> blocks;
 
 private:
 	shared_ptr<Graphics> graphic;

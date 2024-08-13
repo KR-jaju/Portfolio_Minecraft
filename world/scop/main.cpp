@@ -3,7 +3,6 @@
 #include "pch.h"
 #include "framework.h"
 #include "scop.h"
-#include "Game.h"
 
 
 // test
@@ -40,18 +39,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SCOP));
 
-    /*Game game;
-    game.Init(hWnd, 2);*/
-
-
-    //Test test(hWnd, 800, 650);
-    //test.setDrawBox();
-    //test.setDrawTexSkel();
-
+    // test code
     Terrain terrain(hWnd, 800, 650);
     Mat view = XMMatrixLookToLH(
-        vec3(0, 50, 50),
-        XMVector3Normalize(vec3(0, -1, -1.f)),
+        vec3(0, 50, -50),
+        XMVector3Normalize(vec3(0, -1, 1.f)),
         vec3(0, 1, 0)
     );
     Mat proj = XMMatrixPerspectiveFovLH(
@@ -71,10 +63,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     finish = clock();
     cout << "time(ms) vertices and indices: " << static_cast<double>(finish - start) << endl;
     start = clock();
-    terrain.readTerrainForTest();
+    terrain.updateTerrainForTest();
     finish = clock();
     cout << "time(ms) read vertices and indices: " << static_cast<double>(finish - start) << endl;
     terrain.setRender();
+    // test code
 
     MSG msg = {};
 

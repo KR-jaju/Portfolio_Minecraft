@@ -22,8 +22,8 @@ Chunk::Chunk()
 	this->right = nullptr;
 	this->block_cnt = 0;
 	fill(
-		&this->chunk[0][0][0], 
-		&this->chunk[0][0][0] + 16 * 256 * 16, 
+		&this->chunk[0][0][0],
+		&this->chunk[0][0][0] + 16 * 256 * 16,
 		0
 	);
 }
@@ -41,11 +41,19 @@ void Chunk::setVerticesAndIndices()
 			for (int x = 0; x < 16; x++) {
 				if (this->chunk[x][y][z] == 0)
 					continue;
+				vector<int> check_arr = this->checkBlock(x, y, z);
+				if (check_arr.size() == 0)
+					continue;
+				this->blocks.insert({ x, y, z });
 				vector<VertexBlockUV> block_vertices =
-					this->getBlockVertexBlockUV(x, y, z, 
-						this->chunk[x][y][z]);
+					this->getBlockVertexBlockUV(x, y, z,
+						this->chunk[x][y][z],
+						check_arr
+					);
 				vector<uint32> block_indices =
-					this->getBlockIndices(x, y, z, index);
+					this->getBlockIndices(x, y, z, index,
+						check_arr
+					);
 				this->vertices.insert(
 					this->vertices.end(),
 					block_vertices.begin(),
@@ -61,6 +69,36 @@ void Chunk::setVerticesAndIndices()
 	}
 }
 
+void Chunk::updateVerticesAndIndices()
+{
+	uint32 index = 0;
+	this->vertices.clear();
+	this->indices.clear();
+	set<Index3>::iterator it = this->blocks.begin();
+	for (it; it != this->blocks.end(); it++) {
+		vector<int> check_arr = this->checkBlock(it->x, it->y, it->z);
+		vector<VertexBlockUV> block_vertices =
+			this->getBlockVertexBlockUV(it->x, it->y, it->z,
+				this->chunk[it->x][it->y][it->z],
+				check_arr
+			);
+		vector<uint32> block_indices =
+			this->getBlockIndices(it->x, it->y, it->z, index,
+				check_arr
+			);
+		this->vertices.insert(
+			this->vertices.end(),
+			block_vertices.begin(),
+			block_vertices.end()
+		);
+		this->indices.insert(
+			this->indices.end(),
+			block_indices.begin(),
+			block_indices.end()
+		);
+	}
+}
+
 
 
 void Chunk::setBlockInChunk(int x, int y, int z, int16 type)
@@ -69,8 +107,51 @@ void Chunk::setBlockInChunk(int x, int y, int z, int16 type)
 	this->block_cnt++;
 }
 
+void Chunk::addBlock(Index3, int16 type)
+{
+}
+
+void Chunk::deleteBlock(vector<Index3> const& block_arr)
+{
+	cout << block_arr.size() << endl;
+	set<Index3>::iterator it;
+	int dx[] = { 0, 0, 0, 0, -1, 1 };
+	int dy[] = { 1, -1, 0, 0, 0, 0 };
+	int dz[] = { 0, 0, 1, -1, 0, 0 };
+
+	for (int i = 0; i < block_arr.size(); i++) {
+		it = this->blocks.find(block_arr[i]);
+		if (it == this->blocks.end())
+			continue;
+		vector<int> move_arr = this->checkBlockReverse(
+			block_arr[i].x,
+			block_arr[i].y,
+			block_arr[i].z
+		);
+		for (int j = 0; j < move_arr.size(); j++) {
+			int nx = block_arr[i].x + dx[move_arr[j]];
+			int ny = block_arr[i].y + dy[move_arr[j]];
+			int nz = block_arr[i].z + dz[move_arr[j]];
+			set<Index3>::iterator itt = this->blocks.find({ nx, ny, nz });
+			if (itt == this->blocks.end())
+				this->blocks.insert({ nx, ny, nz });
+		}
+		this->chunk[block_arr[i].x][block_arr[i].y][block_arr[i].z] = 0;
+		this->blocks.erase(it);
+	}
+	this->updateVerticesAndIndices();
+}
+
 int Chunk::getBlock(int x, int y, int z) const
 {
+	if (x < 0)
+		return this->left->getBlock(16 + x, y, z);
+	if (x >= 16)
+		return this->right->getBlock(x % 16, y, z);
+	if (z < 0)
+		return this->back->getBlock(x, y, 16 + z);
+	if (z >= 16)
+		return this->front->getBlock(x, y, z % 16);
 	return this->chunk[x][y][z];
 }
 
@@ -84,24 +165,16 @@ vec3 Chunk::getStartPos() const
 	return this->start_pos;
 }
 
-void Chunk::setLeft(Chunk* chunk)
+void Chunk::setChunk(Chunk* chunk, string const& str)
 {
-	this->left = chunk;
-}
-
-void Chunk::setRight(Chunk* chunk)
-{
-	this->right = chunk;
-}
-
-void Chunk::setFront(Chunk* chunk)
-{
-	this->front = chunk;
-}
-
-void Chunk::setBack(Chunk* chunk)
-{
-	this->back = chunk;
+	if (str == "left")
+		this->left = chunk;
+	else if (str == "right")
+		this->right = chunk;
+	else if (str == "front")
+		this->front = chunk;
+	else if (str == "back")
+		this->back = chunk;
 }
 
 int Chunk::getBlockCnt()
@@ -109,192 +182,35 @@ int Chunk::getBlockCnt()
 	return this->block_cnt;
 }
 
-void Chunk::showChunk()
-{
-	for (int i = 0; i < 256; i++) {
-		for (int j = 0; j < 16; j++) {
-			for (int k = 0; k < 16; k++) {
-				cout << this->chunk[j][i][k] << ' ';
-			}
-			cout << endl;
-		}
-		cout << endl;
-	}
-}
-
-void Chunk::readFile(string const& path)
-{
-	ifstream ifile;
-	int flag = 0;
-	char buffer[200];
-	VertexBlockUV vertex;
-
-	fill(
-		&this->chunk[0][0][0],
-		&this->chunk[0][0][0] + 16 * 256 * 16,
-		0
-	);
-	this->vertices = {};
-	this->indices = {};
-	ifile.open(path.c_str());
-	ifile.getline(buffer, 200);
-	string str, token;
-	str = buffer;
-	stringstream stream(str);
-	getline(stream, token, ',');
-	this->start_pos.x = stof(token);
-	this->start_pos.y = 0.5f;
-	getline(stream, token, ',');
-	this->start_pos.z = stof(token);
-	for (int i = 0; i < 16; i++) {
-		for (int j = 0; j < 256; j++) {
-			ifile.getline(buffer, 200);
-			str = buffer;
-			stream.clear();
-			stream.str(str);
-			int idx = 0;
-			while (getline(stream, token, ',')) {
-				this->chunk[i][j][idx] = stoi(token);
-				idx++;
-			}
-		}
-	}
-	ifile.getline(buffer, 200);
-	str = buffer;
-	int total = stoi(str);
-	if (total) {
-		for (int i = 0; i < total; i++) {
-			ifile.getline(buffer, 200);
-			str = buffer;
-			stream.clear();
-			stream.str(str);
-			int idx = 0;
-			while (getline(stream, token, ',')) {
-				if (idx == 0)
-					vertex.type = stoi(token);
-				else if (idx == 1)
-					vertex.pos.x = stof(token);
-				else if (idx == 2)
-					vertex.pos.y = stof(token);
-				else if (idx == 3)
-					vertex.pos.z = stof(token);
-				else if (idx == 4)
-					vertex.uv.x = stof(token);
-				else if (idx == 5)
-					vertex.uv.y = stof(token);
-				else
-					vertex.dir = stoi(token);
-				idx++;
-			}
-			this->vertices.push_back(vertex);
-		}
-	}
-	ifile.getline(buffer, 200);
-	str = buffer;
-	total = stoi(str);
-	if (total) {
-		for (int i = 0; i < total; i++) {
-			ifile.getline(buffer, 200);
-			str = buffer;
-			stream.clear();
-			stream.str(str);
-			while (getline(stream, token, ','))
-				this->indices.push_back(stoi(token));
-		}
-	}
-	ifile.getline(buffer, 200);
-	str = buffer;
-	this->block_cnt = stoi(str);
-}
-
-void Chunk::updateFile() const
-{
-	string file_name = "../chunk_files/";
-	file_name = file_name + to_string(this->start_pos.x) + "_"
-		+ to_string(this->start_pos.z) + ".txt";
-	ofstream ofile;
-	ofile.open(file_name);
-	string str = to_string(this->start_pos.x) + ",";
-	str += to_string(this->start_pos.y) + ",";
-	str += to_string(this->start_pos.z) + "\n";
-	ofile.write(str.c_str(), str.size());
-	for (int i = 0; i < 16; i++) {
-		for (int j = 0; j < 256; j++) {
-			str = "";
-			for (int k = 0; k < 16; k++) {
-				str += to_string(this->chunk[i][j][k]);
-				if (k == 15)
-					str += '\n';
-				else
-					str += ',';
-			}
-			ofile.write(str.c_str(), str.size());
-		}
-	}
-	str = to_string(this->vertices.size()) + '\n';
-	ofile.write(str.c_str(), str.size());
-	for (int i = 0; i < this->vertices.size(); i++) {
-		str = to_string(this->vertices[i].type) + ',';
-		str += to_string(this->vertices[i].pos.x) + ',';
-		str += to_string(this->vertices[i].pos.y) + ',';
-		str += to_string(this->vertices[i].pos.z) + ',';
-		str += to_string(this->vertices[i].uv.x) + ',';
-		str += to_string(this->vertices[i].uv.y) + ',';
-		str += to_string(this->vertices[i].dir) + '\n';
-		ofile.write(str.c_str(), str.size());
-	}
-	str = to_string(this->indices.size() / 3) + "\n";
-	ofile.write(str.c_str(), str.size());
-	int cnt = 0;
-	str = "";
-	for (int i = 0; i < this->indices.size(); i++) {
-		str += to_string(this->indices[i]);
-		cnt++;
-		if (cnt == 3) {
-			str += '\n';
-			ofile.write(str.c_str(), str.size());
-			str = "";
-			cnt = 0;
-		}
-		else
-			str += ',';
-	}
-	str = to_string(this->block_cnt);
-	ofile.write(str.c_str(), str.size());
-	ofile.close();
-}
-
 vector<VertexBlockUV> Chunk::getBlockVertexBlockUV(
-	int x, 
-	int y, 
+	int x,
+	int y,
 	int z,
-	int type
+	int type,
+	vector<int> const& check_arr
 ) const
 {
 	vector<VertexBlockUV> cube_vertices;
-	vector<bool> put_able_arr = this->checkBlock(x, y, z);
 	vec2 start = vec2(0.f, 0.f);
 	vec2 end = vec2(1.f, 1.f);
 
-	for (int i = 0; i < put_able_arr.size(); i++) {
-		Face flag = static_cast<Face>(i);
+	for (int i = 0; i < check_arr.size(); i++) {
+		Face flag = static_cast<Face>(check_arr[i]);
 		VertexBlockUV tmp_vertex;
 		vector<vec3> positions;
 		vector<vec2> texcoords;
-		if (put_able_arr[i]) {
-			positions = this->getBlockFacePos(x, y, z, flag);
-			texcoords = this->getBlockFaceTexcoord(
-				start,
-				end,
-				flag
-			);
-			for (int j = 0; j < 4; j++) {
-				tmp_vertex.type = type;
-				tmp_vertex.pos = positions[j];
-				tmp_vertex.uv = texcoords[j];
-				tmp_vertex.dir = i;
-				cube_vertices.push_back(tmp_vertex);
-			}
+		positions = this->getBlockFacePos(x, y, z, flag);
+		texcoords = this->getBlockFaceTexcoord(
+			start,
+			end,
+			flag
+		);
+		for (int j = 0; j < 4; j++) {
+			tmp_vertex.type = type;
+			tmp_vertex.pos = positions[j];
+			tmp_vertex.uv = texcoords[j];
+			tmp_vertex.dir = check_arr[i];
+			cube_vertices.push_back(tmp_vertex);
 		}
 	}
 	return cube_vertices;
@@ -304,22 +220,20 @@ vector<uint32> Chunk::getBlockIndices(
 	int x,
 	int y,
 	int z,
-	uint32& start
+	uint32& start,
+	vector<int> const& check_arr
 ) const
 {
 	vector<uint32> block_indices;
-	vector<bool> able_set_arr = this->checkBlock(x, y, z);
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < check_arr.size(); i++) {
 		vector<uint32> face_indices;
-		if (able_set_arr[i]) {
-			face_indices = this->getBlockFaceIndices(start);
-			start += 4;
-			block_indices.insert(
-				block_indices.end(),
-				face_indices.begin(),
-				face_indices.end()
-			);
-		}
+		face_indices = this->getBlockFaceIndices(start);
+		start += 4;
+		block_indices.insert(
+			block_indices.end(),
+			face_indices.begin(),
+			face_indices.end()
+		);
 	}
 	return block_indices;
 }
@@ -335,77 +249,66 @@ bool Chunk::checkBoundary(int x, int y, int z) const
 	return true;
 }
 
-void defineTrueFalse(vector<bool>& vec, int flag) {
-	if (flag)
-		vec.push_back(false);
-	else
-		vec.push_back(true);
+void defineTrueFace(vector<int>& vec, int flag, int idx) {
+	if (flag != 0)
+		return;
+	vec.push_back(idx);
 }
 
-vector<bool> Chunk::checkBlock(int x, int y, int z) const
+
+vector<int> Chunk::checkBlock(int x, int y, int z) const
 {
-	vector<bool> block_check_arr;
-	int dx[] = {0, 0, 0, 0, -1, 1};
-	int dy[] = {1, -1, 0, 0, 0, 0};
-	int dz[] = {0, 0, 1, -1, 0, 0};
+	vector<int> face_arr;
+	int dx[] = { 0, 0, 0, 0, -1, 1 };
+	int dy[] = { 1, -1, 0, 0, 0, 0 };
+	int dz[] = { 0, 0, 1, -1, 0, 0 };
 	for (int i = 0; i < 6; i++) {
 		int nx = x + dx[i];
 		int ny = y + dy[i];
 		int nz = z + dz[i];
 		if (this->checkBoundary(nx, ny, nz))
-			defineTrueFalse(block_check_arr, this->chunk[nx][ny][nz]);
-		else if (ny < 0 || ny >= 256)
-			block_check_arr.push_back(true);
-		else if (nx < 0) {
-			if (this->left == nullptr)
-				block_check_arr.push_back(true);
-			else {
-				defineTrueFalse(
-					block_check_arr, 
-					this->left->getBlock(15, ny, nz)
-				);
-			}
-		}
-		else if (nx >= 16) {
-			if (this->right == nullptr)
-				block_check_arr.push_back(true);
-			else {
-				defineTrueFalse(
-					block_check_arr,
-					this->right->getBlock(0, ny, nz)
-				);
-			}
-		}
-		else if (nz < 0) {
-			if (this->back == nullptr) {
-				block_check_arr.push_back(true);
-			}
-			else {
-				defineTrueFalse(
-					block_check_arr,
-					this->back->getBlock(nx, ny, 15)
-				);
-			}
-		}
-		else if (nz >= 16) {
-			if (this->front == nullptr)
-				block_check_arr.push_back(true);
-			else {
-				defineTrueFalse(
-					block_check_arr,
-					this->front->getBlock(nx, ny, 0)
-				);
-			}
+			defineTrueFace(face_arr, this->chunk[nx][ny][nz], i);
+		else {
+			if (ny < 0 || ny >= 256)
+				face_arr.push_back(i);
+			else if (nx < 0 && this->left == nullptr)
+				face_arr.push_back(i);
+			else if (nx >= 16 && this->right == nullptr)
+				face_arr.push_back(i);
+			else if (nz < 0 && this->back == nullptr)
+				face_arr.push_back(i);
+			else if (nz >= 16 && this->front == nullptr)
+				face_arr.push_back(i);
+			else
+				defineTrueFace(face_arr, this->getBlock(nx, ny, nz), i);
 		}
 	}
-	return block_check_arr;
+	return face_arr;
+}
+
+vector<int> Chunk::checkBlockReverse(int x, int y, int z) const
+{
+	vector<int> face_arr;
+	int dx[] = { 0, 0, 0, 0, -1, 1 };
+	int dy[] = { 1, -1, 0, 0, 0, 0 };
+	int dz[] = { 0, 0, 1, -1, 0, 0 };
+	for (int i = 0; i < 6; i++) {
+		int nx = x + dx[i];
+		int ny = y + dy[i];
+		int nz = z + dz[i];
+		if (this->checkBoundary(nx, ny, nz)) {
+			if (this->chunk[nx][ny][nz])
+				face_arr.push_back(i);
+		}
+	}
+	return face_arr;
 }
 
 vector<vec3> Chunk::getBlockFacePos
 (
-	float x, 
-	float y, 
-	float z, 
+	float x,
+	float y,
+	float z,
 	Face block_face
 ) const
 {
@@ -459,8 +362,8 @@ vector<vec3> Chunk::getBlockFacePos
 
 vector<vec2> Chunk::getBlockFaceTexcoord
 (
-	vec2 start, 
-	vec2 end, 
+	vec2 start,
+	vec2 end,
 	Face block_face
 ) const
 {
@@ -611,8 +514,8 @@ void Chunk::setRender
 
 void Chunk::Render
 (
-	Mat view, 
-	Mat proj, 
+	Mat view,
+	Mat proj,
 	shared_ptr<TextureArray> const& texture_array
 )
 {
@@ -690,4 +593,147 @@ void Chunk::Render
 		0,
 		0
 	);
+}
+
+void Chunk::readFile(string const& path)
+{
+	ifstream ifile;
+	int flag = 0;
+	char buffer[200];
+	VertexBlockUV vertex;
+
+	fill(
+		&this->chunk[0][0][0],
+		&this->chunk[0][0][0] + 16 * 256 * 16,
+		0
+	);
+	this->vertices = {};
+	this->indices = {};
+	ifile.open(path.c_str());
+	ifile.getline(buffer, 200);
+	string str, token;
+	str = buffer;
+	stringstream stream(str);
+	getline(stream, token, ',');
+	this->start_pos.x = stof(token);
+	this->start_pos.y = 0.5f;
+	getline(stream, token, ',');
+	this->start_pos.z = stof(token);
+	for (int i = 0; i < 16; i++) {
+		for (int j = 0; j < 256; j++) {
+			ifile.getline(buffer, 200);
+			str = buffer;
+			stream.clear();
+			stream.str(str);
+			int idx = 0;
+			while (getline(stream, token, ',')) {
+				this->chunk[i][j][idx] = stoi(token);
+				idx++;
+			}
+		}
+	}
+	ifile.getline(buffer, 200);
+	str = buffer;
+	int total = stoi(str);
+	if (total) {
+		for (int i = 0; i < total; i++) {
+			ifile.getline(buffer, 200);
+			str = buffer;
+			stream.clear();
+			stream.str(str);
+			int idx = 0;
+			while (getline(stream, token, ',')) {
+				if (idx == 0)
+					vertex.type = stoi(token);
+				else if (idx == 1)
+					vertex.pos.x = stof(token);
+				else if (idx == 2)
+					vertex.pos.y = stof(token);
+				else if (idx == 3)
+					vertex.pos.z = stof(token);
+				else if (idx == 4)
+					vertex.uv.x = stof(token);
+				else if (idx == 5)
+					vertex.uv.y = stof(token);
+				else
+					vertex.dir = stoi(token);
+				idx++;
+			}
+			this->vertices.push_back(vertex);
+		}
+	}
+	ifile.getline(buffer, 200);
+	str = buffer;
+	total = stoi(str);
+	if (total) {
+		for (int i = 0; i < total; i++) {
+			ifile.getline(buffer, 200);
+			str = buffer;
+			stream.clear();
+			stream.str(str);
+			while (getline(stream, token, ','))
+				this->indices.push_back(stoi(token));
+		}
+	}
+	ifile.getline(buffer, 200);
+	str = buffer;
+	this->block_cnt = stoi(str);
+	ifile.close();
+}
+
+void Chunk::updateFile() const
+{
+	string file_name = "../chunk_files/";
+	file_name = file_name + to_string(this->start_pos.x) + "_"
+		+ to_string(this->start_pos.z) + ".txt";
+	ofstream ofile;
+	ofile.open(file_name);
+	string str = to_string(this->start_pos.x) + ",";
+	str += to_string(this->start_pos.y) + ",";
+	str += to_string(this->start_pos.z) + "\n";
+	ofile.write(str.c_str(), str.size());
+	for (int i = 0; i < 16; i++) {
+		for (int j = 0; j < 256; j++) {
+			str = "";
+			for (int k = 0; k < 16; k++) {
+				str += to_string(this->chunk[i][j][k]);
+				if (k == 15)
+					str += '\n';
+				else
+					str += ',';
+			}
+			ofile.write(str.c_str(), str.size());
+		}
+	}
+	str = to_string(this->vertices.size()) + '\n';
+	ofile.write(str.c_str(), str.size());
+	for (int i = 0; i < this->vertices.size(); i++) {
+		str = to_string(this->vertices[i].type) + ',';
+		str += to_string(this->vertices[i].pos.x) + ',';
+		str += to_string(this->vertices[i].pos.y) + ',';
+		str += to_string(this->vertices[i].pos.z) + ',';
+		str += to_string(this->vertices[i].uv.x) + ',';
+		str += to_string(this->vertices[i].uv.y) + ',';
+		str += to_string(this->vertices[i].dir) + '\n';
+		ofile.write(str.c_str(), str.size());
+	}
+	str = to_string(this->indices.size() / 3) + "\n";
+	ofile.write(str.c_str(), str.size());
+	int cnt = 0;
+	str = "";
+	for (int i = 0; i < this->indices.size(); i++) {
+		str += to_string(this->indices[i]);
+		cnt++;
+		if (cnt == 3) {
+			str += '\n';
+			ofile.write(str.c_str(), str.size());
+			str = "";
+			cnt = 0;
+		}
+		else
+			str += ',';
+	}
+	str = to_string(this->block_cnt);
+	ofile.write(str.c_str(), str.size());
+	ofile.close();
 }
