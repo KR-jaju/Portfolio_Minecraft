@@ -66,7 +66,7 @@ private:
 	vector<uint32> getBlockFaceIndices(uint32 start) const;
 	
 private:
-	int16 chunk[16][256][16];
+	int16 chunk[16 * 16 * 256];
 	int block_cnt;
 	Chunk* front;
 	Chunk* back;
@@ -80,7 +80,7 @@ private:
 	shared_ptr<ConstantBuffer> constant_buffer;
 	vec3 start_pos;
 	MVP mvp;
-	set<Index3> blocks;
+	unordered_map<Index3, bool, Index3Hash> blocks;
 
 private:
 	shared_ptr<Graphics> graphic;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <set>
+#include <unordered_map>
 
 class PixelShader;
 class VertexShader;
@@ -34,5 +35,16 @@ struct Index3 {
 			return this->y < idx3.y;
 		}
 		return this->x < idx3.x;
+	}
+
+	bool operator==(Index3 const& idx3) const {
+		return this->x == idx3.x && this->y == idx3.y &&
+			this->z == idx3.z;
+	}
+};
+
+struct Index3Hash {
+	size_t operator() (Index3 const& idx3) const {
+		return hash<int>()(idx3.x) ^ hash<int>()(idx3.y) ^ hash<int>()(idx3.z);
 	}
 };

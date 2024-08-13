@@ -41,7 +41,7 @@ private:
 	shared_ptr<TextureArray> texture_array;
 	shared_ptr<SamplerState> sampler_state;
 
-	int size_w = 1;
-	int size_h = 1;
+	int size_w = 2;
+	int size_h = 2;
 };
 

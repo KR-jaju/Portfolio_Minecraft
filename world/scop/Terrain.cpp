@@ -9,6 +9,7 @@
 #include "Chunk.h"
 #include <fstream>
 
+#include <time.h>
 
 Terrain::Terrain(HWND hwnd, uint32 width, uint32 height)
 {
@@ -197,14 +198,32 @@ void Terrain::readTerrainForTest()
 
 void Terrain::updateTerrainForTest()
 {
-	vector<Index3> arr;
-	cout << "height: " << this->height_map[15][15] << endl;
+	vector<vector<Index3>> arr;
+	vector<Index3> rr;
 	for (int i = 0; i < this->height_map[15][15]; i++)
-		arr.push_back({ 15, i, 15 });
+		rr.push_back({ 15, i, 15 });
+	arr.push_back(rr);
+	rr.clear();
+	for (int i = 0; i < this->height_map[15][16]; i++)
+		rr.push_back({ 0, i, 15 });
+	arr.push_back(rr);
+	rr.clear();
+	for (int i = 0; i < this->height_map[16][15]; i++)
+		rr.push_back({ 15, i, 0 });
+	arr.push_back(rr);
+	rr.clear();
+	for (int i = 0; i < this->height_map[16][16]; i++)
+		rr.push_back({ 0, i, 0 });
+	arr.push_back(rr);
+	clock_t start, finish;
+	start = clock();
+	int idx = 0;
 	for (int i = 0; i < this->size_h; i++) {
 		for (int j = 0; j < this->size_w; j++)
-			this->terrain[i][j]->deleteBlock(arr);
+			this->terrain[i][j]->deleteBlock(arr[idx++]);
 	}
+	finish = clock();
+	cout << "time(ms) updateTerrainForTest: " << static_cast<double>(finish - start) << endl;
 }
 
 vector<pair<int, int>> Terrain::coordinateToIndex(

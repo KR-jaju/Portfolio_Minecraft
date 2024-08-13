@@ -22,8 +22,8 @@ Chunk::Chunk()
 	this->right = nullptr;
 	this->block_cnt = 0;
 	fill(
-		&this->chunk[0][0][0],
-		&this->chunk[0][0][0] + 16 * 256 * 16,
+		this->chunk,
+		this->chunk + 16 * 256 * 16,
 		0
 	);
 }
@@ -36,18 +36,18 @@ void Chunk::setVerticesAndIndices()
 {
 	VertexBlockUV vertex;
 	uint32 index = 0;
-	for (int z = 0; z < 16; z++) {
-		for (int y = 0; y < 256; y++) {
+	for (int y = 0; y < 256; y++) {
+		for (int z = 0; z < 16; z++) {
 			for (int x = 0; x < 16; x++) {
-				if (this->chunk[x][y][z] == 0)
+				if (this->chunk[x + z * 16 + y * 16 * 16] == 0)
 					continue;
 				vector<int> check_arr = this->checkBlock(x, y, z);
 				if (check_arr.size() == 0)
 					continue;
-				this->blocks.insert({ x, y, z });
+				this->blocks.insert({ { x, y, z}, true });
 				vector<VertexBlockUV> block_vertices =
 					this->getBlockVertexBlockUV(x, y, z,
-						this->chunk[x][y][z],
+						this->chunk[x + z * 16 + y * 16 * 16],
 						check_arr
 					);
 				vector<uint32> block_indices =
@@ -74,16 +74,22 @@ void Chunk::updateVerticesAndIndices()
 	uint32 index = 0;
 	this->vertices.clear();
 	this->indices.clear();
-	set<Index3>::iterator it = this->blocks.begin();
+	int jz = 16;
+	int jy = 16 * 16;
+	unordered_map<Index3, bool>::iterator it = this->blocks.begin();
 	for (it; it != this->blocks.end(); it++) {
-		vector<int> check_arr = this->checkBlock(it->x, it->y, it->z);
+		vector<int> check_arr = this->checkBlock(
+			it->first.x, it->first.y, it->first.z);
 		vector<VertexBlockUV> block_vertices =
-			this->getBlockVertexBlockUV(it->x, it->y, it->z,
-				this->chunk[it->x][it->y][it->z],
+			this->getBlockVertexBlockUV(
+				it->first.x, it->first.y, it->first.z,
+				this->chunk[it->first.x + it->first.z * jz + it->first.y * jy],
 				check_arr
 			);
 		vector<uint32> block_indices =
-			this->getBlockIndices(it->x, it->y, it->z, index,
+			this->getBlockIndices(
+				it->first.x, it->first.y, it->first.z, 
+				index,
 				check_arr
 			);
 		this->vertices.insert(
@@ -103,7 +109,7 @@ void Chunk::updateVerticesAndIndices()
 
 void Chunk::setBlockInChunk(int x, int y, int z, int16 type)
 {
-	this->chunk[x][y][z] = type;
+	this->chunk[x + z * 16 + y * 16 * 16] = type;
 	this->block_cnt++;
 }
 
@@ -113,12 +119,13 @@ void Chunk::addBlock(Index3, int16 type)
 
 void Chunk::deleteBlock(vector<Index3> const& block_arr)
 {
-	cout << block_arr.size() << endl;
-	set<Index3>::iterator it;
+	unordered_map<Index3, bool>::iterator it;
 	int dx[] = { 0, 0, 0, 0, -1, 1 };
 	int dy[] = { 1, -1, 0, 0, 0, 0 };
 	int dz[] = { 0, 0, 1, -1, 0, 0 };
 
+	int jz = 16;
+	int jy = 16 * 16;
 	for (int i = 0; i < block_arr.size(); i++) {
 		it = this->blocks.find(block_arr[i]);
 		if (it == this->blocks.end())
@@ -132,11 +139,11 @@ void Chunk::deleteBlock(vector<Index3> const& block_arr)
 			int nx = block_arr[i].x + dx[move_arr[j]];
 			int ny = block_arr[i].y + dy[move_arr[j]];
 			int nz = block_arr[i].z + dz[move_arr[j]];
-			set<Index3>::iterator itt = this->blocks.find({ nx, ny, nz });
+			unordered_map<Index3, bool>::iterator itt = this->blocks.find({ nx, ny, nz });
 			if (itt == this->blocks.end())
-				this->blocks.insert({ nx, ny, nz });
+				this->blocks.insert({ {nx, ny, nz}, true });
 		}
-		this->chunk[block_arr[i].x][block_arr[i].y][block_arr[i].z] = 0;
+		this->chunk[block_arr[i].x + block_arr[i].y * jy + block_arr[i].z * jz] = 0;
 		this->blocks.erase(it);
 	}
 	this->updateVerticesAndIndices();
@@ -152,7 +159,7 @@ int Chunk::getBlock(int x, int y, int z) const
 		return this->back->getBlock(x, y, 16 + z);
 	if (z >= 16)
 		return this->front->getBlock(x, y, z % 16);
-	return this->chunk[x][y][z];
+	return this->chunk[x + y * 16 * 16 + z * 16];
 }
 
 void Chunk::setStartPos(float x, float y, float z)
@@ -262,12 +269,14 @@ vector<int> Chunk::checkBlock(int x, int y, int z) const
 	int dx[] = { 0, 0, 0, 0, -1, 1 };
 	int dy[] = { 1, -1, 0, 0, 0, 0 };
 	int dz[] = { 0, 0, 1, -1, 0, 0 };
+	int jz = 16;
+	int jy = 16 * 16;
 	for (int i = 0; i < 6; i++) {
 		int nx = x + dx[i];
 		int ny = y + dy[i];
 		int nz = z + dz[i];
 		if (this->checkBoundary(nx, ny, nz))
-			defineTrueFace(face_arr, this->chunk[nx][ny][nz], i);
+			defineTrueFace(face_arr, this->chunk[nx + ny * jy + nz * jz], i);
 		else {
 			if (ny < 0 || ny >= 256)
 				face_arr.push_back(i);
@@ -292,12 +301,14 @@ vector<int> Chunk::checkBlockReverse(int x, int y, int z) const
 	int dx[] = { 0, 0, 0, 0, -1, 1 };
 	int dy[] = { 1, -1, 0, 0, 0, 0 };
 	int dz[] = { 0, 0, 1, -1, 0, 0 };
+	int jy = 16 * 16;
+	int jz = 16;
 	for (int i = 0; i < 6; i++) {
 		int nx = x + dx[i];
 		int ny = y + dy[i];
 		int nz = z + dz[i];
 		if (this->checkBoundary(nx, ny, nz)) {
-			if (this->chunk[nx][ny][nz])
+			if (this->chunk[nx + ny * jy + nz * jz])
 				face_arr.push_back(i);
 		}
 	}
@@ -601,10 +612,11 @@ void Chunk::readFile(string const& path)
 	int flag = 0;
 	char buffer[200];
 	VertexBlockUV vertex;
-
+	int jy = 16 * 16;
+	int jz = 16;
 	fill(
-		&this->chunk[0][0][0],
-		&this->chunk[0][0][0] + 16 * 256 * 16,
+		this->chunk,
+		this->chunk + 16 * 256 * 16,
 		0
 	);
 	this->vertices = {};
@@ -619,15 +631,15 @@ void Chunk::readFile(string const& path)
 	this->start_pos.y = 0.5f;
 	getline(stream, token, ',');
 	this->start_pos.z = stof(token);
-	for (int i = 0; i < 16; i++) {
-		for (int j = 0; j < 256; j++) {
+	for (int j = 0; j < 256; j++) {
+		for (int i = 0; j < 16; i++) {
 			ifile.getline(buffer, 200);
 			str = buffer;
 			stream.clear();
 			stream.str(str);
 			int idx = 0;
 			while (getline(stream, token, ',')) {
-				this->chunk[i][j][idx] = stoi(token);
+				this->chunk[i * jz + j * jy + idx] = stoi(token);
 				idx++;
 			}
 		}
@@ -683,6 +695,8 @@ void Chunk::readFile(string const& path)
 
 void Chunk::updateFile() const
 {
+	int jy = 16 * 16;
+	int jz = 16;
 	string file_name = "../chunk_files/";
 	file_name = file_name + to_string(this->start_pos.x) + "_"
 		+ to_string(this->start_pos.z) + ".txt";
@@ -692,11 +706,11 @@ void Chunk::updateFile() const
 	str += to_string(this->start_pos.y) + ",";
 	str += to_string(this->start_pos.z) + "\n";
 	ofile.write(str.c_str(), str.size());
-	for (int i = 0; i < 16; i++) {
-		for (int j = 0; j < 256; j++) {
+	for (int j = 0; j < 256; j++) {
+		for (int i = 0; i < 16; i++) {
 			str = "";
 			for (int k = 0; k < 16; k++) {
-				str += to_string(this->chunk[i][j][k]);
+				str += to_string(this->chunk[i * jz + j * jy + k]);
 				if (k == 15)
 					str += '\n';
 				else
