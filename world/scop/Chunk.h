@@ -8,6 +8,7 @@ public:
 	Chunk();
 	~Chunk();
 	void setVerticesAndIndices();
+	void setVerticesAndIndices2();
 	void updateVerticesAndIndices();
 	void setRender(
 		shared_ptr<Graphics> graphic,
@@ -34,6 +35,12 @@ public:
 	void updateFile() const;
 
 private:
+	void vertexAndIndexGenerator(
+		Face const& face, 
+		int const& dx,
+		int const& dy,
+		int const& dz,
+		uint32& idx);
 	vector<VertexBlockUV> getBlockVertexBlockUV(
 		int x, 
 		int y, 
@@ -42,9 +49,6 @@ private:
 		vector<int> const& check_arr
 	) const;
 	vector<uint32> getBlockIndices(
-		int x,
-		int y,
-		int z,
 		uint32& start,
 		vector<int> const& check_arr
 	) const;

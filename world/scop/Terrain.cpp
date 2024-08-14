@@ -171,7 +171,7 @@ void Terrain::terrainsetVerticesAndIndices()
 {
 	for (int i = 0; i < this->size_h; i++) {
 		for (int j = 0; j < this->size_w; j++) {
-			this->terrain[i][j]->setVerticesAndIndices();
+			this->terrain[i][j]->setVerticesAndIndices2();
 			this->terrain[i][j]->updateFile();
 		}
 	}

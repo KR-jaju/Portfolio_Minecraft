@@ -51,9 +51,7 @@ void Chunk::setVerticesAndIndices()
 						check_arr
 					);
 				vector<uint32> block_indices =
-					this->getBlockIndices(x, y, z, index,
-						check_arr
-					);
+					this->getBlockIndices(index, check_arr);
 				this->vertices.insert(
 					this->vertices.end(),
 					block_vertices.begin(),
@@ -87,11 +85,7 @@ void Chunk::updateVerticesAndIndices()
 				check_arr
 			);
 		vector<uint32> block_indices =
-			this->getBlockIndices(
-				it->first.x, it->first.y, it->first.z, 
-				index,
-				check_arr
-			);
+			this->getBlockIndices(index, check_arr);
 		this->vertices.insert(
 			this->vertices.end(),
 			block_vertices.begin(),
@@ -103,6 +97,74 @@ void Chunk::updateVerticesAndIndices()
 			block_indices.end()
 		);
 	}
+}
+
+void Chunk::vertexAndIndexGenerator(
+	Face const& face, 
+	int const& dx,
+	int const& dy,
+	int const& dz,
+	uint32& idx)
+{
+	int my = 16 * 16;
+	int mz = 16;
+	vector<vec3> pos_arr;
+	vector<vec2> tex_arr;
+	vector<uint32> idx_arr;
+	VertexBlockUV vertex;
+	vec2 start = vec2(0.f, 0.f);
+	vec2 end = vec2(1.f, 1.f);
+	for (int y = 0; y < 256; y++) {
+		for (int z = 0; z < 16; z++) {
+			for (int x = 0; x < 16; x++) {
+				int nx = x + dx;
+				int ny = y + dy;
+				int nz = z + dz;
+				if (this->chunk[x + z * mz + y * my] == 0)
+					continue;
+				if (this->checkBoundary(nx, ny, nz)) {
+					if (this->getBlock(nx, ny, nz))
+						continue;
+				}
+				else {
+					if (face == Face::Left && this->left && this->getBlock(nx, ny, nz))
+						continue;
+					if (face == Face::Right && this->right && this->getBlock(nx, ny, nz))
+						continue;
+					if (face == Face::Front && this->front && this->getBlock(nx, ny, nz))
+						continue;
+					if (face == Face::Back && this->back && this->getBlock(nx, ny, nz))
+						continue;
+				}
+				this->blocks.insert({ {x, y, z}, 1 });
+				pos_arr = this->getBlockFacePos(x, y, z, face);
+				tex_arr = this->getBlockFaceTexcoord(start,
+					end, face);
+				idx_arr = this->getBlockFaceIndices(idx);
+				idx += 4;
+				for (int i = 0; i < 4; i++) {
+					vertex.pos = pos_arr[i];
+					vertex.uv = tex_arr[i];
+					vertex.type = this->chunk[x + z * mz + y * my];
+					vertex.dir = static_cast<int>(face);
+					this->vertices.push_back(vertex);
+				}
+				this->indices.insert(this->indices.end(),
+					idx_arr.begin(), idx_arr.end());
+			}
+		}
+	}
+}
+
+void Chunk::setVerticesAndIndices2()
+{
+	uint32 index = 0;
+	this->vertexAndIndexGenerator(Face::Right, 1, 0, 0, index);
+	this->vertexAndIndexGenerator(Face::Left, -1, 0, 0, index);
+	this->vertexAndIndexGenerator(Face::Front, 0, 0, 1, index);
+	this->vertexAndIndexGenerator(Face::Bottom, 0, 0, -1, index);
+	this->vertexAndIndexGenerator(Face::Top, 0, 1, 0, index);
+	this->vertexAndIndexGenerator(Face::Bottom, 0, -1, 0, index);
 }
 
 
@@ -189,6 +251,8 @@ int Chunk::getBlockCnt()
 	return this->block_cnt;
 }
 
+
+
 vector<VertexBlockUV> Chunk::getBlockVertexBlockUV(
 	int x,
 	int y,
@@ -224,9 +288,6 @@ vector<VertexBlockUV> Chunk::getBlockVertexBlockUV(
 }
 
 vector<uint32> Chunk::getBlockIndices(
-	int x,
-	int y,
-	int z,
 	uint32& start,
 	vector<int> const& check_arr
 ) const
