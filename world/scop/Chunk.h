@@ -7,9 +7,7 @@ class Chunk
 public:
 	Chunk();
 	~Chunk();
-	void setVerticesAndIndices();
 	void setVerticesAndIndices2();
-	void updateVerticesAndIndices();
 	void setRender(
 		shared_ptr<Graphics> graphic,
 		shared_ptr<RasterizerState> rasterizer_state, 
@@ -35,39 +33,16 @@ public:
 	void updateFile() const;
 
 private:
+	void getBlockFacePosAndTex(
+		int dir, float x, float y, float z, int type);
 	void vertexAndIndexGenerator(
 		Face const& face, 
 		int const& dx,
 		int const& dy,
 		int const& dz,
 		uint32& idx);
-	vector<VertexBlockUV> getBlockVertexBlockUV(
-		int x, 
-		int y, 
-		int z,
-		int type,
-		vector<int> const& check_arr
-	) const;
-	vector<uint32> getBlockIndices(
-		uint32& start,
-		vector<int> const& check_arr
-	) const;
 	bool checkBoundary(int x, int y, int z) const;
-	vector<int> checkBlock(int x, int y, int z) const;
-	vector<int> checkBlockReverse(int x, int y, int z) const;
-	vector<vec3> getBlockFacePos(
-		float x,
-		float y,
-		float z,
-		Face block_face
-	) const;
-
-	vector<vec2> getBlockFaceTexcoord(
-		vec2 start,
-		vec2 end,
-		Face block_face
-	) const;
-	vector<uint32> getBlockFaceIndices(uint32 start) const;
+	void getBlockFaceIndices(uint32 start);
 	
 private:
 	int16 chunk[16 * 16 * 256];
@@ -84,7 +59,6 @@ private:
 	shared_ptr<ConstantBuffer> constant_buffer;
 	vec3 start_pos;
 	MVP mvp;
-	unordered_map<Index3, bool, Index3Hash> blocks;
 
 private:
 	shared_ptr<Graphics> graphic;

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <set>
-#include <unordered_map>
 
 class PixelShader;
 class VertexShader;
