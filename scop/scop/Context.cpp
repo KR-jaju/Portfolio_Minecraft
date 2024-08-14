@@ -2,7 +2,7 @@
 #include "Context.h"
 
 Context::Context(HWND handle)
-	: device(), device_context()
+	: handle(handle), device(), device_context()
 {
 	HRESULT hr = D3D11CreateDevice(nullptr,
 		D3D_DRIVER_TYPE_HARDWARE, 
