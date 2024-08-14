@@ -32,3 +32,11 @@ HWND	Context::getWindowHandle() const
 {
 	return (this->handle);
 }
+
+void	Context::setViewport(uint32 x, uint32 y, uint32 w, uint32 h)
+{
+	D3D11_VIEWPORT const	viewport = {
+		x, y, w, h, 0.0f, 1.0f
+	};
+	this->device_context->RSSetViewports(1, &viewport);
+}
