@@ -2,7 +2,7 @@
 
 class Context {
 public:
-	Context();
+	Context(HWND handle);
 	Context(Context const&) = delete;
 	
 	ID3D11Device* getDevice() const;

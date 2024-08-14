@@ -126,9 +126,6 @@
     <ClInclude Include="Context.h">
       <Filter>소스 파일\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="RenderTarget.h">
-      <Filter>소스 파일\Engine</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
