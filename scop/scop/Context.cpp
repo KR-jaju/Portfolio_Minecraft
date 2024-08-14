@@ -27,3 +27,8 @@ ID3D11DeviceContext* Context::getDeviceContext() const
 {
 	return (this->device_context.Get());
 }
+
+HWND	Context::getWindowHandle() const
+{
+	return (this->handle);
+}
