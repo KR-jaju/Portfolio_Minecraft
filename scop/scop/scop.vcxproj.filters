@@ -58,6 +58,12 @@
     <Filter Include="소스 파일\Engine\Pipeline\5_Texture\Sampler">
       <UniqueIdentifier>{d5d1504c-6c36-4dd5-8c69-6c4ba4b14648}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Engine\d3d">
+      <UniqueIdentifier>{e4200732-699d-4a79-956f-57a7f2b41f41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Engine\graphics">
+      <UniqueIdentifier>{b9169b4f-b72e-42e5-935b-bb5389672423}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -123,14 +129,14 @@
     <ClInclude Include="WindowCallback.h">
       <Filter>소스 파일\Engine\Graphic</Filter>
     </ClInclude>
-    <ClInclude Include="Context.h">
-      <Filter>소스 파일\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="SwapChain.h">
       <Filter>소스 파일\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Context.h">
+      <Filter>소스 파일\Engine\graphics</Filter>
+    </ClInclude>
     <ClInclude Include="RenderTarget.h">
-      <Filter>소스 파일\Engine</Filter>
+      <Filter>소스 파일\Engine\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -185,14 +191,14 @@
     <ClCompile Include="Window.cpp">
       <Filter>소스 파일\Engine\Graphic</Filter>
     </ClCompile>
-    <ClCompile Include="Context.cpp">
-      <Filter>소스 파일\Engine</Filter>
-    </ClCompile>
     <ClCompile Include="SwapChain.cpp">
       <Filter>소스 파일\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Context.cpp">
+      <Filter>소스 파일\Engine\graphics</Filter>
+    </ClCompile>
     <ClCompile Include="RenderTarget.cpp">
-      <Filter>소스 파일\Engine</Filter>
+      <Filter>소스 파일\Engine\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -30,7 +30,7 @@ SwapChain::SwapChain(Context const& context, uint32 width, uint32 height)
 	CHECK(hr);
 }
 
-ID3D11Texture2D* SwapChain::getInternalResource() const {
+ID3D11Texture2D* SwapChain::getBackBuffer() const {
 	ID3D11Texture2D* texture = nullptr;
 	HRESULT hr = this->swap_chain->GetBuffer(
 		0,

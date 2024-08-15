@@ -4,10 +4,10 @@
 
 class Context;
 
-class SwapChain : public RenderTarget {
+class SwapChain {
 public:
 	SwapChain(Context const& context, uint32 width, uint32 height);
-	ID3D11Texture2D* getInternalResource() const;
+	ID3D11Texture2D* getBackBuffer() const;
 private:
 	ComPtr<IDXGISwapChain>	swap_chain;
 };
