@@ -49,15 +49,6 @@
     <Filter Include="소스 파일\Engine\Pipeline\4_OutputMerger\BlendState">
       <UniqueIdentifier>{c7059efa-b3ae-468c-b421-da2da03c359d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Engine\Pipeline\5_Texture">
-      <UniqueIdentifier>{2eef5446-b711-49f2-9b13-9107f84accde}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Engine\Pipeline\5_Texture\Texture">
-      <UniqueIdentifier>{c475c293-4ae3-4db2-8c19-79f61338b01c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Engine\Pipeline\5_Texture\Sampler">
-      <UniqueIdentifier>{d5d1504c-6c36-4dd5-8c69-6c4ba4b14648}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Engine\d3d">
       <UniqueIdentifier>{e4200732-699d-4a79-956f-57a7f2b41f41}</UniqueIdentifier>
     </Filter>
@@ -105,12 +96,6 @@
     <ClInclude Include="Test.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>소스 파일\Engine\Pipeline\5_Texture\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="SamplerState.h">
-      <Filter>소스 파일\Engine\Pipeline\5_Texture\Sampler</Filter>
-    </ClInclude>
     <ClInclude Include="BlendState.h">
       <Filter>소스 파일\Engine\Pipeline\4_OutputMerger\BlendState</Filter>
     </ClInclude>
@@ -137,6 +122,36 @@
     </ClInclude>
     <ClInclude Include="RenderTarget.h">
       <Filter>소스 파일\Engine\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>소스 파일\Engine\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerState.h">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthStencilView.h">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTargetView.h">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderResourceView.h">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthStencilTexture.h">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderResourceTexture.h">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTargetTexture.h">
+      <Filter>소스 파일\Engine\d3d</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -170,12 +185,6 @@
     <ClCompile Include="Test.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>소스 파일\Engine\Pipeline\5_Texture\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="SamplerState.cpp">
-      <Filter>소스 파일\Engine\Pipeline\5_Texture\Sampler</Filter>
-    </ClCompile>
     <ClCompile Include="BlendState.cpp">
       <Filter>소스 파일\Engine\Pipeline\4_OutputMerger\BlendState</Filter>
     </ClCompile>
@@ -199,6 +208,33 @@
     </ClCompile>
     <ClCompile Include="RenderTarget.cpp">
       <Filter>소스 파일\Engine\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClCompile>
+    <ClCompile Include="SamplerState.cpp">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture2D.cpp">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthStencilView.cpp">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTargetView.cpp">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderResourceView.cpp">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderResourceTexture.cpp">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthStencilTexture.cpp">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTargetTexture.cpp">
+      <Filter>소스 파일\Engine\d3d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

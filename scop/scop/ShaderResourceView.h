@@ -1,12 +1,12 @@
 #pragma once
 
+#include "Context.h"
+#include "ShaderResourceTexture.h"
 
 class ShaderResourceView {
 public:
-	ShaderResourceView(ComPtr<ID3D11Device> const& device, ID3D11Texture1D* texture);
-	ShaderResourceView(ComPtr<ID3D11Device> const& device, ID3D11Texture2D* texture);
-	ShaderResourceView(ComPtr<ID3D11Device> const& device, ID3D11Texture3D* texture);
+	ShaderResourceView(Context const& context, ShaderResourceTexture const& texture);
 private:
-	ComPtr<ID3D11Device>				device;
+	ID3D11Device*				device;
 	ComPtr<ID3D11ShaderResourceView>	view;
 };

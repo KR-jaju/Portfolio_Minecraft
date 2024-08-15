@@ -1,9 +1,12 @@
 #pragma once
 
+#include "Context.h"
+#include "DepthStencilTexture.h"
+
 class DepthStencilView {
 public:
-	DepthStencilView(ComPtr<ID3D11Device> device, ID3D11Texture2D* texture);
+	DepthStencilView(Context const& context, DepthStencilTexture const& texture);
 private:
-	ComPtr<ID3D11Device>			device;
+	ID3D11Device*			device;
 	ComPtr<ID3D11DepthStencilView>	view;
 };

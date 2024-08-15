@@ -3,6 +3,9 @@
 class RenderTarget 
 {
 public:
-	virtual ~RenderTarget() = default;
-	virtual  void	bind() = 0;
+	//RenderTarget(std::vector<)
+	~RenderTarget() = default;
+	void	bind();
+private:
+	//std::vector
 };
