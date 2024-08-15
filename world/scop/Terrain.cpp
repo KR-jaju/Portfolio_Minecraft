@@ -19,6 +19,7 @@ Terrain::Terrain(HWND hwnd, uint32 width, uint32 height)
 
 	float sx = -16.f * this->size_w * 0.5f;
 	float sz = 16.f * this->size_h * 0.5f;
+	this->start_pos = vec2(sx, sz);
 	for (int i = 0; i < this->size_h; i++) {
 		for (int j = 0; j < this->size_w; j++)
 			this->terrain[i][j] = make_shared<Chunk>();
@@ -171,10 +172,33 @@ void Terrain::terrainsetVerticesAndIndices()
 {
 	for (int i = 0; i < this->size_h; i++) {
 		for (int j = 0; j < this->size_w; j++) {
-			this->terrain[i][j]->setVerticesAndIndices2();
-			this->terrain[i][j]->updateFile();
+			this->terrain[i][j]->setVerticesAndIndices();
+			//this->terrain[i][j]->updateFile();
 		}
 	}
+}
+
+void Terrain::checkTerrain(float x, float z)
+{
+	float end_x = this->start_pos.x + 16 * this->size_w;
+	float end_y = this->start_pos.y - 16 * this->size_h;
+	float r = 16.f * this->sight_r;
+	int mask = 0;
+
+	if (x - r < this->start_pos.x)
+		mask |= 1 << 0;
+	if (x + r > end_x)
+		mask |= 1 << 1;
+	if (z + r > this->start_pos.y)
+		mask |= 1 << 2;
+	if (z - r < end_y)
+		mask |= 1 << 3;
+
+}
+
+void Terrain::setSightChunk(int cnt)
+{
+	this->sight_r = cnt;
 }
 
 void Terrain::readTerrainForTest()
@@ -226,32 +250,26 @@ void Terrain::updateTerrainForTest()
 	cout << "time(ms) updateTerrainForTest: " << static_cast<double>(finish - start) << endl;
 }
 
-vector<pair<int, int>> Terrain::coordinateToIndex(
+WorldIndex Terrain::coordinateToIndex(
 	float x, 
 	float y, 
 	float z
 ) const
 {
-	vector<pair<int, int>> res;
-	int idx_x;
-	int idx_xx;
-	int idx_y;
-	int idx_z;
-	int idx_zz;
-	vec3 start = this->terrain[0][0]->getStartPos();
-	vec3 end = this->terrain[this->size_h - 1][this->size_w - 1]->
-		getStartPos() + vec3(16.f, 0.f, -16.f);
-	if (x < start.x || x > end.x || z > start.z || z < end.z || y < 0 || y > 255)
+	WorldIndex res = {};
+	float end_x = this->start_pos.x + 16 * this->size_w;
+	float end_y = this->start_pos.y - 16 * this->size_h;
+	if (x < this->start_pos.x || x > end_x + 0.00001 ||
+		y < end_y || y > this->start_pos.y + 0.00001) {
+		res.w_idx = {-1, -1};
 		return res;
-	x -= start.x;
-	x = abs(x);
-	idx_x = static_cast<int>(x) / 16;
-	idx_xx = static_cast<int>(x) % 16;
-	res.push_back({ idx_x, idx_xx });
-	idx_y = static_cast<int>(y) % 256;
-	res.push_back({ idx_y, -1 });
-	idx_z = static_cast<int>(z) / 16;
-	idx_zz = static_cast<int>(z) % 16;
-	res.push_back({ idx_z, idx_zz });
+	}
+	res.w_idx.x = static_cast<int>(x - this->start_pos.x) / 16;
+	res.w_idx.y = static_cast<int>(this->start_pos.y - z) / 16;
+	
+	vec3 start = this->terrain[res.w_idx.y][res.w_idx.x]->getStartPos();
+	res.c_idx.x = static_cast<int>(x - start.x) % 16;
+	res.c_idx.y = static_cast<int>(y) % 256;
+	res.c_idx.z = static_cast<int>(start.z - z) % 16;
 	return res;
 }

@@ -42,8 +42,35 @@ struct Index3 {
 	}
 };
 
+struct Index2 {
+	int x;
+	int y;
+
+	bool operator<(Index2 const& idx2) const {
+		if (this->x == idx2.x) {
+			return this->y < idx2.y;
+		}
+		return this->x < idx2.x;
+	}
+
+	bool operator==(Index2 const& idx2) const {
+		return this->x == idx2.x && this->y == idx2.y;
+	}
+};
+
 struct Index3Hash {
 	size_t operator() (Index3 const& idx3) const {
 		return hash<int>()(idx3.x) ^ hash<int>()(idx3.y) ^ hash<int>()(idx3.z);
 	}
+};
+
+struct Index2Hash {
+	size_t operator() (Index2 const& idx2) const {
+		return hash<int>()(idx2.x) ^ hash<int>()(idx2.y);
+	}
+};
+
+struct WorldIndex {
+	Index2 w_idx;
+	Index3 c_idx;
 };

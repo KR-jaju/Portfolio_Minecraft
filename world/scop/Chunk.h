@@ -7,7 +7,7 @@ class Chunk
 public:
 	Chunk();
 	~Chunk();
-	void setVerticesAndIndices2();
+	void setVerticesAndIndices();
 	void setRender(
 		shared_ptr<Graphics> graphic,
 		shared_ptr<RasterizerState> rasterizer_state, 
@@ -16,13 +16,14 @@ public:
 		wstring const& pixel_shader_path,
 		shared_ptr<BlendState> blend_state
 	);
+	void setBuffer();
 	void Render(
 		Mat view, 
 		Mat proj,
 		shared_ptr<TextureArray> const& texture_array
 	);
 	void setBlockInChunk(int x, int y, int z, int16 type);
-	void addBlock(Index3, int16 type);
+	void addBlock(Index3 idx3, int16 type);
 	void deleteBlock(vector<Index3> const& block_arr);
 	int getBlock(int x, int y, int z) const;
 	void setStartPos(float x, float y, float z);

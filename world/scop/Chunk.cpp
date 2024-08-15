@@ -74,7 +74,7 @@ void Chunk::vertexAndIndexGenerator(
 	}
 }
 
-void Chunk::setVerticesAndIndices2()
+void Chunk::setVerticesAndIndices()
 {
 	uint32 index = 0;
 	this->vertexAndIndexGenerator(Face::Right, 1, 0, 0, index);
@@ -93,8 +93,13 @@ void Chunk::setBlockInChunk(int x, int y, int z, int16 type)
 	this->block_cnt++;
 }
 
-void Chunk::addBlock(Index3, int16 type)
+void Chunk::addBlock(Index3 idx3, int16 type)
 {
+	this->chunk[idx3.x + idx3.y * 16 * 16 + idx3.z * 16] = type;
+	this->block_cnt++;
+	this->indices.clear();
+	this->vertices.clear();
+	this->setVerticesAndIndices();
 }
 
 void Chunk::deleteBlock(vector<Index3> const& block_arr)
@@ -105,9 +110,10 @@ void Chunk::deleteBlock(vector<Index3> const& block_arr)
 		this->chunk[block_arr[i].x + 
 			block_arr[i].y * jy + block_arr[i].z * jz] = 0;
 	}
+	this->block_cnt -= block_arr.size();
 	this->indices.clear();
 	this->vertices.clear();
-	this->setVerticesAndIndices2();
+	this->setVerticesAndIndices();
 }
 
 int Chunk::getBlock(int x, int y, int z) const
@@ -347,6 +353,22 @@ void Chunk::setRender
 		"ps_5_0"
 	);
 	this->blend_state = blend_state;
+}
+
+void Chunk::setBuffer()
+{
+	this->vertex_buffer = make_shared<Buffer<VertexBlockUV>>(
+		this->graphic->getDevice(),
+		this->vertices.data(),
+		this->vertices.size(),
+		D3D11_BIND_VERTEX_BUFFER
+	);
+	this->index_buffer = make_shared<Buffer<uint32>>(
+		this->graphic->getDevice(),
+		this->indices.data(),
+		this->indices.size(),
+		D3D11_BIND_INDEX_BUFFER
+	);
 }
 
 void Chunk::Render

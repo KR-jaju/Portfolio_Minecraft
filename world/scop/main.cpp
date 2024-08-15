@@ -64,7 +64,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     terrain.terrainsetVerticesAndIndices();
     finish = clock();
     cout << "time(ms) vertices and indices: " << static_cast<double>(finish - start) << endl;
-    terrain.updateTerrainForTest();
+    //terrain.updateTerrainForTest();
     terrain.setRender();
     // test code
 
