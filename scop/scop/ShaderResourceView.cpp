@@ -19,3 +19,9 @@ ShaderResourceView::ShaderResourceView(Context const& context, ShaderResourceTex
 	HRESULT hr = device->CreateShaderResourceView(internal_texture, &desc, view);
 	CHECK(hr);
 }
+
+ID3D11ShaderResourceView* ShaderResourceView::getInternalResource() const
+{
+	return (this->view.Get());
+}
+

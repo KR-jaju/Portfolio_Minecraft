@@ -31,12 +31,17 @@ SwapChain::SwapChain(Context const& context, uint32 width, uint32 height)
 }
 
 ID3D11Texture2D* SwapChain::getBackBuffer() const {
-	ID3D11Texture2D* texture = nullptr;
+	void* texture = nullptr;
 	HRESULT hr = this->swap_chain->GetBuffer(
 		0,
 		__uuidof(ID3D11Texture2D),
-		reinterpret_cast<void**>(&texture)
+		&texture
 	);
 	CHECK(hr);
-	return (texture);
+	return (static_cast<ID3D11Texture2D*>(texture));
+}
+
+IDXGISwapChain* SwapChain::getInternalResource() const
+{
+	return (this->swap_chain.Get());
 }

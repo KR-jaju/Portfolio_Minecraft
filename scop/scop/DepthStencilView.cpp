@@ -18,3 +18,8 @@ DepthStencilView::DepthStencilView(Context const& context, DepthStencilTexture c
 	HRESULT hr = device->CreateDepthStencilView(internal_texture, &desc, view);
 	CHECK(hr);
 }
+
+ID3D11DepthStencilView* DepthStencilView::getInternalResource() const
+{
+	return (this->view.Get());
+}

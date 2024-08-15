@@ -114,12 +114,6 @@
     <ClInclude Include="WindowCallback.h">
       <Filter>소스 파일\Engine\Graphic</Filter>
     </ClInclude>
-    <ClInclude Include="SwapChain.h">
-      <Filter>소스 파일\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Context.h">
-      <Filter>소스 파일\Engine\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="RenderTarget.h">
       <Filter>소스 파일\Engine\graphics</Filter>
     </ClInclude>
@@ -151,6 +145,15 @@
       <Filter>소스 파일\Engine\d3d</Filter>
     </ClInclude>
     <ClInclude Include="RenderTargetTexture.h">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Test2.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SwapChain.h">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Context.h">
       <Filter>소스 파일\Engine\d3d</Filter>
     </ClInclude>
   </ItemGroup>
@@ -200,12 +203,6 @@
     <ClCompile Include="Window.cpp">
       <Filter>소스 파일\Engine\Graphic</Filter>
     </ClCompile>
-    <ClCompile Include="SwapChain.cpp">
-      <Filter>소스 파일\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Context.cpp">
-      <Filter>소스 파일\Engine\graphics</Filter>
-    </ClCompile>
     <ClCompile Include="RenderTarget.cpp">
       <Filter>소스 파일\Engine\graphics</Filter>
     </ClCompile>
@@ -234,6 +231,15 @@
       <Filter>소스 파일\Engine\d3d</Filter>
     </ClCompile>
     <ClCompile Include="RenderTargetTexture.cpp">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Test2.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SwapChain.cpp">
+      <Filter>소스 파일\Engine\d3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Context.cpp">
       <Filter>소스 파일\Engine\d3d</Filter>
     </ClCompile>
   </ItemGroup>

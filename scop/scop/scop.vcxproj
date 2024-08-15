@@ -172,6 +172,7 @@
     <ClInclude Include="ShaderResourceView.h" />
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="Test.h" />
+    <ClInclude Include="Test2.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="targetver.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="ShaderResourceView.cpp" />
     <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="Test.cpp" />
+    <ClCompile Include="Test2.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
     <ClCompile Include="Texture2D.cpp" />

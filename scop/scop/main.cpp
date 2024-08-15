@@ -6,6 +6,7 @@
 #include "Game.h"
 
 #include "Test.h"
+#include "Test2.h"
 #include "WindowCallback.h"
 #include "Window.h"
 
@@ -26,7 +27,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
     Window  window(hInstance, nCmdShow, L"WindowClassName");
     MSG msg = {};
-    Test test(window.getHandle(), 800, 650);
+    Test2 test(window.getHandle(), 800, 650);
 
     std::cout << "start";
 

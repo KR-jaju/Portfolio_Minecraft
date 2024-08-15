@@ -14,7 +14,8 @@ RenderTargetTexture::RenderTargetTexture(Context const& context, uint32 width, u
 	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // format
 	desc.SampleDesc.Count = 1;
 	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+	desc.BindFlags = D3D11_BIND_RENDER_TARGET;
+		//D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0;
 
