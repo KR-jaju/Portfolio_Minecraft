@@ -8,10 +8,13 @@
 // test
 #include "Terrain.h"
 #include "time.h"
+#include "TestCam.h"
 // test 
 
 #define MAX_LOADSTRING 100
 HWND hWnd;
+TestCam cam;
+
 
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
@@ -41,20 +44,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // test code
     Terrain terrain(hWnd, 800, 650);
-    Mat view = XMMatrixLookToLH(
-        //vec3(0, 50, -50),
-        vec3(0, 50, 0),
-        //XMVector3Normalize(vec3(0, -1, 1.f)),
-        XMVector3Normalize(vec3(0, -1, 0.000001f)),
-        vec3(0, 1, 0)
-    );
-    Mat proj = XMMatrixPerspectiveFovLH(
-        XMConvertToRadians(70),
-        800.f / 650.f,
-        0.01f,
-        1000.f
-    );
-    terrain.setCam(view, proj);
+    cam.setDir(vec3(0, -1, 0.0000001f));
+    cam.movePos(0, 60.f, 0.f);
     clock_t start, finish;
     start = clock();
     terrain.createHeightMap();
@@ -64,7 +55,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     terrain.terrainsetVerticesAndIndices();
     finish = clock();
     cout << "time(ms) vertices and indices: " << static_cast<double>(finish - start) << endl;
-    //terrain.updateTerrainForTest();
     terrain.setRender();
     // test code
 
@@ -76,20 +66,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
             TranslateMessage(&msg);
-            if (msg.message == WM_KEYDOWN)
-                cout << "hi hi hi" << endl;
             DispatchMessage(&msg);
+            /*if (msg.message == WM_KEYDOWN) {
+            }
+            DispatchMessage(&msg);*/
         }
         else
         {
-            //game.Update();
-            //game.Render();
-            //test.update();
-            //test.render();
-            //test.renderUV();
-            //terrain.Render();
+            cam.update();
+            terrain.setCam(cam.getViewProj().view, cam.getViewProj().proj);
+            terrain.Render();
         }
-        terrain.Render();
         //chunk.renderTest();
         //test.update();
         //test.render();
@@ -171,6 +158,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
     case WM_COMMAND:
         {
+            cout << "hello\n";
             int wmId = LOWORD(wParam);
             // 메뉴 선택을 구문 분석합니다:
             switch (wmId)
@@ -186,6 +174,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
+    case WM_KEYDOWN:
+    {
+        vec3 pos = cam.getPos();
+        switch (wParam)
+        {
+        case 'W':
+            cam.movePos(pos.x, pos.y, pos.z + 1.f);
+            break;
+        case 'A':
+            cam.movePos(pos.x - 1.f, pos.y, pos.z);
+            break;
+        case 'S':
+            cam.movePos(pos.x, pos.y, pos.z - 1.f);
+            break;
+        case 'D':
+            cam.movePos(pos.x + 1.f, pos.y, pos.z);
+            break;
+        }
+        break;
+    }
     case WM_PAINT:
         {
             PAINTSTRUCT ps;

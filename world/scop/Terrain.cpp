@@ -20,6 +20,7 @@ Terrain::Terrain(HWND hwnd, uint32 width, uint32 height)
 	float sx = -16.f * this->size_w * 0.5f;
 	float sz = 16.f * this->size_h * 0.5f;
 	this->start_pos = vec2(sx, sz);
+	this->end_pos = vec2(sx + 16 * this->size_w, sz - 16 * this->size_h);
 	for (int i = 0; i < this->size_h; i++) {
 		for (int j = 0; j < this->size_w; j++)
 			this->terrain[i][j] = make_shared<Chunk>();
@@ -144,26 +145,20 @@ void Terrain::setCam(Mat view, Mat proj)
 
 void Terrain::createHeightMap()
 {
-	for (int i = 0; i < this->size_h; i++) {
-		for (int j = 0; j < this->size_w; j++) {
-			for (int z = 0; z < 16; z++) {
-				for (int x = 0; x < 16; x++) {
-					int nx = x + 16 * j;
-					int nz = z + 16 * i;
-					double res = this->perlin_noise.getNoise2D(
-						(nx) / 100.f,
-						(nz) / 100.f,
-						5,
-						1.2f
-					);
-					res = ((res + 1.f) * 0.5f) * 30.f;
-					this->height_map[nz][nx] = static_cast<int16>(res);
-					for (int y = 0; y < this->height_map[nz][nx]; y++) {
-						this->terrain[i][j]->setBlockInChunk(
-							x, y, z, 1);
-					}
-				}
-			}
+	for (int i = 0; i < this->size_h * 16; i++) {
+		for (int j = 0; j < this->size_w * 16; j++) {
+			int nz = i / 16;
+			int nx = j / 16;
+			double res = this->perlin_noise.getNoise2D(
+				static_cast<float>(j) / 100.f,
+				static_cast<float>(i) / 100.f,
+				5,
+				0.82f
+			);
+			int16 h = static_cast<int16>(((res + 1.f) * 0.5f) * 40.f);
+			this->terrain[nz][nx]->setHeight(j % 16, i % 16, h);
+			for (int y = 0; y < h; y++)
+				this->terrain[nz][nx]->setBlockInChunk(j, y, i, 1);
 		}
 	}
 }
@@ -178,22 +173,20 @@ void Terrain::terrainsetVerticesAndIndices()
 	}
 }
 
-void Terrain::checkTerrain(float x, float z)
+int Terrain::checkTerrain(float x, float z) const
 {
-	float end_x = this->start_pos.x + 16 * this->size_w;
-	float end_y = this->start_pos.y - 16 * this->size_h;
 	float r = 16.f * this->sight_r;
 	int mask = 0;
 
 	if (x - r < this->start_pos.x)
 		mask |= 1 << 0;
-	if (x + r > end_x)
+	if (x + r > this->end_pos.x)
 		mask |= 1 << 1;
 	if (z + r > this->start_pos.y)
 		mask |= 1 << 2;
-	if (z - r < end_y)
+	if (z - r < this->end_pos.y)
 		mask |= 1 << 3;
-
+	return mask;
 }
 
 void Terrain::setSightChunk(int cnt)
@@ -220,35 +213,6 @@ void Terrain::readTerrainForTest()
 	}
 }
 
-void Terrain::updateTerrainForTest()
-{
-	vector<vector<Index3>> arr;
-	vector<Index3> rr;
-	for (int i = 0; i < this->height_map[15][15]; i++)
-		rr.push_back({ 15, i, 15 });
-	arr.push_back(rr);
-	rr.clear();
-	for (int i = 0; i < this->height_map[15][16]; i++)
-		rr.push_back({ 0, i, 15 });
-	arr.push_back(rr);
-	rr.clear();
-	for (int i = 0; i < this->height_map[16][15]; i++)
-		rr.push_back({ 15, i, 0 });
-	arr.push_back(rr);
-	rr.clear();
-	for (int i = 0; i < this->height_map[16][16]; i++)
-		rr.push_back({ 0, i, 0 });
-	arr.push_back(rr);
-	clock_t start, finish;
-	start = clock();
-	int idx = 0;
-	for (int i = 0; i < this->size_h; i++) {
-		for (int j = 0; j < this->size_w; j++)
-			this->terrain[i][j]->deleteBlock(arr[idx++]);
-	}
-	finish = clock();
-	cout << "time(ms) updateTerrainForTest: " << static_cast<double>(finish - start) << endl;
-}
 
 WorldIndex Terrain::coordinateToIndex(
 	float x, 

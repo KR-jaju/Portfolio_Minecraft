@@ -599,3 +599,13 @@ void Chunk::updateFile() const
 	ofile.write(str.c_str(), str.size());
 	ofile.close();
 }
+
+void Chunk::setHeight(int x, int y, int16 h)
+{
+	this->height_map[y][x] = h;
+}
+
+int16 Chunk::getHeight(int x, int y) const
+{
+	return this->height_map[y][x];
+}

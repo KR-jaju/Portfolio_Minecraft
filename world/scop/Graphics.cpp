@@ -72,7 +72,7 @@ void Graphics::createDeviceAndSwapChain()
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
 	desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	desc.BufferCount = 1;
+	desc.BufferCount = 2;
 	desc.OutputWindow = this->hwnd;
 	desc.Windowed = TRUE;
 	desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;

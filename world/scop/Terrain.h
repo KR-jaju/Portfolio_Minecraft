@@ -16,18 +16,17 @@ public:
 	void setCam(Mat view, Mat proj);
 	void createHeightMap();
 	void terrainsetVerticesAndIndices();
-	void checkTerrain(float x, float z);
+	int checkTerrain(float x, float z) const;
 	void setSightChunk(int cnt);
 
 
 public: // test func
 	void readTerrainForTest();
-	void updateTerrainForTest();
 
 private:
 	WorldIndex coordinateToIndex(
 		float x, 
-		float y, 
+		float y,
 		float z
 	) const;
 
@@ -40,8 +39,9 @@ private:
 	int16 height_map[480][480];
 	PerlinNoise perlin_noise;
 	vec2 start_pos;
+	vec2 end_pos;
 	int size_w = 4;
-	int size_h = 1;
+	int size_h = 4;
 	int sight_r;
 
 private:

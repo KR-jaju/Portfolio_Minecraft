@@ -88,6 +88,9 @@
     <Filter Include="헤더 파일\etc">
       <UniqueIdentifier>{fe1ffa22-c76d-4dfb-9b0a-5ce31e97791e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\TestCam">
+      <UniqueIdentifier>{1c81632f-c82d-418c-b2a8-b1a4e4a5cea0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -162,6 +165,9 @@
     <ClInclude Include="targetver.h">
       <Filter>헤더 파일\etc</Filter>
     </ClInclude>
+    <ClInclude Include="TestCam.h">
+      <Filter>소스 파일\World\TestCam</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -226,6 +232,9 @@
     </ClCompile>
     <ClCompile Include="WorldUtils.cpp">
       <Filter>소스 파일\World\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCam.cpp">
+      <Filter>소스 파일\World\TestCam</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

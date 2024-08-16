@@ -32,6 +32,8 @@ public:
 	int getBlockCnt();
 	void readFile(string const& path);
 	void updateFile() const;
+	void setHeight(int x, int y, int16 h);
+	int16 getHeight(int x, int y) const;
 
 private:
 	void getBlockFacePosAndTex(
@@ -47,6 +49,7 @@ private:
 	
 private:
 	int16 chunk[16 * 16 * 256];
+	int16 height_map[16][16];
 	int block_cnt;
 	Chunk* front;
 	Chunk* back;
