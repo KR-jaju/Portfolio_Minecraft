@@ -52,8 +52,3 @@ ID3D11RenderTargetView* RenderTargetView::getInternalResource() const
 {
 	return (this->view.Get());
 }
-
-ID3D11RenderTargetView*const* RenderTargetView::getAddressOf() const
-{
-	return (this->view.GetAddressOf());
-}

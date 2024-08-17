@@ -107,11 +107,10 @@ void Test2::renderUV()
 {
 	//this->graphic->renderBegin();
 	ID3D11DeviceContext* device_context = this->context.getDeviceContext();
-	//ID3D11RenderTargetView* rtv_array[] = {
-		//this->swapchain_rtv.getInternalResource()
-	//};
+	ID3D11RenderTargetView* rtv_array[] = {
+		this->swapchain_rtv.getInternalResource()
+	};
 	IDXGISwapChain* swap_chain = this->swapchain.getInternalResource();
-	ID3D11RenderTargetView*const* rtv_array = this->swapchain_rtv.getAddressOf();
 
 	ID3D11DepthStencilView* dsv = this->dsv.getInternalResource();
 	this->swapchain_rtv.clear(0.5f, 0.5f, 0.5f, 1.0f);
