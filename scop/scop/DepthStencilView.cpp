@@ -3,6 +3,7 @@
 
 DepthStencilView::DepthStencilView(Context const& context, DepthStencilTexture const& texture)
 	: device(context.getDevice()),
+	device_context(context.getDeviceContext()),
 	view()
 {
 	ID3D11Texture2D* const	internal_texture = texture.getInternalResource();
@@ -17,6 +18,27 @@ DepthStencilView::DepthStencilView(Context const& context, DepthStencilTexture c
 
 	HRESULT hr = device->CreateDepthStencilView(internal_texture, &desc, view);
 	CHECK(hr);
+}
+
+void	DepthStencilView::clear(float depth, float stencil)
+{
+	ID3D11DepthStencilView* const internal_view = this->getInternalResource();
+
+	this->device_context->ClearDepthStencilView(internal_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depth, stencil);
+}
+
+void	DepthStencilView::clearDepth(float depth)
+{
+	ID3D11DepthStencilView* const internal_view = this->getInternalResource();
+
+	this->device_context->ClearDepthStencilView(internal_view, D3D11_CLEAR_DEPTH, depth, 0.0f);
+}
+
+void	DepthStencilView::clearStencil(float stencil)
+{
+	ID3D11DepthStencilView* const internal_view = this->getInternalResource();
+
+	this->device_context->ClearDepthStencilView(internal_view, D3D11_CLEAR_STENCIL, 0, stencil);
 }
 
 ID3D11DepthStencilView* DepthStencilView::getInternalResource() const
