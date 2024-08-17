@@ -19,88 +19,88 @@ Test2::~Test2()
 void Test2::setDrawTexSkel()
 {
 	this->geometrySkel();
-	//this->graphic->setClearColor(0.5f, 0.5f, 0.5f, 1.f);
-	this->index_buffer = make_shared<Buffer<uint32>>(
-		this->graphic->getDevice(),
-		this->indices.data(),
-		(uint32)(this->indices.size()),
-		D3D11_BIND_INDEX_BUFFER
-		);
-	this->vertex_uv_buffer = make_shared<Buffer<VertexUV>>(
-		this->graphic->getDevice(),
-		this->vertices_uv.data(),
-		(uint32)(this->vertices_uv.size()),
-		D3D11_BIND_VERTEX_BUFFER
-		);
-	vector<D3D11_INPUT_ELEMENT_DESC> layout = {
-		{
-			"POSITION",
-			0,
-			DXGI_FORMAT_R32G32B32_FLOAT,
-			0,
-			0,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		},
-		{
-			"TEXCOORD",
-			0,
-			DXGI_FORMAT_R32G32_FLOAT,
-			0,
-			12,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		}
-	};
-	this->vertex_shader = make_shared<VertexShader>(
-		this->graphic->getDevice(),
-		L"VertexShaderUV.hlsl",
-		"main",
-		"vs_5_0"
-		);
-	this->input_layout = make_shared<InputLayout>(
-		this->graphic->getDevice(),
-		layout.data(),
-		layout.size(),
-		this->vertex_shader->getBlob()
-		);
+	////this->graphic->setClearColor(0.5f, 0.5f, 0.5f, 1.f);
+	//this->index_buffer = make_shared<Buffer<uint32>>(
+	//	this->graphic->getDevice(),
+	//	this->indices.data(),
+	//	(uint32)(this->indices.size()),
+	//	D3D11_BIND_INDEX_BUFFER
+	//	);
+	//this->vertex_uv_buffer = make_shared<Buffer<VertexUV>>(
+	//	this->graphic->getDevice(),
+	//	this->vertices_uv.data(),
+	//	(uint32)(this->vertices_uv.size()),
+	//	D3D11_BIND_VERTEX_BUFFER
+	//	);
+	//vector<D3D11_INPUT_ELEMENT_DESC> layout = {
+	//	{
+	//		"POSITION",
+	//		0,
+	//		DXGI_FORMAT_R32G32B32_FLOAT,
+	//		0,
+	//		0,
+	//		D3D11_INPUT_PER_VERTEX_DATA,
+	//		0
+	//	},
+	//	{
+	//		"TEXCOORD",
+	//		0,
+	//		DXGI_FORMAT_R32G32_FLOAT,
+	//		0,
+	//		12,
+	//		D3D11_INPUT_PER_VERTEX_DATA,
+	//		0
+	//	}
+	//};
+	//this->vertex_shader = make_shared<VertexShader>(
+	//	this->graphic->getDevice(),
+	//	L"VertexShaderUV.hlsl",
+	//	"main",
+	//	"vs_5_0"
+	//	);
+	//this->input_layout = make_shared<InputLayout>(
+	//	this->graphic->getDevice(),
+	//	layout.data(),
+	//	layout.size(),
+	//	this->vertex_shader->getBlob()
+	//	);
 
-	this->pixel_shader = make_shared<PixelShader>(
-		this->graphic->getDevice(),
-		L"PixelShaderUV.hlsl",
-		"main",
-		"ps_5_0"
-		);
+	//this->pixel_shader = make_shared<PixelShader>(
+	//	this->graphic->getDevice(),
+	//	L"PixelShaderUV.hlsl",
+	//	"main",
+	//	"ps_5_0"
+	//	);
 
-	this->rasterizer_state = make_shared<RasterizerState>(
-		this->graphic->getDevice(),
-		D3D11_FILL_SOLID,
-		D3D11_CULL_BACK
-		);
+	//this->rasterizer_state = make_shared<RasterizerState>(
+	//	this->graphic->getDevice(),
+	//	D3D11_FILL_SOLID,
+	//	D3D11_CULL_BACK
+	//	);
 
-	this->sampler_state =
-		make_shared<SamplerState>(
-			this->graphic->getDevice()
-			);
+	//this->sampler_state =
+	//	make_shared<SamplerState>(
+	//		this->graphic->getDevice()
+	//		);
 
-	this->texture = make_shared<Texture>(
-		this->graphic->getDevice(),
-		L"Skeleton.png"
-		);
+	//this->texture = make_shared<Texture>(
+	//	this->graphic->getDevice(),
+	//	L"Skeleton.png"
+	//	);
 
-	this->blend_state = make_shared<BlendState>(
-		this->graphic->getDevice()
-		);
+	//this->blend_state = make_shared<BlendState>(
+	//	this->graphic->getDevice()
+	//	);
 
-	MVP mvp;
-	mvp.model = Mat::Identity;
-	mvp.view = Mat::Identity;
-	mvp.proj = Mat::Identity;
-	this->constant_buffer = make_shared<ConstantBuffer>(
-		this->graphic->getDevice(),
-		this->graphic->getContext(),
-		mvp
-		);
+	//MVP mvp;
+	//mvp.model = Mat::Identity;
+	//mvp.view = Mat::Identity;
+	//mvp.proj = Mat::Identity;
+	//this->constant_buffer = make_shared<ConstantBuffer>(
+	//	this->graphic->getDevice(),
+	//	this->graphic->getContext(),
+	//	mvp
+	//	);
 }
 
 void Test2::renderUV()
@@ -114,30 +114,14 @@ void Test2::renderUV()
 	ID3D11RenderTargetView*const* rtv_array = this->swapchain_rtv.getAddressOf();
 
 	ID3D11DepthStencilView* dsv = this->dsv.getInternalResource();
-	float	clear_color[] = {
-		0.5f, 0.5f, 0.5f, 1.0f
-	};
-
+	this->swapchain_rtv.clear(0.5f, 0.5f, 0.5f, 1.0f);
+	this->dsv.clearDepth(1.0f);
+	this->context.setViewport(0, 0, 400, 400);
 	device_context->OMSetRenderTargets(
 		1,
 		rtv_array,
 		dsv
 	);
-	device_context->ClearRenderTargetView(
-		rtv_array[0],
-		clear_color
-	);
-	device_context->ClearDepthStencilView(
-		dsv,
-		D3D11_CLEAR_DEPTH,
-		1.f,
-		0
-	);
-	D3D11_VIEWPORT	viewport = {
-		0, 0, 0, 400, 400, 1.0f
-	};
-	device_context->RSSetViewports(1, &viewport);
-
 	device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//device_context->IASetInputLayout(
 	//	
@@ -234,7 +218,7 @@ void Test2::update()
 	);
 	mvp.proj = mvp.proj.Transpose();
 
-	this->constant_buffer->update(mvp);
+	//this->constant_buffer->update(mvp);
 
  
 }
