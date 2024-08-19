@@ -46,6 +46,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     Terrain terrain(hWnd, 800, 650);
     cam.setDir(vec3(0, -1, 0.0000001f));
     cam.movePos(0, 60.f, 0.f);
+    Mat view = XMMatrixLookAtLH(vec3(0, 60.f, 0.f), 
+        vec3(0, -1, 0.00001f), vec3(0, 1, 0));
+    cout << "Mat" << endl;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++)
+            cout << view.m[i][j] << ' ';
+        cout << endl;
+    }
+    cout << endl;
+    terrain.setSightChunk(16);
     clock_t start, finish;
     start = clock();
     terrain.createHeightMap();
@@ -74,8 +84,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
         {
             cam.update();
-            terrain.setCam(cam.getViewProj().view, cam.getViewProj().proj);
-            terrain.Render();
+            terrain.Render(
+                cam.getViewProj().proj,
+                cam.getViewProj().view,
+                cam.getPos()
+            );
         }
         //chunk.renderTest();
         //test.update();

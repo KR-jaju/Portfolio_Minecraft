@@ -279,6 +279,12 @@
       <Filter>소스 파일\World\WorldShaderFIle</Filter>
     </FxCompile>
     <FxCompile Include="VertexShaderUV.hlsl" />
+    <FxCompile Include="TestPixelShader2.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\TestShader</Filter>
+    </FxCompile>
+    <FxCompile Include="TestVertexShader2.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\TestShader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

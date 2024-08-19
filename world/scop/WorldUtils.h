@@ -74,3 +74,10 @@ struct WorldIndex {
 	Index2 w_idx;
 	Index3 c_idx;
 };
+
+struct CamPos {
+	vec3 pos;
+	float dummy;
+	float r;
+	vec3 dummys;
+};

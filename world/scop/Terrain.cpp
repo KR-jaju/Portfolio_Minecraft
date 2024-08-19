@@ -91,16 +91,6 @@ Terrain::~Terrain()
 {
 }
 
-void Terrain::setViewAndProj
-(
-	Mat const& view, 
-	Mat const& proj
-)
-{
-	this->view = view;
-	this->proj = proj;
-}
-
 void Terrain::setRender()
 {
 	// temp
@@ -112,35 +102,37 @@ void Terrain::setRender()
 				this->graphic,
 				this->rasterizer_state,
 				this->sampler_state,
-				L"WorldVertexShader.hlsl",
-				L"WorldPixelShader.hlsl",
+				L"TestVertexShader2.hlsl",
+				L"TestPixelShader2.hlsl",
 				this->blend_state_arr[0]
 			);
 		}
 	}
 }
 
-void Terrain::Render()
+void Terrain::Render
+(
+	Mat const& proj,
+	Mat const& view,
+	vec3 const& cam_pos
+)
 {
 	this->graphic->renderBegin();
 	for (int i = 0; i < this->size_h; i++) {
 		for (int j = 0; j < this->size_w; j++) {
 			if (this->terrain[i][j]->getBlockCnt() == 0)
 				continue;
+			// temp
+			this->terrain[i][j]->setCamPos(cam_pos);
+			// temp
 			this->terrain[i][j]->Render(
-				this->view, 
-				this->proj,
+				view, 
+				proj,
 				this->texture_array
 			);
 		}
 	}
 	this->graphic->renderEnd();
-}
-
-void Terrain::setCam(Mat view, Mat proj)
-{
-	this->view = view;
-	this->proj = proj;
 }
 
 void Terrain::createHeightMap()
@@ -171,22 +163,6 @@ void Terrain::terrainsetVerticesAndIndices()
 			//this->terrain[i][j]->updateFile();
 		}
 	}
-}
-
-int Terrain::checkTerrain(float x, float z) const
-{
-	float r = 16.f * this->sight_r;
-	int mask = 0;
-
-	if (x - r < this->start_pos.x)
-		mask |= 1 << 0;
-	if (x + r > this->end_pos.x)
-		mask |= 1 << 1;
-	if (z + r > this->start_pos.y)
-		mask |= 1 << 2;
-	if (z - r < this->end_pos.y)
-		mask |= 1 << 3;
-	return mask;
 }
 
 void Terrain::setSightChunk(int cnt)
@@ -236,4 +212,31 @@ WorldIndex Terrain::coordinateToIndex(
 	res.c_idx.y = static_cast<int>(y) % 256;
 	res.c_idx.z = static_cast<int>(start.z - z) % 16;
 	return res;
+}
+
+int Terrain::checkTerrainBoundary(float x, float z) const
+{
+	float r = 16.f * this->sight_r;
+	int mask = 0;
+
+	if (x - r < this->start_pos.x)
+		mask |= 1 << 0;
+	if (x + r > this->end_pos.x)
+		mask |= 1 << 1;
+	if (z + r > this->start_pos.y)
+		mask |= 1 << 2;
+	if (z - r < this->end_pos.y)
+		mask |= 1 << 3;
+	return mask;
+}
+
+void Terrain::relocateTerrain(float x, float z)
+{
+	int flag = this->checkTerrainBoundary(x, z);
+	if (flag & 1) {
+		for (int i = this->size_h - 1; i > -1; i--) {
+			for (int j = this->size_w - 1; j > 0; j--) {
+			}
+		}
+	}
 }

@@ -10,38 +10,33 @@ class Terrain
 public:
 	Terrain(HWND hwnd, uint32 width, uint32 height);
 	~Terrain();
-	void setViewAndProj(Mat const& view, Mat const& proj);
 	void setRender();
-	void Render();
-	void setCam(Mat view, Mat proj);
+	void Render(Mat const& proj, Mat const& view, vec3 const& pos);
 	void createHeightMap();
 	void terrainsetVerticesAndIndices();
-	int checkTerrain(float x, float z) const;
 	void setSightChunk(int cnt);
-
 
 public: // test func
 	void readTerrainForTest();
 
 private:
+	int checkTerrainBoundary(float x, float z) const;
 	WorldIndex coordinateToIndex(
 		float x, 
 		float y,
 		float z
 	) const;
-
+	void relocateTerrain(float x, float z);
 private:
-	Mat view;
-	Mat proj;
 	set<string> file_book;
 	map<vec3, uint32> object_book;
+	map<vec3, shared_ptr<Chunk>> tmp_storage;
 	shared_ptr<Chunk> terrain[30][30];
-	int16 height_map[480][480];
 	PerlinNoise perlin_noise;
 	vec2 start_pos;
 	vec2 end_pos;
-	int size_w = 4;
-	int size_h = 4;
+	int size_w = 8;
+	int size_h = 8;
 	int sight_r;
 
 private:
@@ -50,6 +45,5 @@ private:
 	vector <shared_ptr<BlendState>> blend_state_arr;
 	shared_ptr<TextureArray> texture_array;
 	shared_ptr<SamplerState> sampler_state;
-
 };
 

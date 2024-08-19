@@ -64,6 +64,11 @@ private:
 	vec3 start_pos;
 	MVP mvp;
 
+public: // tmp
+	void setCamPos(vec3 const& pos);
+private:
+	vec3 cam_pos;
+
 private:
 	shared_ptr<Graphics> graphic;
 	shared_ptr<VertexShader> vertex_shader;

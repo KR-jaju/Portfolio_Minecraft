@@ -269,6 +269,11 @@ void Chunk::getBlockFaceIndices(uint32 start)
 	this->indices.push_back(start + 3);
 }
 
+void Chunk::setCamPos(vec3 const& pos)
+{
+	this->cam_pos = pos;
+}
+
 
 void Chunk::setRender
 (
@@ -378,6 +383,17 @@ void Chunk::Render
 	shared_ptr<TextureArray> const& texture_array
 )
 {
+	CamPos cam;
+	cam.pos = this->cam_pos;
+	cam.r = 16.f * 1.f;
+	size_t test = sizeof(cam);
+	shared_ptr<ConstantBuffer> pixel_cbuffer;
+	pixel_cbuffer = make_shared<ConstantBuffer>(
+		this->graphic->getDevice(),
+		this->graphic->getContext(),
+		cam
+	);
+	pixel_cbuffer->update(cam);
 	this->mvp.view = view.Transpose();
 	this->mvp.proj = proj.Transpose();
 	this->constant_buffer = make_shared<ConstantBuffer>(
@@ -431,6 +447,11 @@ void Chunk::Render
 		nullptr,
 		0
 	);
+	this->graphic->getContext()->PSSetConstantBuffers(
+		0,
+		1,
+		pixel_cbuffer->getComPtr().GetAddressOf()
+	);
 	this->graphic->getContext()->PSSetSamplers(
 		0,
 		1,
@@ -442,6 +463,7 @@ void Chunk::Render
 		texture_array->getComPtr().GetAddressOf()
 	);
 
+	// om
 	this->graphic->getContext()->OMSetBlendState(
 		this->blend_state->getComPtr().Get(),
 		this->blend_state->getBlendFactor(),
