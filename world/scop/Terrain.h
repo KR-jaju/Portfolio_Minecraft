@@ -15,6 +15,7 @@ public:
 	void createHeightMap();
 	void terrainsetVerticesAndIndices();
 	void setSightChunk(int cnt);
+	void terrainUpdate(float x, float z);
 
 public: // test func
 	void readTerrainForTest();
@@ -26,7 +27,8 @@ private:
 		float y,
 		float z
 	) const;
-	void relocateTerrain(float x, float z);
+	int relocateTerrain(float x, float z, int flag);
+	void allocateTerrain(int flag);
 private:
 	set<string> file_book;
 	map<vec3, uint32> object_book;
@@ -37,7 +39,7 @@ private:
 	vec2 end_pos;
 	int size_w = 8;
 	int size_h = 8;
-	int sight_r;
+	int sight_r = 1;
 
 private:
 	shared_ptr<Graphics> graphic;

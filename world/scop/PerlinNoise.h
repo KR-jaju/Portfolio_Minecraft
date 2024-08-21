@@ -17,7 +17,7 @@ private:
     double perlin(double x, double y, double z) const;
     double perlin2D(double x, double y) const;
     double gradiant2D(int hash, double x, double y) const;
-    double gradiant(int hash, double x, double y, double z) const;
+    double gradiant(int hash, double x = 0, double y = 0, double z = 0) const;
 
 private:
     int permutation[512] = { 151,160,137,91,90,15,

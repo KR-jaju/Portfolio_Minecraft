@@ -55,7 +55,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         cout << endl;
     }
     cout << endl;
-    terrain.setSightChunk(16);
+    terrain.setSightChunk(1);
     clock_t start, finish;
     start = clock();
     terrain.createHeightMap();
@@ -84,6 +84,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
         {
             cam.update();
+            terrain.terrainUpdate(
+                cam.getPos().x,
+                cam.getPos().z
+            );
             terrain.Render(
                 cam.getViewProj().proj,
                 cam.getViewProj().view,

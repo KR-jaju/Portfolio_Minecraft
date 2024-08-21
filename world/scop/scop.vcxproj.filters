@@ -91,6 +91,9 @@
     <Filter Include="소스 파일\World\TestCam">
       <UniqueIdentifier>{1c81632f-c82d-418c-b2a8-b1a4e4a5cea0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\Map">
+      <UniqueIdentifier>{7e7a0dc6-b5f2-44b0-b090-c9bcf401b95d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -168,6 +171,9 @@
     <ClInclude Include="TestCam.h">
       <Filter>소스 파일\World\TestCam</Filter>
     </ClInclude>
+    <ClInclude Include="MapGenerator.h">
+      <Filter>소스 파일\World\Map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -235,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="TestCam.cpp">
       <Filter>소스 파일\World\TestCam</Filter>
+    </ClCompile>
+    <ClCompile Include="MapGenerator.cpp">
+      <Filter>소스 파일\World\Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
