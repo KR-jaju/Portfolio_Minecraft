@@ -191,26 +191,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
-    case WM_KEYDOWN:
-    {
-        vec3 pos = cam.getPos();
-        switch (wParam)
-        {
-        case 'W':
-            cam.movePos(pos.x, pos.y, pos.z + 1.f);
-            break;
-        case 'A':
-            cam.movePos(pos.x - 1.f, pos.y, pos.z);
-            break;
-        case 'S':
-            cam.movePos(pos.x, pos.y, pos.z - 1.f);
-            break;
-        case 'D':
-            cam.movePos(pos.x + 1.f, pos.y, pos.z);
-            break;
-        }
-        break;
-    }
     case WM_PAINT:
         {
             PAINTSTRUCT ps;

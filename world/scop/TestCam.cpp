@@ -21,6 +21,17 @@ void TestCam::setDir(vec3 dir)
 
 void TestCam::update()
 {
+	vec3 move_dir = vec3(0, 0, 0);
+	if (GetAsyncKeyState('A') & 0x8000)
+		move_dir += vec3(-1, 0, 0);
+	if (GetAsyncKeyState('D') & 0x8000)
+		move_dir += vec3(1, 0, 0);
+	if (GetAsyncKeyState('W') & 0x8000)
+		move_dir += vec3(0, 0, 1);
+	if (GetAsyncKeyState('S') & 0x8000)
+		move_dir += vec3(0, 0, -1);
+	move_dir = XMVector3Normalize(move_dir) * 0.3f;
+	this->pos += move_dir;
 	this->mvp.view = XMMatrixLookToLH(this->pos, this->dir, vec3(0, 1, 0));
 	this->mvp.proj = XMMatrixPerspectiveFovLH(
 		XMConvertToDegrees(70),

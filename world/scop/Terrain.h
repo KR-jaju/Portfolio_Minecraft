@@ -29,6 +29,10 @@ private:
 	) const;
 	int relocateTerrain(float x, float z, int flag);
 	void allocateTerrain(int flag);
+	void allocateTerrainLeft(int flag);
+	void allocateTerrainRiht(int flag);
+	void allocateTerrainBack(int flag);
+	void allocateTerrainFront(int flag);
 private:
 	set<string> file_book;
 	map<vec3, uint32> object_book;

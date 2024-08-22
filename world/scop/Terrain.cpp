@@ -169,7 +169,7 @@ void Terrain::terrainsetVerticesAndIndices()
 
 void Terrain::setSightChunk(int cnt)
 {
-	this->sight_r = cnt;
+	this->sight_r = cnt % min(this->size_h, this->size_w);
 }
 
 void Terrain::readTerrainForTest()
@@ -221,13 +221,13 @@ int Terrain::checkTerrainBoundary(float x, float z) const
 	float r = 16.f * this->sight_r;
 	int mask = 0;
 	if (x - r < this->start_pos.x)
-		mask |= 1 << 0;
+		mask |= 1 << 0; // left out
 	if (x + r > this->end_pos.x)
-		mask |= 1 << 1;
+		mask |= 1 << 1; // right out
 	if (z + r > this->start_pos.y)
-		mask |= 1 << 2;
+		mask |= 1 << 2; // back out
 	if (z - r < this->end_pos.y)
-		mask |= 1 << 3;
+		mask |= 1 << 3; // front out
 	return mask;
 }
 
@@ -238,69 +238,232 @@ int Terrain::relocateTerrain(float x, float z, int flag)
 			for (int j = this->size_w - 1; j > 0; j--)
 				this->terrain[i][j] = this->terrain[i][j - 1];
 		}
+		for (int i = 0; i < this->size_h; i++)
+			this->terrain[i][this->size_w - 1]->setChunk(nullptr, "right");
+		this->start_pos = this->start_pos + vec2(-16, 0);
 	}
 	else if (flag & 2) {
-		
+		for (int i = 0; i < this->size_h; i++) {
+			for (int j = 0; j < this->size_w - 1; j++)
+				this->terrain[i][j] = this->terrain[i][j + 1];
+		}
+		for (int i = 0; i < this->size_h; i++)
+			this->terrain[i][0]->setChunk(nullptr, "left");
+		this->start_pos = this->start_pos + vec2(16, 0);
 	}
 	if (flag & 4) {
-		
+		for (int i = this->size_h - 1; i > 0; i--) {
+			for (int j = 0; j < this->size_w; j++)
+				this->terrain[i][j] = this->terrain[i - 1][j];
+		}
+		for (int i = 0; i < this->size_w; i++)
+			this->terrain[this->size_h - 1][i]->setChunk(nullptr, "front");
+		this->start_pos = this->start_pos + vec2(0, 16);
 	}
 	else if (flag & 8) {
-		
+		for (int i = 0; i < this->size_h - 1; i++) {
+			for (int j = 0; j < this->size_w; j++)
+				this->terrain[i][j] = this->terrain[i + 1][j];
+		}
+		for (int i = 0; i < this->size_w; i++)
+			this->terrain[0][i]->setChunk(nullptr, "back");
+		this->start_pos = this->start_pos + vec2(0, -16);
 	}
+	this->end_pos.x = this->start_pos.x + 16.f * this->size_w;
+	this->end_pos.y = this->start_pos.y - 16.f * this->size_h;
 	return flag;
 }
 
 void Terrain::allocateTerrain(int flag)
 {
-	if (flag & 1) {
-		vec3 pos;
-		if (flag & 4)
-			pos = this->terrain[1][1]->getStartPos() + vec3(-16, 0, 16);
-		else
-			pos = this->terrain[0][1]->getStartPos() + vec3(-16, 0, 0);
-		for (int i = 0; i < this->size_h; i++) {
-			this->terrain[i][0] = make_shared<Chunk>();
-			this->terrain[i][0]->setStartPos(pos.x, 0, pos.z);
-			if (i)
-				this->terrain[i][0]->setChunk(this->terrain[i - 1][0].get(), 
-					"back");
-			if (i != this->size_h - 1)
-				this->terrain[i][0]->setChunk(this->terrain[i + 1][0].get(),
-					"front");
-			this->terrain[i][0]->setChunk(nullptr, "left");
-			this->terrain[i][0]->setChunk(this->terrain[i][1].get(), "right");
-		}
-		for (int i = 0; i < this->size_h * 16; i++) {
-			int nz = i / 16;
-			float z = (this->start_pos.y - i) / 32;
-			double res = this->perlin_noise.getNoise2D(
-				this->start_pos.x / 32, z, 3, 0.5);
+	if (flag & 1)
+		this->allocateTerrainLeft(flag);
+	else if (flag & 2)
+		this->allocateTerrainRiht(flag);
+	if (flag & 4)
+		this->allocateTerrainBack(flag);
+	else if (flag & 8)
+		this->allocateTerrainFront(flag);
+}
+
+void Terrain::allocateTerrainLeft(int flag)
+{
+	for (int i = 0; i < this->size_h; i++) {
+		this->terrain[i][0] = make_shared<Chunk>();
+		this->terrain[i][0]->setStartPos(this->start_pos.x, 0, 
+			this->start_pos.y - 16 * i);
+	}
+	for (int i = 0; i < this->size_h; i++) {
+		if (i)
+			this->terrain[i][0]->setChunk(this->terrain[i - 1][0].get(),
+				"back");
+		if (i != this->size_h - 1)
+			this->terrain[i][0]->setChunk(this->terrain[i + 1][0].get(),
+				"front");
+		this->terrain[i][0]->setChunk(this->terrain[i][1].get(), "right");
+		this->terrain[i][1]->setChunk(this->terrain[i][0].get(), "left");
+	}
+	for (int i = 0; i < this->size_h * 16; i++) {
+		int nz = i / 16;
+		float z = (this->start_pos.y - i) / 32;
+		for (int j = 0; j < 16; j++) {
+			float x = (this->start_pos.x + j) / 32;
+			double res = this->perlin_noise.getNoise2D(x, z, 3, 0.5);
 			int16 h = static_cast<int16>(((res + 1.f) * 0.5f) * 30.f);
-			this->terrain[nz][0]->setHeight(0, i % 16, h);
+			this->terrain[nz][0]->setHeight(j, i % 16, h);
 			for (int y = 0; y < h; y++)
-				this->terrain[nz][0]->setBlockInChunk(0, y, i % 16, 1);
-		}
-		for (int i = 0; i < this->size_h; i++) {
-			this->terrain[i][0]->setVerticesAndIndices();
-			this->terrain[i][0]->setRender(
-				this->graphic,
-				this->rasterizer_state,
-				this->sampler_state,
-				L"TestVertexShader2.hlsl",
-				L"TestPixelShader2.hlsl",
-				this->blend_state_arr[0]
-			);
+				this->terrain[nz][0]->setBlockInChunk(j, y, i % 16, 1);
 		}
 	}
-	else if (flag & 2) {
-		
+	for (int i = 0; i < this->size_h; i++) {
+		this->terrain[i][0]->setVerticesAndIndices();
+		this->terrain[i][0]->setRender(
+			this->graphic,
+			this->rasterizer_state,
+			this->sampler_state,
+			L"TestVertexShader2.hlsl",
+			L"TestPixelShader2.hlsl",
+			this->blend_state_arr[0]
+		);
 	}
-	if (flag & 4) {
+}
 
+void Terrain::allocateTerrainRiht(int flag)
+{
+	int ix = this->size_w - 1;
+	float sx = this->start_pos.x + 16 * (this->size_w - 1);
+	for (int i = 0; i < this->size_h; i++) {
+		this->terrain[i][ix] = make_shared<Chunk>();
+		this->terrain[i][ix]->setStartPos(sx, 0, this->start_pos.y - 16 * i);
 	}
-	else if (flag & 8) {
+	for (int i = 0; i < this->size_h; i++) {
+		if (i)
+			this->terrain[i][ix]->setChunk(this->terrain[i - 1][ix].get(),
+				"back");
+		if (i != this->size_h - 1)
+			this->terrain[i][ix]->setChunk(this->terrain[i + 1][ix].get(),
+				"front");
+		this->terrain[i][ix]->setChunk(this->terrain[i][ix - 1].get(),
+			"left");
+		this->terrain[i][ix - 1]->setChunk(this->terrain[i][ix].get(),
+			"right");
+	}
+	for (int i = 0; i < this->size_h * 16; i++) {
+		int nz = i / 16;
+		float z = (this->start_pos.y - i) / 32;
+		for (int j = 0; j < 16; j++) {
+			float x = (sx + j) / 32;
+			double res = this->perlin_noise.getNoise2D(x, z, 3, 0.5);
+			int16 h = static_cast<int16>(((res + 1.f) * 0.5f) * 30.f);
+			this->terrain[nz][ix]->setHeight(j, i % 16, h);
+			for (int y = 0; y < h; y++)
+				this->terrain[nz][ix]->setBlockInChunk(j, y, i % 16, 1);
+		}
+	}
+	for (int i = 0; i < this->size_h; i++) {
+		this->terrain[i][ix]->setVerticesAndIndices();
+		this->terrain[i][ix]->setRender(
+			this->graphic,
+			this->rasterizer_state,
+			this->sampler_state,
+			L"TestVertexShader2.hlsl",
+			L"TestPixelShader2.hlsl",
+			this->blend_state_arr[0]
+		);
+	}
+}
 
+void Terrain::allocateTerrainBack(int flag)
+{
+	int s_idx = 0;
+	int e_idx = this->size_w;
+	if (flag & 1)
+		s_idx += 1;
+	else if (flag & 2)
+		e_idx -= 1;
+	for (int i = s_idx; i < e_idx; i++) {
+		this->terrain[0][i] = make_shared<Chunk>();
+		this->terrain[0][i]->setStartPos(this->start_pos.x + 16 * i, 0, 
+			this->start_pos.y);
+	}
+	for (int i = s_idx; i < e_idx; i++) {
+		if (i)
+			this->terrain[0][i]->setChunk(this->terrain[0][i - 1].get(), "left");
+		if (i != this->size_w - 1)
+			this->terrain[0][i]->setChunk(this->terrain[0][i + 1].get(), "right");
+		this->terrain[0][i]->setChunk(this->terrain[1][i].get(), "front");
+		this->terrain[1][i]->setChunk(this->terrain[0][i].get(), "back");
+	}
+	for (int i = 0; i < 16; i++) {
+		float sz = (this->start_pos.y - i) / 32;
+		for (int j = 16 * s_idx; j < 16 * e_idx; j++) {
+			int ix = j / 16;
+			float sx = (this->start_pos.x + j) / 32;
+			float res = this->perlin_noise.getNoise2D(sx, sz, 5, 0.5);
+			int16 h = static_cast<int16>(((res + 1.f) * 0.5f) * 30.f);
+			this->terrain[0][ix]->setHeight(j % 16, i, h);
+			for (int y = 0; y < h; y++)
+				this->terrain[0][ix]->setBlockInChunk(j % 16, y, i, 1);
+		}
+	}
+	for (int i = s_idx; i < e_idx; i++) {
+		this->terrain[0][i]->setVerticesAndIndices();
+		this->terrain[0][i]->setRender(
+			this->graphic,
+			this->rasterizer_state,
+			this->sampler_state,
+			L"TestVertexShader2.hlsl",
+			L"TestPixelShader2.hlsl",
+			this->blend_state_arr[0]
+		);
+	}
+}
+
+void Terrain::allocateTerrainFront(int flag)
+{
+	int s_idx = 0;
+	int e_idx = this->size_w;
+	if (flag & 1)
+		s_idx += 1;
+	else if (flag & 2)
+		e_idx -= 1;
+	int iy = this->size_h - 1;
+	for (int i = s_idx; i < e_idx; i++) {
+		this->terrain[iy][i] = make_shared<Chunk>();
+		this->terrain[iy][i]->setStartPos(
+			this->start_pos.x + 16 * i, 
+			0, this->start_pos.y - 16 * (this->size_h - 1));
+	}
+	for (int i = s_idx; i < e_idx; i++) {
+		if (i)
+			this->terrain[iy][i]->setChunk(this->terrain[iy][i - 1].get(), "left");
+		if (i != this->size_w - 1)
+			this->terrain[iy][i]->setChunk(this->terrain[iy][i + 1].get(), "right");
+		this->terrain[iy][i]->setChunk(this->terrain[iy - 1][i].get(), "back");
+		this->terrain[iy - 1][i]->setChunk(this->terrain[iy][i].get(), "front");
+	}
+	for (int i = 0; i < 16; i++) {
+		float sz = (this->start_pos.y - i - 16 * (this->size_h - 1)) / 32;
+		for (int j = 16 * s_idx; j < 16 * e_idx; j++) {
+			int ix = j / 16;
+			float sx = (this->start_pos.x + j) / 32;
+			float res = this->perlin_noise.getNoise2D(sx, sz, 5, 0.5);
+			int16 h = static_cast<int16>(((res + 1.f) * 0.5f) * 30.f);
+			this->terrain[iy][ix]->setHeight(j % 16, i, h);
+			for (int y = 0; y < h; y++)
+				this->terrain[iy][ix]->setBlockInChunk(j % 16, y, i, 1);
+		}
+	}
+	for (int i = s_idx; i < e_idx; i++) {
+		this->terrain[iy][i]->setVerticesAndIndices();
+		this->terrain[iy][i]->setRender(
+			this->graphic,
+			this->rasterizer_state,
+			this->sampler_state,
+			L"TestVertexShader2.hlsl",
+			L"TestPixelShader2.hlsl",
+			this->blend_state_arr[0]
+		);
 	}
 }
 
