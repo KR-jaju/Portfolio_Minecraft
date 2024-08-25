@@ -32,6 +32,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ LPWSTR    lpCmdLine,
                      _In_ int       nCmdShow)
 {
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     MyRegisterClass(hInstance);
 
     // 애플리케이션 초기화를 수행합니다:
@@ -45,16 +46,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // test code
     Terrain terrain(hWnd, 800, 650);
     cam.setDir(vec3(0, -1, 0.0000001f));
-    cam.movePos(0, 60.f, 0.f);
+    cam.movePos(0, 50.f, 0.f);
     Mat view = XMMatrixLookAtLH(vec3(0, 60.f, 0.f), 
         vec3(0, -1, 0.00001f), vec3(0, 1, 0));
-    cout << "Mat" << endl;
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++)
-            cout << view.m[i][j] << ' ';
-        cout << endl;
-    }
-    cout << endl;
     terrain.setSightChunk(1);
     clock_t start, finish;
     start = clock();

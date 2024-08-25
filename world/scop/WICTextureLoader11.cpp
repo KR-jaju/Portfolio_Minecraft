@@ -29,7 +29,7 @@
 // For now, we just load the first frame (note: DirectXTex supports multi-frame images)
 
 #include "pch.h"
-#include "WICTextureLoader.h"
+#include "WICTextureLoader11.h"
 #include <dxgiformat.h>
 #include <assert.h>
 
@@ -40,7 +40,7 @@
 
 #include <memory>
 
-#include "WICTextureLoader.h"
+#include "WICTextureLoader11.h"
 
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/) && !defined(DXGI_1_2_FORMATS)
 #define DXGI_1_2_FORMATS

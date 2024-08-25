@@ -87,7 +87,8 @@ Terrain::Terrain(HWND hwnd, uint32 width, uint32 height)
 	this->texture_array = make_shared<TextureArray>(
 		this->graphic->getDevice(),
 		this->graphic->getContext(),
-		path_arr
+		path_arr,
+		0
 	);
 }
 
@@ -257,7 +258,7 @@ int Terrain::relocateTerrain(float x, float z, int flag)
 				this->terrain[i][j] = this->terrain[i - 1][j];
 		}
 		for (int i = 0; i < this->size_w; i++)
-			this->terrain[this->size_h - 1][i]->setChunk(nullptr, "front");
+			this->terrain[this->size_h-1][i]->setChunk(nullptr, "front");
 		this->start_pos = this->start_pos + vec2(0, 16);
 	}
 	else if (flag & 8) {

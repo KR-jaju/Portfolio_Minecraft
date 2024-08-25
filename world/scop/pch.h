@@ -7,7 +7,7 @@
 #include <windows.h>
 #include "DirectXMath.h"
 #include "SimpleMath.h"
-#include "WICTextureLoader.h"
+#include "WICTextureLoader11.h"
 
 using int8 = __int8;
 using int16 = __int16;

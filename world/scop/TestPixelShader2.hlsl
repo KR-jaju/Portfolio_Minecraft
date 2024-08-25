@@ -28,14 +28,23 @@ float4 main(PS_INPUT input) : SV_TARGET
         uvw = float3(input.uv, input.dir + offset);
     else
         uvw = float3(input.uv, 2 + offset);
+    
+    //uvw = float3(input.uv, 1);
 
     float2 dvec = float2(input.world_pos.x - pos.x, 
         input.world_pos.z - pos.z);
     float d = sqrt(pow(dvec.x, 2) + pow(dvec.y, 2));
+    float dist = pos.y - input.world_pos.y;
+    float distMin = 10.0;
+    float distMax = 50.0;
+    float lod = 5 * saturate((dist - distMin) / (distMax - distMin));
+    
+    //lod = 0;
     
     if (d <= r)
-        color = texture_arr.Sample(sampler0, uvw);
+        color = texture_arr.SampleLevel(sampler0, uvw, lod);
     else
-        color = texture_arr.Sample(sampler0, uvw) * float4(0.6, 0.6, 0.6, 1.0);
+        color = texture_arr.Sample(sampler0, uvw);
+        //color = texture_arr.SampleLevel(sampler0, uvw, lod) * float4(0.6, 0.6, 0.6, 1.0);
     return color;
 }

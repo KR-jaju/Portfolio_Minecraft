@@ -94,13 +94,16 @@
     <Filter Include="소스 파일\World\Map">
       <UniqueIdentifier>{7e7a0dc6-b5f2-44b0-b090-c9bcf401b95d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Utils\WICTextureLoader">
+      <UniqueIdentifier>{84562d8d-e3d2-48a6-aa82-609c84bc2068}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Utils\SimpleMath">
+      <UniqueIdentifier>{60c06e56-3714-4101-aae9-cf3e3f0320dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="SimpleMath.h">
-      <Filter>헤더 파일\Utils</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
       <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
@@ -147,9 +150,6 @@
     <ClInclude Include="TextureArray.h">
       <Filter>소스 파일\Engine\Pipeline\5_Texture\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="WICTextureLoader.h">
-      <Filter>헤더 파일\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="PerlinNoise.h">
       <Filter>소스 파일\World\Noise</Filter>
     </ClInclude>
@@ -174,6 +174,12 @@
     <ClInclude Include="MapGenerator.h">
       <Filter>소스 파일\World\Map</Filter>
     </ClInclude>
+    <ClInclude Include="SimpleMath.h">
+      <Filter>헤더 파일\Utils\SimpleMath</Filter>
+    </ClInclude>
+    <ClInclude Include="WICTextureLoader11.h">
+      <Filter>헤더 파일\Utils\WICTextureLoader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -181,9 +187,6 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="SimpleMath.cpp">
-      <Filter>헤더 파일\Utils</Filter>
     </ClCompile>
     <ClCompile Include="ConstantBuffer.cpp">
       <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
@@ -230,9 +233,6 @@
     <ClCompile Include="TextureArray.cpp">
       <Filter>소스 파일\Engine\Pipeline\5_Texture\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="WICTextureLoader.cpp">
-      <Filter>헤더 파일\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="PerlinNoise.cpp">
       <Filter>소스 파일\World\Noise</Filter>
     </ClCompile>
@@ -244,6 +244,12 @@
     </ClCompile>
     <ClCompile Include="MapGenerator.cpp">
       <Filter>소스 파일\World\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleMath.cpp">
+      <Filter>헤더 파일\Utils\SimpleMath</Filter>
+    </ClCompile>
+    <ClCompile Include="WICTextureLoader11.cpp">
+      <Filter>헤더 파일\Utils\WICTextureLoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -297,7 +303,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
-      <Filter>헤더 파일\Utils</Filter>
+      <Filter>헤더 파일\Utils\SimpleMath</Filter>
     </None>
   </ItemGroup>
 </Project>
