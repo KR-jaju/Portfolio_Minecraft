@@ -1,14 +1,15 @@
 #include "pch.h"
 #include "InputLayout.h"
+#include "Context.h"
 
 
 InputLayout::InputLayout(
-	ComPtr<ID3D11Device> device, 
+	Context const& context,
 	D3D11_INPUT_ELEMENT_DESC const* descs, 
 	uint32 count,
 	ComPtr<ID3DBlob> vertexShaderBlob
 )
-	: device(device)
+	: device(context.getDevice())
 {
 	HRESULT hr = this->device->CreateInputLayout(
 		descs,

@@ -5,7 +5,6 @@
 #include "scop.h"
 #include "Game.h"
 
-#include "Test.h"
 #include "Test2.h"
 #include "WindowCallback.h"
 #include "Window.h"
@@ -25,14 +24,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_ LPWSTR    lpCmdLine,
     _In_ int       nCmdShow)
 {
+    std::shared_ptr<d3d11::Device> device = make_shared<d3d11::Device>();
     Window  window(hInstance, nCmdShow, L"WindowClassName");
     MSG msg = {};
-    Test2 test(window.getHandle(), 800, 650);
-
+    Test2 handler(device, window.getHandle(), 400, 400); //Application
     std::cout << "start";
-
-    window.setCallback(std::make_unique<WCallback>());
-    test.setDrawTexSkel();
+    window.setCallback(&handler);
     while (1) //msg.message != WM_QUIT)
     {
         if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -40,10 +37,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-        test.update();
-        //test.render();
-        test.renderUV();
+        handler.update();
+        handler.renderUV();
     }
-
     return (int) msg.wParam;
 }

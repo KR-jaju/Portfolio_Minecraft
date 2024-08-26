@@ -1,15 +1,12 @@
 #include "pch.h"
 #include "Test2.h"
 
-Test2::Test2(HWND hwnd, UINT width, UINT height)
-	: context(hwnd),
-	swapchain(context, width, height),
-	swapchain_rtv(this->context, this->swapchain),
-	depth_texture(context, width, height),
-	dsv(this->context, this->depth_texture)
+Test2::Test2(std::shared_ptr<Device> const& device, HWND hwnd, UINT width, UINT height)
+	: device(device),
+	swap_chain(*device, hwnd, width, height),
+	context(*device)
 {
-	this->graphic = make_shared<Graphics>(hwnd, width, height);
-	
+	this->geometrySkel();
 }
 
 Test2::~Test2()
@@ -18,7 +15,6 @@ Test2::~Test2()
 
 void Test2::setDrawTexSkel()
 {
-	this->geometrySkel();
 	////this->graphic->setClearColor(0.5f, 0.5f, 0.5f, 1.f);
 	//this->index_buffer = make_shared<Buffer<uint32>>(
 	//	this->graphic->getDevice(),
@@ -105,23 +101,30 @@ void Test2::setDrawTexSkel()
 
 void Test2::renderUV()
 {
-	//this->graphic->renderBegin();
-	ID3D11DeviceContext* device_context = this->context.getDeviceContext();
-	ID3D11RenderTargetView* rtv_array[] = {
-		this->swapchain_rtv.getInternalResource()
-	};
-	IDXGISwapChain* swap_chain = this->swapchain.getInternalResource();
+	this->context.setRenderTarget(&this->swap_chain);
+	this->context.clearColor(0, 0.5f, 0.5f, 0.5f, 1.0f);
+	this->context.clearDepthStencil(1.0f, 0);
 
-	ID3D11DepthStencilView* dsv = this->dsv.getInternalResource();
-	this->swapchain_rtv.clear(0.5f, 0.5f, 0.5f, 1.0f);
-	this->dsv.clearDepth(1.0f);
-	this->context.setViewport(0, 0, 400, 400);
-	device_context->OMSetRenderTargets(
-		1,
-		rtv_array,
-		dsv
-	);
-	device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//this->context.setPrimitive();
+
+	this->device->execute(this->context);
+	this->swap_chain.present();
+	//this->graphic->renderBegin();
+	//ID3D11DeviceContext* device_context = this->context.getDeviceContext();
+	//ID3D11RenderTargetView* rtv_array[] = {
+	//	this->swapchain_rtv.getInternalResource()
+	//};
+	//IDXGISwapChain* swap_chain = this->swapchain.getInternalResource();
+	//ID3D11DepthStencilView* dsv = this->dsv.getInternalResource();
+	//this->context.setViewport(0, 0, 400, 400);
+	//this->swapchain_rtv.clear(0.5f, 0.5f, 0.5f, 1.0f);
+	//this->dsv.clearDepth(1.0f);
+	//device_context->OMSetRenderTargets(
+	//	1,
+	//	rtv_array,
+	//	dsv
+	//);
+	//device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//device_context->IASetInputLayout(
 	//	
 	//);
@@ -158,7 +161,6 @@ void Test2::renderUV()
 //		1,
 //		this->constant_buffer->getComPtr().GetAddressOf()
 //	);
-//
 //	//RS
 //	this->graphic->getContext()->RSSetState(
 //		this->rasterizer_state->getComPtr().Get()
@@ -195,7 +197,7 @@ void Test2::renderUV()
 //	);
 //
 	//this->graphic->renderEnd();
-	swap_chain->Present(1, 0);
+	//swap_chain->Present(1, 0);
 }
 
 void Test2::update()
@@ -220,6 +222,12 @@ void Test2::update()
 	//this->constant_buffer->update(mvp);
 
  
+}
+
+LRESULT	Test2::onEvent(HWND handle, UINT msg, WPARAM w_param, LPARAM l_param)
+{
+	//std::cout << "Event";
+	return DefWindowProc(handle, msg, w_param, l_param);
 }
 
 void Test2::geometrySkel()

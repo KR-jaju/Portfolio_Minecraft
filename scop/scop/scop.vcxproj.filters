@@ -22,6 +22,9 @@
     <Filter Include="소스 파일\Engine\Graphic">
       <UniqueIdentifier>{3ca9b127-b72a-476b-bc29-05c6ce6ddb79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Engine\graphics">
+      <UniqueIdentifier>{b9169b4f-b72e-42e5-935b-bb5389672423}</UniqueIdentifier>
+    </Filter>
     <Filter Include="소스 파일\Engine\Pipeline">
       <UniqueIdentifier>{eae637a7-e201-4e7e-a79d-f54297ea6d9b}</UniqueIdentifier>
     </Filter>
@@ -49,11 +52,8 @@
     <Filter Include="소스 파일\Engine\Pipeline\4_OutputMerger\BlendState">
       <UniqueIdentifier>{c7059efa-b3ae-468c-b421-da2da03c359d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Engine\d3d">
-      <UniqueIdentifier>{e4200732-699d-4a79-956f-57a7f2b41f41}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Engine\graphics">
-      <UniqueIdentifier>{b9169b4f-b72e-42e5-935b-bb5389672423}</UniqueIdentifier>
+    <Filter Include="소스 파일\Engine\NewFilter1">
+      <UniqueIdentifier>{f32c0a56-fdef-4025-a3aa-e0dea4e41bd1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -63,50 +63,14 @@
     <ClInclude Include="targetver.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="scop.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="SimpleMath.h">
       <Filter>헤더 파일\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="ConstantBuffer.h">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="InputLayout.h">
-      <Filter>소스 파일\Engine\Pipeline\1_InputAssembler</Filter>
-    </ClInclude>
-    <ClInclude Include="VertexShader.h">
-      <Filter>소스 파일\Engine\Pipeline\3_Shader\VertexShader</Filter>
-    </ClInclude>
-    <ClInclude Include="PixelShader.h">
-      <Filter>소스 파일\Engine\Pipeline\3_Shader\PixelShader</Filter>
-    </ClInclude>
-    <ClInclude Include="Test.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="BlendState.h">
-      <Filter>소스 파일\Engine\Pipeline\4_OutputMerger\BlendState</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics.h">
-      <Filter>소스 파일\Engine\Graphic</Filter>
-    </ClInclude>
-    <ClInclude Include="RasterizerState.h">
-      <Filter>소스 파일\Engine\Pipeline\2_Rasterizer</Filter>
-    </ClInclude>
-    <ClInclude Include="Buffer.h">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>소스 파일\Engine\Graphic</Filter>
@@ -114,133 +78,73 @@
     <ClInclude Include="WindowCallback.h">
       <Filter>소스 파일\Engine\Graphic</Filter>
     </ClInclude>
-    <ClInclude Include="RenderTarget.h">
-      <Filter>소스 파일\Engine\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>소스 파일\Engine\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClInclude>
-    <ClInclude Include="SamplerState.h">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture2D.h">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClInclude>
-    <ClInclude Include="DepthStencilView.h">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderTargetView.h">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderResourceView.h">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClInclude>
-    <ClInclude Include="DepthStencilTexture.h">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderResourceTexture.h">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderTargetTexture.h">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClInclude>
     <ClInclude Include="Test2.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="SwapChain.h">
-      <Filter>소스 파일\Engine\d3d</Filter>
+    <ClInclude Include="d3d11\Buffer.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Context.h">
-      <Filter>소스 파일\Engine\d3d</Filter>
+    <ClInclude Include="d3d11\Context.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d11\Device.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d11\RenderTarget.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d11\Texture2D.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d11\SwapChain.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d11\Mesh.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d11\Primitive.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d11\Program.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d11\ConstantBuffer.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="SimpleMath.cpp">
       <Filter>헤더 파일\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="ConstantBuffer.cpp">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="InputLayout.cpp">
-      <Filter>소스 파일\Engine\Pipeline\1_InputAssembler</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexShader.cpp">
-      <Filter>소스 파일\Engine\Pipeline\3_Shader\VertexShader</Filter>
-    </ClCompile>
-    <ClCompile Include="PixelShader.cpp">
-      <Filter>소스 파일\Engine\Pipeline\3_Shader\PixelShader</Filter>
-    </ClCompile>
-    <ClCompile Include="Test.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="BlendState.cpp">
-      <Filter>소스 파일\Engine\Pipeline\4_OutputMerger\BlendState</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics.cpp">
-      <Filter>소스 파일\Engine\Graphic</Filter>
-    </ClCompile>
-    <ClCompile Include="RasterizerState.cpp">
-      <Filter>소스 파일\Engine\Pipeline\2_Rasterizer</Filter>
-    </ClCompile>
-    <ClCompile Include="Buffer.cpp">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
-    </ClCompile>
     <ClCompile Include="Window.cpp">
       <Filter>소스 파일\Engine\Graphic</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderTarget.cpp">
-      <Filter>소스 파일\Engine\graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClCompile>
-    <ClCompile Include="SamplerState.cpp">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture2D.cpp">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClCompile>
-    <ClCompile Include="DepthStencilView.cpp">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderTargetView.cpp">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderResourceView.cpp">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderResourceTexture.cpp">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClCompile>
-    <ClCompile Include="DepthStencilTexture.cpp">
-      <Filter>소스 파일\Engine\d3d</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderTargetTexture.cpp">
-      <Filter>소스 파일\Engine\d3d</Filter>
     </ClCompile>
     <ClCompile Include="Test2.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="SwapChain.cpp">
-      <Filter>소스 파일\Engine\d3d</Filter>
+    <ClCompile Include="d3d11\Buffer.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Context.cpp">
-      <Filter>소스 파일\Engine\d3d</Filter>
+    <ClCompile Include="d3d11\Context.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="d3d11\Device.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="d3d11\Texture2D.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="d3d11\SwapChain.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="d3d11\ConstantBuffer.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

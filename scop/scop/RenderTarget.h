@@ -1,11 +1,9 @@
 #pragma once
 
+#include "Context.h"
+
 class RenderTarget 
 {
 public:
-	//RenderTarget(std::vector<)
-	~RenderTarget() = default;
-	void	bind();
-private:
-	//std::vector
+	virtual ~RenderTarget() = default;
 };

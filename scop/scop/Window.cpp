@@ -7,9 +7,9 @@ Window::Window(HINSTANCE instance, int nCmdShow, std::wstring const& class_name,
 	this->handle = this->initialize(instance, nCmdShow, class_name, title);
 }
 
-void	Window::setCallback(std::unique_ptr<WindowCallback>&& callback) {
-	SetWindowLongPtr(this->handle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(callback.get()));
-	this->callback = std::move(callback);
+void	Window::setCallback(WindowCallback* callback) {
+	SetWindowLongPtr(this->handle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(callback));
+	this->callback = callback;
 }
 
 HWND	Window::getHandle() const
