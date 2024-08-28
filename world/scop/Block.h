@@ -1,13 +1,6 @@
 #pragma once
 
-enum class BlockFace {
-	Top,
-	Bottom,
-	Front,
-	Back,
-	Left,
-	Right
-};
+#include "WorldUtils.h"
 
 class Texture;
 class TextureArray;
@@ -15,10 +8,21 @@ class TextureArray;
 class Block
 {
 public:
-	Block(int type);
+	Block();
 	~Block();
+	void addBlockFacePosAndTex(
+		vec3 const& start_pos,
+		int dir,
+		float x,
+		float y,
+		float z,
+		int type,
+		vector<VertexBlockUV> &vertices
+	);
 
-private:
-	int type;
+	void addBlockFaceIndices(
+		uint32 start, 
+		vector<uint32>& indices
+	);
 };
 

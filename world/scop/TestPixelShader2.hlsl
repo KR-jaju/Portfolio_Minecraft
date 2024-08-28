@@ -44,7 +44,6 @@ float4 main(PS_INPUT input) : SV_TARGET
     if (d <= r)
         color = texture_arr.SampleLevel(sampler0, uvw, lod);
     else
-        color = texture_arr.Sample(sampler0, uvw);
-        //color = texture_arr.SampleLevel(sampler0, uvw, lod) * float4(0.6, 0.6, 0.6, 1.0);
+        color = texture_arr.SampleLevel(sampler0, uvw, lod) * float4(0.6, 0.6, 0.6, 1.0);
     return color;
 }

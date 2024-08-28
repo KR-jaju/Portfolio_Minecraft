@@ -55,14 +55,11 @@ private:
 	Chunk* back;
 	Chunk* left;
 	Chunk* right;
-	shared_ptr<Buffer<VertexBlockUV>> vertex_buffer;
-	vector<VertexBlockUV> vertices;
-	shared_ptr<Buffer<uint32>> index_buffer;
 	vector<uint32> indices;
 	vector<D3D11_INPUT_ELEMENT_DESC> layout;
 	shared_ptr<ConstantBuffer> constant_buffer;
-	vec3 start_pos;
 	MVP mvp;
+	vector<VertexBlockUV> vertices;
 
 public: // tmp
 	void setCamPos(vec3 const& pos);
@@ -77,5 +74,11 @@ private:
 	shared_ptr<SamplerState> sampler_state;
 	shared_ptr<RasterizerState> rasterizer_state;
 	shared_ptr<BlendState> blend_state;
+
+private: // new 
+	shared_ptr<Buffer<VertexBlockUV>> vertex_buffer;
+	shared_ptr<Buffer<uint32>> index_buffer;
+	bool render_flag;
+	vec3 start_pos;
 };
 

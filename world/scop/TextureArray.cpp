@@ -104,45 +104,6 @@ TextureArray::TextureArray(
 	}
 }
 
-
-ComPtr<ID3D11Texture2D>
-CreateStagingTexture(ComPtr<ID3D11Device>& device,
-	ComPtr<ID3D11DeviceContext>& context, const int width,
-	const int height, const std::vector<uint8_t>& image,
-	const int mipLevels = 1, const int arraySize = 1)
-{
-
-	// 스테이징 텍스춰 만들기
-	D3D11_TEXTURE2D_DESC txtDesc;
-	ZeroMemory(&txtDesc, sizeof(txtDesc));
-	txtDesc.Width = width;
-	txtDesc.Height = height;
-	txtDesc.MipLevels = mipLevels;
-	txtDesc.ArraySize = arraySize;
-	txtDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	txtDesc.SampleDesc.Count = 1;
-	txtDesc.Usage = D3D11_USAGE_STAGING;
-	txtDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
-
-	ComPtr<ID3D11Texture2D> stagingTexture;
-	if (FAILED(device->CreateTexture2D(&txtDesc, nullptr,
-		stagingTexture.GetAddressOf()))) {
-		cout << "Failed()" << endl;
-	}
-
-	// CPU에서 이미지 데이터 복사
-	D3D11_MAPPED_SUBRESOURCE ms;
-	context->Map(stagingTexture.Get(), NULL, D3D11_MAP_WRITE, NULL, &ms);
-	uint8_t* pData = (uint8_t*)ms.pData;
-	for (UINT h = 0; h < UINT(height); h++) { // 가로줄 한 줄씩 복사
-		memcpy(&pData[h * ms.RowPitch], &image[h * width * 4],
-			width * sizeof(uint8_t) * 4);
-	}
-	context->Unmap(stagingTexture.Get(), NULL);
-
-	return stagingTexture;
-}
-
 void ReadImage(const std::string filename, std::vector<uint8_t>& image,
 	int& width, int& height) {
 
@@ -153,18 +114,16 @@ void ReadImage(const std::string filename, std::vector<uint8_t>& image,
 
 	// assert(channels == 4);
 
-	cout << filename << " " << width << " " << height << " " << channels
-		<< endl;
-
 	// 4채널로 만들어서 복사
 	image.resize(width * height * 4);
 
 	if (channels == 3) {
+		// 채널3 (rgb) -> 채널4(rgba)로 바꿔줌
 		for (size_t i = 0; i < width * height; i++) {
 			for (size_t c = 0; c < 3; c++) {
 				image[4 * i + c] = img[i * channels + c];
 			}
-			image[4 * i + 3] = 255;
+			image[4 * i + 3] = 255; // alpha 값을 항상 255로 설정
 		}
 	}
 	else if (channels == 4) {
@@ -178,6 +137,7 @@ void ReadImage(const std::string filename, std::vector<uint8_t>& image,
 		std::cout << "Read 3 or 4 channels images only. " << channels
 			<< " channels" << endl;
 	}
+	delete img;
 }
 
 // mipmap 적용
@@ -227,18 +187,15 @@ TextureArray::TextureArray(
         for (size_t i = 0; i < imageArray.size(); i++) {
 
             auto& image = imageArray[i];
-
-            // StagingTexture는 Texture2DArray가 아니라 Texture2D 입니다.
-            ComPtr<ID3D11Texture2D> stagingTexture =
-                CreateStagingTexture(device, context, width, height, image, 1, 1);
-
-            // 스테이징 텍스춰를 텍스춰 배열의 해당 위치에 복사합니다.
-            UINT subresourceIndex =
-                D3D11CalcSubresource(0, UINT(i), txtDesc.MipLevels);
-
-            context->CopySubresourceRegion(this->texture_arr.Get(), 
-				subresourceIndex, 0, 0, 0,
-                stagingTexture.Get(), 0, nullptr);
+            
+			context->UpdateSubresource(
+				this->texture_arr.Get(),
+				D3D11CalcSubresource(0, UINT(i), txtDesc.MipLevels),
+				nullptr,
+				image.data(),
+				width * 4,
+				width * height * 4
+			);
         }
 
         device->CreateShaderResourceView(

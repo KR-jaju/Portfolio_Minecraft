@@ -102,7 +102,7 @@ void Chunk::addBlock(Index3 idx3, int16 type)
 	this->setVerticesAndIndices();
 }
 
-void Chunk::deleteBlock(vector<Index3> const& block_arr)
+void Chunk::deleteBlock(vector<Index3> const& block_arr) // terrain
 {
 	int jz = 16;
 	int jy = 16 * 16;
@@ -116,7 +116,7 @@ void Chunk::deleteBlock(vector<Index3> const& block_arr)
 	this->setVerticesAndIndices();
 }
 
-int Chunk::getBlock(int x, int y, int z) const
+int Chunk::getBlock(int x, int y, int z) const // terrain
 {
 	if (x < 0)
 		return this->left->getBlock(16 + x, y, z);
@@ -139,7 +139,7 @@ vec3 Chunk::getStartPos() const
 	return this->start_pos;
 }
 
-void Chunk::setChunk(Chunk* chunk, string const& str)
+void Chunk::setChunk(Chunk* chunk, string const& str) // no
 {
 	if (str == "left")
 		this->left = chunk;
@@ -151,7 +151,7 @@ void Chunk::setChunk(Chunk* chunk, string const& str)
 		this->back = chunk;
 }
 
-int Chunk::getBlockCnt()
+int Chunk::getBlockCnt() // no
 {
 	return this->block_cnt;
 }

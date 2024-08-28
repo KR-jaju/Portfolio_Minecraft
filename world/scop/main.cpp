@@ -82,6 +82,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 cam.getPos().x,
                 cam.getPos().z
             );
+            cout << "x: " << cam.getPos().x << ", z: " << cam.getPos().z << endl;
             terrain.Render(
                 cam.getViewProj().proj,
                 cam.getViewProj().view,
