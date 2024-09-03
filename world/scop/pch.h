@@ -41,6 +41,7 @@ struct VertexBlockUV {
 	vec3 pos;
 	vec2 uv;
 	int dir;
+	int chunk_idx[2];
 };
 
 struct VertexBlock {

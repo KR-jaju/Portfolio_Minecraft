@@ -141,9 +141,6 @@
     <ClInclude Include="Chunk.h">
       <Filter>소스 파일\World\Chunk</Filter>
     </ClInclude>
-    <ClInclude Include="Block.h">
-      <Filter>소스 파일\World\Block</Filter>
-    </ClInclude>
     <ClInclude Include="Terrain.h">
       <Filter>소스 파일\World</Filter>
     </ClInclude>
@@ -179,6 +176,9 @@
     </ClInclude>
     <ClInclude Include="WICTextureLoader11.h">
       <Filter>헤더 파일\Utils\WICTextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>소스 파일\World\Block</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@ struct PS_INPUT
     float3 world_pos : POSITION;
     float2 uv : TEXCOORD;
     int dir : DIRECTION;
+    int2 chunk_idx : CHUNKIDX;
 };
 
 cbuffer eyePos : register(b0)
@@ -45,5 +46,15 @@ float4 main(PS_INPUT input) : SV_TARGET
         color = texture_arr.SampleLevel(sampler0, uvw, lod);
     else
         color = texture_arr.SampleLevel(sampler0, uvw, lod) * float4(0.6, 0.6, 0.6, 1.0);
+    
+    // test
+    int idx = input.chunk_idx.x + input.chunk_idx.y;
+    idx %= 3;
+    if (idx == 0)
+        color = float4(1, 0, 0, 0.5);
+    if (idx == 1)
+        color = float4(0, 1, 0, 0.5);
+    if (idx == 2)
+        color = float4(0, 0, 1, 0.5);
     return color;
 }

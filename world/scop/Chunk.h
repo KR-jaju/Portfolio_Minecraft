@@ -1,84 +1,55 @@
 #pragma once
 
+
 #include "WorldUtils.h"
 
 class Chunk
 {
-public:
+public: // create
 	Chunk();
 	~Chunk();
-	void setVerticesAndIndices();
-	void setRender(
+	void setVIBuffer(
 		shared_ptr<Graphics> graphic,
-		shared_ptr<RasterizerState> rasterizer_state, 
-		shared_ptr<SamplerState> sampler_state,
-		wstring const& vertex_shader_path,
-		wstring const& pixel_shader_path,
-		shared_ptr<BlendState> blend_state
+		shared_ptr<VertexShader> vertex_shader
 	);
-	void setBuffer();
-	void Render(
-		Mat view, 
-		Mat proj,
-		shared_ptr<TextureArray> const& texture_array
+	void createVIBuffer(
+		shared_ptr<Graphics> graphic,
+		vector<VertexBlockUV> const& vertices,
+		vector<uint32> const& indices
 	);
-	void setBlockInChunk(int x, int y, int z, int16 type);
-	void addBlock(Index3 idx3, int16 type);
-	void deleteBlock(vector<Index3> const& block_arr);
+
+public: // info
+	uint32 getVerticesIdx() const;
+	vec3 getChunkPos() const;
 	int getBlock(int x, int y, int z) const;
+	int getBlock(Index3 const& idx3) const;
+	int16 getHeight(int x, int y) const;
+	int16 getHeight(Index2 const& idx2);
+	bool getRenderFlag();
+
+public: // setting & add & delete
+	void setVerticesIdx(uint32 idx);
+	void addBlock(Index3 idx3, int16 type);
+	void addBlock(int x, int y, int z, int16 type);
+	void setHeight(int x, int y, int16 h);
+	void setHeight(Index2 const& idx2, int16 h);
+	void deleteBlock(vector<Index3> const& block_arr);
 	void setStartPos(float x, float y, float z);
 	vec3 getStartPos() const;
-	void setChunk(Chunk* chunk, string const& str);
-	int getBlockCnt();
+
+public: // temp
 	void readFile(string const& path);
 	void updateFile() const;
-	void setHeight(int x, int y, int16 h);
-	int16 getHeight(int x, int y) const;
-
-private:
-	void getBlockFacePosAndTex(
-		int dir, float x, float y, float z, int type);
-	void vertexAndIndexGenerator(
-		Face const& face, 
-		int const& dx,
-		int const& dy,
-		int const& dz,
-		uint32& idx);
-	bool checkBoundary(int x, int y, int z) const;
-	void getBlockFaceIndices(uint32 start);
-	
-private:
-	int16 chunk[16 * 16 * 256];
-	int16 height_map[16][16];
-	int block_cnt;
-	Chunk* front;
-	Chunk* back;
-	Chunk* left;
-	Chunk* right;
-	vector<uint32> indices;
-	vector<D3D11_INPUT_ELEMENT_DESC> layout;
-	shared_ptr<ConstantBuffer> constant_buffer;
-	MVP mvp;
-	vector<VertexBlockUV> vertices;
-
-public: // tmp
-	void setCamPos(vec3 const& pos);
-private:
-	vec3 cam_pos;
-
-private:
-	shared_ptr<Graphics> graphic;
-	shared_ptr<VertexShader> vertex_shader;
-	shared_ptr<PixelShader> pixel_shader;
-	shared_ptr<InputLayout> input_layout;
-	shared_ptr<SamplerState> sampler_state;
-	shared_ptr<RasterizerState> rasterizer_state;
-	shared_ptr<BlendState> blend_state;
+	int block_cnt = 0;
 
 private: // new 
+	int16 chunk[16 * 16 * 256];
+	int16 height_map[16][16];
 	shared_ptr<Buffer<VertexBlockUV>> vertex_buffer;
 	shared_ptr<Buffer<uint32>> index_buffer;
-	bool render_flag;
 	vec3 start_pos;
+	vec3 chunk_pos;
+	uint32 vertices_idx;
+	bool render_flag;
 };
 
