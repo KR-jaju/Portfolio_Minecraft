@@ -9,8 +9,8 @@ namespace Block {
 		float y,
 		float z,
 		int type,
-		int idx_i,
-		int idx_j,
+		/*int idx_i,
+		int idx_j,*/
 		vector<VertexBlockUV>& vertices
 	)
 	{
@@ -91,8 +91,8 @@ namespace Block {
 			vertex.uv = sample_uv[i];
 			vertex.type = type;
 			vertex.dir = dir;
-			vertex.chunk_idx[0] = idx_i;
-			vertex.chunk_idx[1] = idx_j;
+			/*vertex.chunk_idx[0] = idx_i;
+			vertex.chunk_idx[1] = idx_j;*/
 			vertices.push_back(vertex);
 		}
 	}

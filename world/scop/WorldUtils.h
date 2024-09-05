@@ -80,6 +80,7 @@ struct Index2 {
 	Index2() : x(0), y(0), flag(false) {}
 	Index2(int x, int y) : x(x), y(y), flag(true) {}
 	Index2(Index2 const& idx2) { *this = idx2; }
+	
 	Index2& operator=(Index2 const& idx2) {
 		this->x = idx2.x;
 		this->y = idx2.y;
@@ -97,6 +98,16 @@ struct Index2 {
 		return this->x == idx2.x && this->y == idx2.y;
 	}
 };
+
+inline Index2 operator+(Index2 const& idx1, Index2 const& idx2) {
+	Index2 res(idx1.x + idx2.x, idx1.y + idx2.y);
+	return res;
+}
+
+inline Index2 operator-(Index2 const& idx1, Index2 const& idx2) {
+	Index2 res(idx1.x - idx2.x, idx1.y - idx2.y);
+	return res;
+}
 
 struct Index3Hash {
 	size_t operator() (Index3 const& idx3) const {
