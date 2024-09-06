@@ -387,8 +387,8 @@ void Terrain::chunksSetVerticesAndIndices(vector<Index2> const& v_idx)
 
 void Terrain::terrainsetVerticesAndIndices()
 {
-	int t_cnt = 5;// 최적의 스레드 사용하도록
-	vector<vector<Index2>> vv_idxs(5);
+	int t_cnt = 8;// 최적의 스레드 사용하도록
+	vector<vector<Index2>> vv_idxs(t_cnt);
 	int t = this->size_h * this->size_w / t_cnt;
 	if (t * t_cnt < this->size_h * this->size_w)
 		t += 1;

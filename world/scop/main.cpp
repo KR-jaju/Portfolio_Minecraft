@@ -44,7 +44,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SCOP));
 
     // test code
-    Terrain terrain(4, 4, hWnd, 800, 650);
+    Terrain terrain(8, 8, hWnd, 800, 650);
     cam.setDir(vec3(0, -1, 0.0000001f));
     cam.movePos(0, 50.f, 0.f);
     //cam.setDir(vec3(0, 0, 1));
