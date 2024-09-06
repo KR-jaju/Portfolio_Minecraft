@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "Terrain.h"
 #include "Block.h"
+#include "Chunk.h"
+#include "thread"
+
 #include "Graphics.h"
 #include "TextureArray.h"
 #include "RasterizerState.h"
@@ -10,7 +13,6 @@
 #include "PixelShader.h"
 #include "ConstantBuffer.h"
 #include "InputLayout.h"
-#include "Chunk.h"
 #include <fstream>
 
 #include <time.h>
@@ -347,7 +349,7 @@ void Terrain::vertexAndIndexGenerator(
 	this->chunks[c_idx.y][c_idx.x]->vertices_idx = index;
 }
 
-void Terrain::terrainsetVerticesAndIndices()
+void Terrain::chunksSetVerticesAndIndices(vector<Index2> const& v_idx)
 {
 	static const Index3 move_arr[6] = {
 		Index3(0, 1, 0),
@@ -357,33 +359,63 @@ void Terrain::terrainsetVerticesAndIndices()
 		Index3(-1, 0, 0),
 		Index3(1, 0, 0)
 	};
-	for (int i = 0; i < this->size_h; i++) {
-		for (int j = 0; j < this->size_w; j++) {
-			Index2 pos = this->s_pos + Index2(16 * j, -16 * i);
-			Index2 c_idx = this->findChunkIndex(pos.x, pos.y);
-			vector<VertexBlockUV> vertices;
-			vector<uint32> indices;
-			Index2 apos = this->chunks[c_idx.y][c_idx.x]->chunk_pos;
-			for (int dir = 0; dir < 6; dir++) {
-				Index2 pos = apos + Index2(16 * move_arr[5 - dir].x, 
-					-16 * move_arr[5 - dir].z);
-				Index2 adj_idx = this->findChunkIndex(pos.x, pos.y);
-				this->vertexAndIndexGenerator(
-					c_idx,
-					adj_idx,
-					move_arr[5 - dir],
-					5 - dir,
-					vertices,
-					indices
-				);
-			}
-			this->chunks[c_idx.y][c_idx.x]->createVIBuffer(
-				this->graphic,
+	for (int i = 0; i < v_idx.size(); i++) {
+		Index2 const& c_idx = v_idx[i];
+		Index2 apos = this->chunks[c_idx.y][c_idx.x]->chunk_pos;
+		vector<VertexBlockUV> vertices;
+		vector<uint32> indices;
+		for (int dir = 0; dir < 6; dir++) {
+			Index2 pos = apos + Index2(16 * move_arr[5 - dir].x,
+				-16 * move_arr[5 - dir].z);
+			Index2 adj_idx = this->findChunkIndex(pos.x, pos.y);
+			this->vertexAndIndexGenerator(
+				c_idx,
+				adj_idx,
+				move_arr[5 - dir],
+				5 - dir,
 				vertices,
 				indices
 			);
 		}
+		this->chunks[c_idx.y][c_idx.x]->createVIBuffer(
+			this->graphic,
+			vertices,
+			indices
+		);
 	}
+}
+
+void Terrain::terrainsetVerticesAndIndices()
+{
+	int t_cnt = 5;// 최적의 스레드 사용하도록
+	vector<vector<Index2>> vv_idxs(5);
+	int t = this->size_h * this->size_w / t_cnt;
+	if (t * t_cnt < this->size_h * this->size_w)
+		t += 1;
+	int cnt = 0;
+	int flag = 0;
+	for (int i = 0; i < this->size_h; i++) {
+		for (int j = 0; j < this->size_w; j++) {
+			Index2 pos = this->s_pos + Index2(16 * j, -16 * i);
+			Index2 c_idx = this->findChunkIndex(pos.x, pos.y);
+			vv_idxs[cnt].push_back(c_idx);
+			if (flag)
+				cnt++;
+			if (vv_idxs[cnt].size() == t) {
+				cnt++;
+				if (cnt == t_cnt) {
+					cnt = 0;
+					flag = 1;
+				}
+			}
+		}
+	}
+	vector<thread> threads;
+	for (int i = 0; i < vv_idxs.size(); i++)
+		threads.push_back(thread(&Terrain::chunksSetVerticesAndIndices,
+			this, vv_idxs[i]));
+	for (int i = 0; i < vv_idxs.size(); i++)
+		threads[i].join();
 }
 
 void Terrain::setSightChunk(int cnt)

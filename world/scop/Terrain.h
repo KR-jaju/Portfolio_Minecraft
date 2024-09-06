@@ -7,6 +7,7 @@
 
 class Chunk;
 
+
 class Terrain
 {
 public:
@@ -21,6 +22,7 @@ public: // test func & temp func
 	void setRender();
 
 private:
+	void chunksSetVerticesAndIndices(vector<Index2> const& v_idx);
 	WorldIndex getBlockIndex(float x, float y, float z) const;
 	int checkTerrainBoundary(float x, float z) const;
 	Index2 getChunkIndex(int w_x, int w_z) const;
