@@ -62,6 +62,18 @@ void Chunk::createVIBuffer(
 	this->render_flag = true;
 }
 
+void Chunk::reset()
+{
+	this->render_flag = false;
+	this->vertices_idx = 0;
+}
+
+void Chunk::setPos(Index2 const& c_pos)
+{
+	this->chunk_pos = c_pos;
+	this->start_pos = vec3(c_pos.x + 0.5f, 0.5f, c_pos.y - 0.5f);
+}
+
 
 void Chunk::readFile(string const& path)
 {

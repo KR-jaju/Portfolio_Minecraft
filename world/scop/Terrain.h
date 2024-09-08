@@ -11,23 +11,32 @@ class Chunk;
 class Terrain
 {
 public:
-	Terrain(int size_w, int size_h, HWND hwnd, 
-		UINT width, UINT height);
+	Terrain(int size_w, int size_h, 
+		HWND hwnd, UINT width, 
+		UINT height, int fov_chunk, 
+		int thread_cnt
+	);
 	~Terrain();
 	void setSightChunk(int cnt);
 	int getBlock(float x, float y, float z) const;
+	void userPositionCheck(float x, float z);
 
 public: // test func & temp func
 	void Render(Mat const& proj, Mat const& view, vec3 const& pos);
 	void setRender();
+	void showChunk(Index2 const& c_idx);
 
 private:
-	void chunksSetVerticesAndIndices(vector<Index2> const& v_idx);
-	WorldIndex getBlockIndex(float x, float y, float z) const;
+	void resetChunk(Index2 const& c_idx);
+	void chunksSetVerticesAndIndices(
+		vector<Index2> const& v_idx, 
+		int st, 
+		int ed
+	);
 	int checkTerrainBoundary(float x, float z) const;
 	Index2 getChunkIndex(int w_x, int w_z) const;
 	Index2 findChunkIndex(int w_x, int w_z) const;
-	void fillChunk(Index2 const& chunk_pos);
+	void fillChunk(Index2 const& c_idx, Index2 const& c_pos);
 	void createHeightMap();
 	void terrainsetVerticesAndIndices();
 	void vertexAndIndexGenerator(
@@ -38,6 +47,9 @@ private:
 		vector<VertexBlockUV>& vertices,
 		vector<uint32>& indices
 	);
+
+private: // find or add info
+	WorldIndex getBlockIndex(float x, float y, float z) const;
 	int findBlock(Index2 const& c_idx, int x, int y, int z) const;
 	int findBlock(Index2 const& c_idx, Index3 const& b_idx) const;
 	void addBlock(Index2 const& c_idx, int x, int y, int z, int type);
@@ -49,17 +61,21 @@ private:
 private:
 	int* blocks;
 	int* h_map;
-	vec2 start_pos;
 	Index2 s_pos;
-	vec2 end_pos;
+	Index2 sv_pos;
+	Index2 ev_pos;
 	set<string> file_book;
 	map<vec3, uint32> object_book;
 	map<vec3, shared_ptr<Chunk>> tmp_storage;
 	shared_ptr<Chunk> chunks[30][30];
 	PerlinNoise perlin_noise;
+	int thread_cnt;
 	int size_w;
 	int size_h;
-	int sight_r;
+	int c_fov;
+
+private:
+	bool test_flag = false;
 
 private:
 	size_t b_arr_size;

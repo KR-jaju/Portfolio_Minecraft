@@ -24,7 +24,8 @@ public: // create
 		vector<VertexBlockUV> const& vertices,
 		vector<uint32> const& indices
 	);
-
+	void reset();
+	void setPos(Index2 const& c_pos);
 public: // temp
 	void readFile(string const& path);
 	void updateFile() const;

@@ -44,11 +44,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SCOP));
 
     // test code
-    Terrain terrain(8, 8, hWnd, 800, 650);
+    Terrain terrain(10, 10, hWnd, 800, 650, 1, 8); // 짝수 단위로만
     cam.setDir(vec3(0, -1, 0.0000001f));
-    cam.movePos(0, 50.f, 0.f);
+    cam.movePos(0, 60.f, 0.f);
     //cam.setDir(vec3(0, 0, 1));
-    //cam.movePos(0, 10, -25);
+    //cam.movePos(0, 15, -25);
     Mat view = XMMatrixLookAtLH(vec3(0, 60.f, 0.f), 
         vec3(0, -1, 0.00001f), vec3(0, 1, 0));
     terrain.setSightChunk(1);
@@ -71,6 +71,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
         {
             cam.update();
+            terrain.userPositionCheck(cam.getPos().x,
+                cam.getPos().z);
             terrain.Render(
                 cam.getViewProj().proj,
                 cam.getViewProj().view,

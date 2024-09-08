@@ -8,6 +8,7 @@ struct PS_INPUT
     float3 world_pos : POSITION;
     float2 uv : TEXCOORD;
     int dir : DIRECTION;
+    int x_pos : XPOS;
 };
 
 cbuffer eyePos : register(b0)
@@ -41,10 +42,20 @@ float4 main(PS_INPUT input) : SV_TARGET
     
     //lod = 0;
     
-    if (d <= r)
-        color = texture_arr.SampleLevel(sampler0, uvw, lod);
+    //if (d <= r)
+        //color = texture_arr.SampleLevel(sampler0, uvw, lod);
+    //else
+        //color = texture_arr.SampleLevel(sampler0, uvw, lod) * float4(0.6, 0.6, 0.6, 1.0);
+    
+    int flag = abs(input.x_pos) % 3;
+    if (flag == 0)
+        color = float4(1, 0, 0, 1);
+    else if (flag == 1)
+        color = float4(0, 1, 0, 1);
     else
-        color = texture_arr.SampleLevel(sampler0, uvw, lod) * float4(0.6, 0.6, 0.6, 1.0);
+        color = float4(0, 0, 1, 1);
+    if (d > r)
+        color *= float4(0.6, 0.6, 0.6, 1);
     
     // test
     return color;
