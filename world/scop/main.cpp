@@ -13,8 +13,13 @@
 
 #define MAX_LOADSTRING 100
 HWND hWnd;
-TestCam cam;
 
+// test 용 전역변수
+TestCam cam(800, 650);
+long w_width = 800;
+long w_height = 650;
+bool lb_flag = false;
+// test
 
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
@@ -44,13 +49,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SCOP));
 
     // test code
-    Terrain terrain(10, 10, hWnd, 800, 650, 1, 8); // 짝수 단위로만
-    cam.setDir(vec3(0, -1, 0.0000001f));
-    cam.movePos(0, 60.f, 0.f);
+    Terrain terrain(10, 10, hWnd, w_width, w_height, 1, 8); // 짝수 단위로만
+    float h = terrain.getHeight(0, 0) + 0.5;
+    cout << "h: " << h << endl;
+    cam.movePos(0.5, h, 0.5f);
+    cam.setDir(vec3(0, 0, 1.f));
     //cam.setDir(vec3(0, 0, 1));
     //cam.movePos(0, 15, -25);
-    Mat view = XMMatrixLookAtLH(vec3(0, 60.f, 0.f), 
-        vec3(0, -1, 0.00001f), vec3(0, 1, 0));
     terrain.setSightChunk(1);
     terrain.setRender();
     // test code
@@ -70,7 +75,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         else
         {
+            if (lb_flag) {
+                terrain.selectBlockTest(cam.getPos(), cam.getDir());
+                lb_flag = false;
+            }
             cam.update();
+            cam.setCursorInClient(hWnd, w_width / 2, w_height / 2);
             terrain.userPositionCheck(cam.getPos().x,
                 cam.getPos().z);
             terrain.Render(
@@ -128,7 +138,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
-    RECT windowRect = { 0, 0, 800, 650 };
+    RECT windowRect = { 0, 0, w_width, w_height };
     hWnd = CreateWindowW(L"SCOP", L"board", WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, 0, windowRect.right - windowRect.left, 
         windowRect.bottom - windowRect.top, nullptr, nullptr, hInstance, nullptr);
@@ -182,6 +192,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
             EndPaint(hWnd, &ps);
+        }
+        break;
+    case WM_KEYDOWN:
+        {
+            if (wParam == 27) {
+                // ESC 키가 눌렸을 때 프로그램 종료
+                DestroyWindow(hWnd);
+            }
+        }
+        break;
+    case WM_LBUTTONDOWN:
+        {
+            lb_flag = true;
+        }
+        break;
+    case WM_MOUSEMOVE:
+        {
+            cam.onMouseMove(wParam, LOWORD(lParam), HIWORD(lParam));
         }
         break;
     case WM_DESTROY:

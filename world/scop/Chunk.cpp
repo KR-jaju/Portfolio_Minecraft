@@ -66,6 +66,7 @@ void Chunk::reset()
 {
 	this->render_flag = false;
 	this->vertices_idx = 0;
+	this->max_h = -1;
 }
 
 void Chunk::setPos(Index2 const& c_pos)

@@ -134,6 +134,7 @@ struct WorldIndex {
 		this->c_idx = world.c_idx;
 		this->b_idx = world.b_idx;
 		this->flag = world.flag;
+		return *this;
 	}
 };
 

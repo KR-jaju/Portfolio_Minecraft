@@ -91,12 +91,14 @@ void Terrain::fillChunk(Index2 const& c_idx, Index2 const& c_pos)
 {
 	float x, z;
 	float offset = 0.000001f;
+	int16& max_h = this->chunks[c_idx.y][c_idx.x]->max_h;
 	for (int i = 0; i < 16; i++) {
 		z = (c_pos.y - i + offset) / 32.f;
 		for (int j = 0; j < 16; j++) {
 			x = (c_pos.x + j + offset) / 32.f;
 			double h_ = this->perlin_noise.getNoise2D(x, z, 3, 0.5);
 			int16 h = static_cast<int16>((h_ + 0.8) * 0.5 * 30.f);
+			max_h = max(max_h, h);
 			this->setHeight(c_idx, j, i, h);
 			for (int y = 0; y < 10; y++)
 				this->addBlock(c_idx, j, y, i, 1);
@@ -182,15 +184,6 @@ void Terrain::setRender()
 			D3D11_INPUT_PER_VERTEX_DATA,
 			0
 		},
-		{
-			"XPOS",
-			0,
-			DXGI_FORMAT_R32_SINT,
-			0,
-			28,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		}
 	};
 	this->vertex_shader = make_shared<VertexShader>(
 		this->graphic->getDevice(),
@@ -259,9 +252,23 @@ void Terrain::showChunk(Index2 const& c_idx)
 			}
 		}
 	}
-	Index2 p = this->chunks[c_idx.y][c_idx.x]->chunk_pos;
-	cout << "c " << c_idx.y << ' ' << c_idx.x << " : " << cnt << endl;
-	cout << "p : " << p.x << ' ' << p.y << endl;
+}
+
+void Terrain::selectBlockTest(vec3 const& ray_pos, vec3 const& ray_dir)
+{
+	WorldIndex block = this->pickBlock(ray_pos, ray_dir);
+	if (block.flag == true) {
+		cout << "c_idx: " << block.c_idx.y << ' ' << block.c_idx.x;
+		cout << ", b_idx: " << block.b_idx.x << ' ' << block.b_idx.y;
+		cout << ' ' << block.b_idx.z << endl;
+		cout << "block: " << this->findBlock(block.c_idx, block.b_idx);
+		cout << endl << endl;
+		vector<Index2> v_idx;
+		v_idx.push_back(block.c_idx);
+		this->addBlock(block.c_idx, block.b_idx, 2);
+		this->chunks[block.c_idx.y][block.c_idx.x]->vertices_idx;
+		this->chunksSetVerticesAndIndices(v_idx, 0, 1);
+	}
 }
 
 void Terrain::Render
@@ -334,7 +341,8 @@ void Terrain::vertexAndIndexGenerator(
 )
 {
 	uint32 index = this->chunks[c_idx.y][c_idx.x]->vertices_idx;
-	for (int y = 0; y < 256; y++) {
+	int16& max_h = this->chunks[c_idx.y][c_idx.x]->max_h;
+	for (int y = 0; y < max_h; y++) {
 		for (int z = 0; z < 16; z++) {
 			for (int x = 0; x < 16; x++) {
 				int type = this->findBlock(c_idx, x, y, z);
@@ -357,8 +365,8 @@ void Terrain::vertexAndIndexGenerator(
 					this->chunks[c_idx.y][c_idx.x]->start_pos,
 					dir, 
 					x, y, z, type, 
-					this->chunks[c_idx.y][c_idx.x]->chunk_pos.x,
-					vertices);
+					vertices
+				);
 				Block::addBlockFaceIndices(index, indices);
 				index += 4;
 			}
@@ -448,18 +456,170 @@ void Terrain::setSightChunk(int cnt)
 	this->c_fov = min(max_fov, cnt);
 }
 
-int Terrain::getBlock(float x, float y, float z) const
+vec3 intersectionRayAndPlane(
+	vec3 const& r_pos,
+	vec3 const& r_dir,
+	vec3 const& p_pos,
+	vec3 const& p_dir
+)
 {
-	WorldIndex ans = this->getBlockIndex(x, y, z);
-	if (ans.flag == false)
-		return 0;
-	return this->findBlock(ans.c_idx, ans.b_idx);
+	vec3 res;
+	float t;
+	t = (p_pos.Dot(p_dir) - r_pos.Dot(p_dir)) / p_dir.Dot(r_dir);
+	res = r_pos + t * r_dir;
+	return res;
+}
+
+WorldIndex Terrain::pickBlock(vec3 const& r_pos, vec3 const& r_dir)
+{
+	// 1. x y z index 찾기
+	WorldIndex sblock = this->getBlockIndex(r_pos.x, r_pos.y, r_pos.z);
+	WorldIndex ans;
+	vec3 tmp_s = r_pos;
+	if (sblock.flag == false) {
+		float flag = r_dir.Dot(vec3(0, 1, 0));
+		if (flag > -0.00000001 && flag < 0.00000001)
+			return ans;
+		tmp_s = intersectionRayAndPlane(
+			r_pos,
+			r_dir,
+			vec3(r_pos.x, 256, r_pos.z),
+			vec3(0, 1, 0)
+		);
+	}
+
+	// 2. max_x, max_y, max_z 찾기
+	int sx = floor(tmp_s.x);
+	int sy = floor(tmp_s.y);
+	int sz = floor(tmp_s.z);
+	int step_x = 1, step_y = 1, step_z = 1;
+	if (r_dir.x < 0)
+		step_x *= -1;
+	if (r_dir.y < 0)
+		step_y *= -1;
+	if (r_dir.z < 0)
+		step_z *= -1;
+	vec3 next;
+	next.x = sx + step_x;
+	next.y = sy + step_y;
+	next.z = sz + step_z;
+	float max_x, max_y, max_z;
+	vec3 bx, by, bz, ax, ay, az;
+	bool flag_x = true, flag_y = true, flag_z = true;
+	max_x = r_dir.Dot(vec3(1, 0, 0));
+	if (max_x < 0.0000001 && max_x > -0.0000001)
+		flag_x = false;
+	if (flag_x) {
+		bx = intersectionRayAndPlane(
+			r_pos,
+			r_dir,
+			vec3(next.x, 0, 0),
+			vec3(1, 0, 0)
+		);
+		max_x = bx.x;
+	}
+	max_y = r_dir.Dot(vec3(0, 1, 0));
+	if (max_y < 0.0000001 && max_y > -0.0000001)
+		flag_y = false;
+	if (flag_y) {
+		by = intersectionRayAndPlane(
+			r_pos,
+			r_dir,
+			vec3(0, next.y, 0),
+			vec3(0, 1, 0)
+		);
+		max_y = by.y;
+	}
+	max_z = r_dir.Dot(vec3(0, 0, 1));
+	if (max_z < 0.0000001 && max_z > -0.0000001)
+		flag_z = false;
+	if (flag_z) {
+		bz = intersectionRayAndPlane(
+			r_pos,
+			r_dir,
+			vec3(0, 0, next.z),
+			vec3(0, 0, 1)
+		);
+		max_z = bz.z;
+	}
+	// 3. delta_x, delta_y, delta_z 
+	float dx, dy, dz;
+	if (flag_x) {
+		ax = intersectionRayAndPlane(
+			r_pos,
+			r_dir,
+			vec3(next.x + step_x, 0, 0),
+			vec3(1, 0, 0)
+		);
+		dx = (ax - bx).Length();
+	}
+	if (flag_y) {
+		ay = intersectionRayAndPlane(
+			r_pos,
+			r_dir,
+			vec3(0, next.y + step_y, 0),
+			vec3(0, 1, 0)
+		);
+		dy = (ay - by).Length();
+	}
+	if (flag_z) {
+		az = intersectionRayAndPlane(
+			r_pos,
+			r_dir,
+			vec3(0, 0, next.z + step_z),
+			vec3(0, 0, 1)
+		);
+		dz = (az - bz).Length();
+	}
+	// 4. loop
+	if (flag_x == false)
+		max_x = INT_MAX;
+	if (flag_y == false)
+		max_y = INT_MAX;
+	if (flag_z == false)
+		max_z = INT_MAX;
+	ans = this->getBlockIndex(sx, sy, sz);
+	for (int i = 0; i < 17; i++) {
+		if (this->findBlock(ans.c_idx, ans.b_idx)) {
+			ans.flag = true;
+			return ans;
+		}
+		if (max_x < max_y) {
+			if (max_x < max_z) {
+				sx += step_x;
+				max_x += dx;
+			}
+			else {
+				sz += step_z;
+				max_z += dz;
+			}
+		}
+		else {
+			if (max_y < max_z) {
+				sy += step_y;
+				max_y += dy;
+			}
+			else {
+				sz += step_z;
+				max_z += dz;
+			}
+		}
+		ans = this->getBlockIndex(sx, sy, sz);
+	}
+	ans.flag = false;
+	return ans;
 }
 
 WorldIndex Terrain::getBlockIndex(float x, float y, float z) const
 {
 	WorldIndex ans;
-	Index2 c_idx = this->findChunkIndex(x, z);
+	int w_x = 0;
+	int w_z = 0;
+	while (w_x * 16 > x)
+		w_x++;
+	while (w_z * 16 < z)
+		w_z++;
+	Index2 c_idx = this->findChunkIndex(w_x * 16, w_z * 16);
 	Index2 pos = this->chunks[c_idx.y][c_idx.x]->chunk_pos;
 	int ex = pos.x + 16;
 	int ez = pos.y - 16;
@@ -479,12 +639,10 @@ int Terrain::checkTerrainBoundary(float x, float z) const
 {
 	float r = 16.f * this->c_fov;
 	int mask = 0;
-	if (x - r < this->sv_pos.x) {
+	if (x - r < this->sv_pos.x)
 		mask |= 1 << 0; // left out
-	}
-	if (x + r > this->ev_pos.x) {
+	if (x + r > this->ev_pos.x)
 		mask |= 1 << 1; // right out
-	}
 	if (z + r > this->sv_pos.y)
 		mask |= 1 << 2; // back out
 	if (z - r < this->ev_pos.y)
@@ -499,7 +657,7 @@ void Terrain::userPositionCheck(float x, float z)
 	Index2 cidx, cpos;
 	if (mask == 1) {
 		for (int i = 0; i < this->size_h; i++) {
-			if (i && i < this->size_w - 1) {
+			if (i && i < this->size_h - 1) {
 				cpos = Index2(this->s_pos.x, this->s_pos.y - 16 * i);
 				cidx = this->findChunkIndex(cpos.x, cpos.y);
 				this->chunks[cidx.y][cidx.x]->reset();
@@ -507,11 +665,11 @@ void Terrain::userPositionCheck(float x, float z)
 				this->resetChunk(cidx);
 				this->fillChunk(cidx, cpos);
 				v_idxs.push_back(cidx);
+				cidx = this->findChunkIndex(this->ev_pos.x - 16, cpos.y);
+				this->chunks[cidx.y][cidx.x]->render_flag = false;
 			}
 			cpos = this->s_pos + Index2(-16, -16 * i);
 			f_pos.push_back(cpos);
-			cidx = this->getChunkIndex(this->ev_pos.x - 16, cpos.y);
-			this->chunks[cidx.y][cidx.x]->render_flag = false;
 		}
 		this->sv_pos.x -= 16;
 		this->s_pos.x -= 16;
@@ -520,7 +678,7 @@ void Terrain::userPositionCheck(float x, float z)
 	else if (mask == 2) {
 		this->test_flag = true;
 		for (int i = 0; i < this->size_h; i++) {
-			if (i && i < this->size_w - 1) {
+			if (i && i < this->size_h - 1) {
 				cpos = Index2(this->ev_pos.x, this->s_pos.y - 16 * i);
 				cidx = this->findChunkIndex(cpos.x, cpos.y);
 				this->chunks[cidx.y][cidx.x]->reset();
@@ -528,33 +686,58 @@ void Terrain::userPositionCheck(float x, float z)
 				this->resetChunk(cidx);
 				this->fillChunk(cidx, cpos);
 				v_idxs.push_back(cidx);
+				cidx = this->findChunkIndex(this->sv_pos.x, cpos.y);
+				this->chunks[cidx.y][cidx.x]->render_flag = false;
 			}
 			cpos.x = this->ev_pos.x + 16;
 			cpos.y = this->s_pos.y - 16 * i;
-			f_pos.push_back(cpos);
-			cidx = this->getChunkIndex(this->sv_pos.x, cpos.y);
-			this->chunks[cidx.y][cidx.x]->render_flag = false;
+			f_pos.push_back(cpos);			
 		}
 		this->sv_pos.x += 16;
 		this->s_pos.x += 16;
 		this->ev_pos.x += 16;
 	}
 	else if (mask == 4) {
-
+		for (int i = 0; i < this->size_w; i++) {
+			if (i && i < this->size_w - 1) {
+				cpos = Index2(this->s_pos.x + 16 * i, this->s_pos.y);
+				cidx = this->findChunkIndex(cpos.x, cpos.y);
+				this->chunks[cidx.y][cidx.x]->reset();
+				this->chunks[cidx.y][cidx.x]->setPos(cpos);
+				this->resetChunk(cidx);
+				this->fillChunk(cidx, cpos);
+				v_idxs.push_back(cidx);
+				cidx = this->findChunkIndex(cpos.x, this->ev_pos.y + 16);
+				this->chunks[cidx.y][cidx.x]->render_flag = false;
+			}
+			cpos = this->s_pos + Index2(16 * i, 16);
+			f_pos.push_back(cpos);
+		}
+		this->sv_pos.y += 16;
+		this->s_pos.y += 16;
+		this->ev_pos.y += 16;
 	}
 	else if (mask == 8) {
-
+		for (int i = 0; i < this->size_w; i++) {
+			if (i && i < this->size_w - 1) {
+				cpos = Index2(this->s_pos.x + 16 * i, this->ev_pos.y);
+				cidx = this->findChunkIndex(cpos.x, cpos.y);
+				this->chunks[cidx.y][cidx.x]->reset();
+				this->chunks[cidx.y][cidx.x]->setPos(cpos);
+				this->resetChunk(cidx);
+				this->fillChunk(cidx, cpos);
+				v_idxs.push_back(cidx);
+				cidx = this->getChunkIndex(cpos.x, this->sv_pos.y);
+				this->chunks[cidx.y][cidx.x]->render_flag = false;
+			}
+			cpos.x = this->s_pos.x + 16 * i;
+			cpos.y = this->ev_pos.y - 16;
+			f_pos.push_back(cpos);
+		}
+		this->sv_pos.y -= 16;
+		this->s_pos.y -= 16;
+		this->ev_pos.y -= 16;
 	}
-	else if (mask == 5) {
-
-	}
-	else if (mask == 9) {
-
-	}
-	else if (mask == 6) {
-
-	}
-	else if (mask == 10) {}
 	if (f_pos.size()) {
 		for (Index2& pos : f_pos) {
 			cidx = this->getChunkIndex(pos.x, pos.y);
@@ -584,6 +767,12 @@ void Terrain::userPositionCheck(float x, float z)
 		for (int i = 0; i < this->thread_cnt; i++)
 			threads[i].join();
 	}
+}
+
+int16 Terrain::getHeight(float x, float z) const
+{
+	WorldIndex w_idx = this->getBlockIndex(x, 0, z);
+	return this->findHeight(w_idx.c_idx, w_idx.b_idx.x, w_idx.b_idx.z);
 }
 
 

@@ -11,7 +11,7 @@ struct VS_INPUT
     float3 pos : POSITION;
     float2 uv : TEXCOORD;
     int dir : DIRECTION;
-    int x_pos : XPOS;
+    //int x_pos : XPOS;
 };
 
 struct PS_INPUT
@@ -21,7 +21,7 @@ struct PS_INPUT
     float3 world_pos : POSITION;
     float2 uv : TEXCOORD;
     int dir : DIRECTION;
-    int x_pos : XPOS;
+    //int x_pos : XPOS;
 };
 
 PS_INPUT main(VS_INPUT input)
@@ -33,7 +33,7 @@ PS_INPUT main(VS_INPUT input)
     output.uv = input.uv;
     output.dir = input.dir;
     
-    output.x_pos = input.x_pos;
+    //output.x_pos = input.x_pos;
     
     output.pos = mul(output.pos, world);
     output.pos = mul(output.pos, view);

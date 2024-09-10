@@ -30,5 +30,6 @@ public: // temp
 	void readFile(string const& path);
 	void updateFile() const;
 	int block_cnt = 0;
+	int16 max_h = -1;
 };
 

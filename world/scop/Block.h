@@ -9,7 +9,6 @@ namespace Block {
 		float y,
 		float z,
 		int type,
-		int test_chunk_x_pos,
 		/*int idx_i,
 		int idx_j,*/
 		vector<VertexBlockUV>& vertices
@@ -93,7 +92,7 @@ namespace Block {
 			vertex.type = type;
 			vertex.dir = dir;
 
-			vertex.x_pos = test_chunk_x_pos;
+			//vertex.x_pos = test_chunk_x_pos;
 			/*vertex.chunk_idx[0] = idx_i;
 			vertex.chunk_idx[1] = idx_j;*/
 			vertices.push_back(vertex);
