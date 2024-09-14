@@ -18,6 +18,22 @@
 #include <time.h>
 #include "Buffer.h"
 
+#define STDZERO 0.00000001
+
+vec3 intersectionRayAndPlane(
+	vec3 const& r_pos,
+	vec3 const& r_dir,
+	vec3 const& p_pos,
+	vec3 const& p_dir
+)
+{
+	vec3 res;
+	float t;
+	t = (p_pos.Dot(p_dir) - r_pos.Dot(p_dir)) / p_dir.Dot(r_dir);
+	res = r_pos + t * r_dir;
+	return res;
+}
+
 Terrain::Terrain(
 	int size_w,
 	int size_h,
@@ -254,21 +270,25 @@ void Terrain::showChunk(Index2 const& c_idx)
 	}
 }
 
-void Terrain::selectBlockTest(vec3 const& ray_pos, vec3 const& ray_dir)
+void Terrain::selectBlockTest(vec3 ray_pos, vec3 ray_dir)
 {
 	WorldIndex block = this->pickBlock(ray_pos, ray_dir);
 	if (block.flag == true) {
-		cout << "c_idx: " << block.c_idx.y << ' ' << block.c_idx.x;
-		cout << ", b_idx: " << block.b_idx.x << ' ' << block.b_idx.y;
-		cout << ' ' << block.b_idx.z << endl;
-		cout << "block: " << this->findBlock(block.c_idx, block.b_idx);
-		cout << endl << endl;
+		Index2& cidx = block.c_idx;
+		Index3& bidx = block.b_idx;
 		vector<Index2> v_idx;
-		v_idx.push_back(block.c_idx);
-		this->addBlock(block.c_idx, block.b_idx, 2);
-		this->chunks[block.c_idx.y][block.c_idx.x]->vertices_idx;
+		v_idx.push_back(cidx);
+		this->addBlock(cidx, bidx, 2);
+		this->chunks[cidx.y][cidx.x]->vertices_idx = 0;
 		this->chunksSetVerticesAndIndices(v_idx, 0, 1);
 	}
+}
+
+vec3 Terrain::getBlockIdxToWorld(Index2& c_idx, int x, int y, int z)
+{
+	vec3 pos = this->chunks[c_idx.y][c_idx.x]->start_pos;
+	pos += vec3(x, y, -z);
+	return pos;
 }
 
 void Terrain::Render
@@ -456,155 +476,178 @@ void Terrain::setSightChunk(int cnt)
 	this->c_fov = min(max_fov, cnt);
 }
 
-vec3 intersectionRayAndPlane(
+WorldIndex Terrain::getBlockIndexRay(
+	vec3 const& pos, 
 	vec3 const& r_pos,
-	vec3 const& r_dir,
-	vec3 const& p_pos,
-	vec3 const& p_dir
+	int dir
 )
 {
-	vec3 res;
-	float t;
-	t = (p_pos.Dot(p_dir) - r_pos.Dot(p_dir)) / p_dir.Dot(r_dir);
-	res = r_pos + t * r_dir;
-	return res;
+	Index3 b_pos;
+	b_pos.x = static_cast<int>(floor(pos.x));
+	b_pos.y = static_cast<int>(floor(pos.y));
+	b_pos.z = static_cast<int>(floor(pos.z));
+	if (dir == 0 && r_pos.x > b_pos.x)
+		b_pos.x -= 1;
+	else if (dir == 1 && r_pos.z < b_pos.z)
+		b_pos.z += 1;
+	else if (dir == 2 && r_pos.y < b_pos.y)
+		b_pos.y += 1;
+	return this->getBlockIndex(b_pos.x, b_pos.y, b_pos.z);
 }
 
-WorldIndex Terrain::pickBlock(vec3 const& r_pos, vec3 const& r_dir)
+WorldIndex Terrain::pickBlock(vec3 r_pos, vec3 r_dir)
 {
 	// 1. x y z index 찾기
-	WorldIndex sblock = this->getBlockIndex(r_pos.x, r_pos.y, r_pos.z);
 	WorldIndex ans;
-	vec3 tmp_s = r_pos;
-	if (sblock.flag == false) {
-		float flag = r_dir.Dot(vec3(0, 1, 0));
-		if (flag > -0.00000001 && flag < 0.00000001)
+	int x, y, z;
+	vec3 tmp = r_pos;
+	if (r_pos.y >= 256) {
+		if (r_dir.y >= 0)
 			return ans;
-		tmp_s = intersectionRayAndPlane(
+		tmp = intersectionRayAndPlane(
 			r_pos,
 			r_dir,
 			vec3(r_pos.x, 256, r_pos.z),
 			vec3(0, 1, 0)
 		);
 	}
-
-	// 2. max_x, max_y, max_z 찾기
-	int sx = floor(tmp_s.x);
-	int sy = floor(tmp_s.y);
-	int sz = floor(tmp_s.z);
-	int step_x = 1, step_y = 1, step_z = 1;
+	else if (r_pos.y < 0) {
+		if (r_dir.y <= 0)
+			return ans;
+		tmp = intersectionRayAndPlane(
+			r_pos,
+			r_dir,
+			vec3(r_pos.x, 0, r_pos.z),
+			vec3(0, 1, 0)
+		);
+	}
+	x = static_cast<int>(floor(tmp.x));
+	y = static_cast<int>(floor(tmp.y));
+	z = static_cast<int>(floor(tmp.z));
+	if (z < tmp.z)
+		z += 1;
+	int step_x = 1;
+	int step_y = 1;
+	int step_z = 1;
 	if (r_dir.x < 0)
-		step_x *= -1;
+		step_x = -1;
 	if (r_dir.y < 0)
-		step_y *= -1;
+		step_y = -1;
 	if (r_dir.z < 0)
-		step_z *= -1;
-	vec3 next;
-	next.x = sx + step_x;
-	next.y = sy + step_y;
-	next.z = sz + step_z;
+		step_z = -1;
+
+	// 2 max x y z, delta x y z 구하기
 	float max_x, max_y, max_z;
-	vec3 bx, by, bz, ax, ay, az;
+	float delta_x = 0, delta_y = 0, delta_z = 0;
 	bool flag_x = true, flag_y = true, flag_z = true;
+	int sx, sy, sz;
+	vec3 first, second;
+	sx = x;
+	if (r_dir.x > 0)
+		sx += 1;
 	max_x = r_dir.Dot(vec3(1, 0, 0));
-	if (max_x < 0.0000001 && max_x > -0.0000001)
+	if (max_x <= STDZERO && max_x >= -STDZERO)
 		flag_x = false;
 	if (flag_x) {
-		bx = intersectionRayAndPlane(
+		first = intersectionRayAndPlane(
 			r_pos,
 			r_dir,
-			vec3(next.x, 0, 0),
+			vec3(sx, 0, 0),
 			vec3(1, 0, 0)
 		);
-		max_x = bx.x;
+		second = intersectionRayAndPlane(
+			r_pos,
+			r_dir,
+			vec3(sx + step_x, 0, 0),
+			vec3(1, 0, 0)
+		);
+		max_x = (r_pos - first).Length();
+		delta_x = (first - second).Length();
 	}
+	sy = y;
+	if (r_dir.y > 0)
+		sy += 1;
 	max_y = r_dir.Dot(vec3(0, 1, 0));
-	if (max_y < 0.0000001 && max_y > -0.0000001)
+	if (max_y <= STDZERO && max_y >= -STDZERO)
 		flag_y = false;
 	if (flag_y) {
-		by = intersectionRayAndPlane(
+		first = intersectionRayAndPlane(
 			r_pos,
 			r_dir,
-			vec3(0, next.y, 0),
+			vec3(0, sy, 0),
 			vec3(0, 1, 0)
 		);
-		max_y = by.y;
+		second = intersectionRayAndPlane(
+			r_pos,
+			r_dir,
+			vec3(0, sy + step_y, 0),
+			vec3(0, 1, 0)
+		);
+		max_y = (r_pos - first).Length();
+		delta_y = (first - second).Length();
 	}
+	sz = z;
+	if (r_dir.z < 0)
+		sz -= 1;
 	max_z = r_dir.Dot(vec3(0, 0, 1));
-	if (max_z < 0.0000001 && max_z > -0.0000001)
+	if (max_z <= STDZERO && max_z >= -STDZERO)
 		flag_z = false;
 	if (flag_z) {
-		bz = intersectionRayAndPlane(
+		first = intersectionRayAndPlane(
 			r_pos,
 			r_dir,
-			vec3(0, 0, next.z),
+			vec3(0, 0, sz),
 			vec3(0, 0, 1)
 		);
-		max_z = bz.z;
-	}
-	// 3. delta_x, delta_y, delta_z 
-	float dx, dy, dz;
-	if (flag_x) {
-		ax = intersectionRayAndPlane(
+		second = intersectionRayAndPlane(
 			r_pos,
 			r_dir,
-			vec3(next.x + step_x, 0, 0),
-			vec3(1, 0, 0)
-		);
-		dx = (ax - bx).Length();
-	}
-	if (flag_y) {
-		ay = intersectionRayAndPlane(
-			r_pos,
-			r_dir,
-			vec3(0, next.y + step_y, 0),
-			vec3(0, 1, 0)
-		);
-		dy = (ay - by).Length();
-	}
-	if (flag_z) {
-		az = intersectionRayAndPlane(
-			r_pos,
-			r_dir,
-			vec3(0, 0, next.z + step_z),
+			vec3(0, 0, sz + step_z),
 			vec3(0, 0, 1)
 		);
-		dz = (az - bz).Length();
+		max_z = (r_pos - first).Length();
+		delta_z = (first - second).Length();
 	}
-	// 4. loop
 	if (flag_x == false)
 		max_x = INT_MAX;
 	if (flag_y == false)
 		max_y = INT_MAX;
 	if (flag_z == false)
 		max_z = INT_MAX;
-	ans = this->getBlockIndex(sx, sy, sz);
-	for (int i = 0; i < 17; i++) {
-		if (this->findBlock(ans.c_idx, ans.b_idx)) {
-			ans.flag = true;
-			return ans;
-		}
+
+	for (int i = 0; i < 8; i++) {
 		if (max_x < max_y) {
 			if (max_x < max_z) {
-				sx += step_x;
-				max_x += dx;
+				x += step_x;
+				max_x += delta_x;
 			}
 			else {
-				sz += step_z;
-				max_z += dz;
+				z += step_z;
+				max_z += delta_z;
 			}
 		}
 		else {
 			if (max_y < max_z) {
-				sy += step_y;
-				max_y += dy;
+				y += step_y;
+				max_y += delta_y;
 			}
 			else {
-				sz += step_z;
-				max_z += dz;
+				z += step_z;
+				max_z += delta_z;
 			}
 		}
-		ans = this->getBlockIndex(sx, sy, sz);
+		ans = this->getBlockIndex(x, y, z);
+		if (ans.flag && this->findBlock(ans.c_idx, ans.b_idx)) {
+			if (this->findBlock(ans.c_idx, ans.b_idx)) {
+				vec3 bp = this->getBlockIdxToWorld(
+					ans.c_idx,
+					ans.b_idx.x,
+					ans.b_idx.y,
+					ans.b_idx.z
+				);
+				return ans;
+			}
+		}
 	}
 	ans.flag = false;
 	return ans;
@@ -613,11 +656,12 @@ WorldIndex Terrain::pickBlock(vec3 const& r_pos, vec3 const& r_dir)
 WorldIndex Terrain::getBlockIndex(float x, float y, float z) const
 {
 	WorldIndex ans;
-	int w_x = 0;
-	int w_z = 0;
-	while (w_x * 16 > x)
-		w_x++;
-	while (w_z * 16 < z)
+	int w_x = static_cast<int>(floor(x)) / 16;
+	int w_z = static_cast<int>(floor(z)) / 16;
+	
+	if (w_x * 16 > x)
+		w_x--;
+	if (w_z * 16 < z)
 		w_z++;
 	Index2 c_idx = this->findChunkIndex(w_x * 16, w_z * 16);
 	Index2 pos = this->chunks[c_idx.y][c_idx.x]->chunk_pos;
@@ -628,7 +672,10 @@ WorldIndex Terrain::getBlockIndex(float x, float y, float z) const
 	ans.c_idx = c_idx;
 	int ix = static_cast<int>(floor(x) - pos.x);
 	int iy = static_cast<int>(floor(y));
-	int iz = static_cast<int>(pos.y - floor(z));
+	int iz = floor(z);
+	if (iz < z)
+		iz += 1;
+	iz = static_cast<int>(pos.y - iz);
 	ans.b_idx = Index3(ix, iy, iz);
 	ans.flag = true;
 	return ans;

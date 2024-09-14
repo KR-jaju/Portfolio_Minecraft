@@ -15,10 +15,14 @@
 HWND hWnd;
 
 // test 용 전역변수
-TestCam cam(800, 650);
-long w_width = 800;
-long w_height = 650;
+TestCam cam(800, 650, 60, 0.1, 1000);
+vec3 dir;
+int w_width = 800;
+int w_height = 650;
 bool lb_flag = false;
+bool fix_flag = true;
+bool move_flag = true;
+bool move_check = false;
 // test
 
 // 전역 변수:
@@ -45,15 +49,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         return FALSE;
     }
-
+    RECT client_rect;
+    GetClientRect(hWnd, &client_rect);
+    cam.setWidth(client_rect.right - 1);
+    cam.setHeight(client_rect.bottom - 1);
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SCOP));
 
     // test code
     Terrain terrain(10, 10, hWnd, w_width, w_height, 1, 8); // 짝수 단위로만
-    float h = terrain.getHeight(0, 0) + 0.5;
+    float h = terrain.getHeight(0.5, 0.5) + 0.5;
     cout << "h: " << h << endl;
     cam.movePos(0.5, h, 0.5f);
-    cam.setDir(vec3(0, 0, 1.f));
+    cam.setDir(vec3(0, 0, 1));
+
     //cam.setDir(vec3(0, 0, 1));
     //cam.movePos(0, 15, -25);
     terrain.setSightChunk(1);
@@ -63,6 +71,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg = {};
 
     // 기본 메시지 루프입니다:
+    cam.setCursorInClient(hWnd);
+    move_check = true;
     while (msg.message != WM_QUIT)
     {
         if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -76,11 +86,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
         {
             if (lb_flag) {
-                terrain.selectBlockTest(cam.getPos(), cam.getDir());
+                terrain.selectBlockTest(cam.getPos(), 
+                    cam.getDir());
                 lb_flag = false;
             }
             cam.update();
-            cam.setCursorInClient(hWnd, w_width / 2, w_height / 2);
             terrain.userPositionCheck(cam.getPos().x,
                 cam.getPos().z);
             terrain.Render(
@@ -200,16 +210,41 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 // ESC 키가 눌렸을 때 프로그램 종료
                 DestroyWindow(hWnd);
             }
+            if (wParam == 13) {
+                fix_flag ^= 1;
+                cam.setDir(vec3(0, 0, 1));
+            }
         }
         break;
     case WM_LBUTTONDOWN:
         {
             lb_flag = true;
+            dir = cam.getDir();
+            SimpleMath::Ray ray(cam.getPos(), dir);
+            SimpleMath::Plane plane(vec3(0, 0, 1), vec3(0, 0, 1));
+            float dist;
+            ray.Intersects(plane, dist);
+            vec3 cp = ray.position + dist * ray.direction;
+            vec3 cam_pos = cam.getPos();
         }
         break;
     case WM_MOUSEMOVE:
         {
-            cam.onMouseMove(wParam, LOWORD(lParam), HIWORD(lParam));
+        if (move_check && fix_flag) {
+            RECT client_rect;
+            GetClientRect(hWnd, &client_rect);
+            POINT pt;
+            GetCursorPos(&pt);
+            ScreenToClient(hWnd, &pt);
+            int centerX = (client_rect.right - client_rect.left) / 2;
+            int centerY = (client_rect.bottom - client_rect.top) / 2;
+            if (pt.x == centerX && pt.y == centerY)
+            {
+                return 0; // 움직임을 무시
+            }
+            cam.onMouseMove(hWnd, pt.x, pt.y);
+            cam.setCursorInClient(hWnd);
+        }
         }
         break;
     case WM_DESTROY:
