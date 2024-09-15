@@ -20,6 +20,7 @@ vec3 dir;
 int w_width = 800;
 int w_height = 650;
 bool lb_flag = false;
+bool rb_flag = false;
 bool fix_flag = true;
 bool move_flag = true;
 bool move_check = false;
@@ -86,9 +87,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
         {
             if (lb_flag) {
-                terrain.selectBlockTest(cam.getPos(), 
-                    cam.getDir());
+                terrain.putBlock(cam.getPos(), cam.getDir(), 1);
                 lb_flag = false;
+            }
+            if (rb_flag) {
+                terrain.deleteBlock(cam.getPos(), cam.getDir());
+                rb_flag = false;
             }
             cam.update();
             terrain.userPositionCheck(cam.getPos().x,
@@ -219,13 +223,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_LBUTTONDOWN:
         {
             lb_flag = true;
-            dir = cam.getDir();
-            SimpleMath::Ray ray(cam.getPos(), dir);
-            SimpleMath::Plane plane(vec3(0, 0, 1), vec3(0, 0, 1));
-            float dist;
-            ray.Intersects(plane, dist);
-            vec3 cp = ray.position + dist * ray.direction;
-            vec3 cam_pos = cam.getPos();
+        }
+        break;
+    case WM_RBUTTONDOWN:
+        {
+            rb_flag = true;
         }
         break;
     case WM_MOUSEMOVE:

@@ -126,6 +126,8 @@ struct WorldIndex {
 	Index2 c_idx;
 	Index3 b_idx;
 	bool flag;
+	vec3 pos;
+	int8 dir;
 	WorldIndex() { this->flag = false; }
 	WorldIndex(Index2 const& cidx, Index3 const& bidx)
 		: c_idx(cidx), b_idx(bidx), flag(true) {}

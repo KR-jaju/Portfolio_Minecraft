@@ -27,6 +27,8 @@ public:
 	void setSightChunk(int cnt);
 	void userPositionCheck(float x, float z);
 	int16 getHeight(float x, float z) const;
+	void putBlock(vec3 const& ray_pos, vec3 const& ray_dir, int type);
+	void deleteBlock(vec3 const& ray_pos, vec3 const& ray_dir);
 
 public: // test func & temp func
 	void Render(Mat const& proj, Mat const& view, vec3 const& pos);
@@ -45,8 +47,6 @@ private:
 		int ed
 	);
 	int checkTerrainBoundary(float x, float z) const;
-	Index2 getChunkIndex(int w_x, int w_z) const;
-	Index2 findChunkIndex(int w_x, int w_z) const;
 	void fillChunk(Index2 const& c_idx, Index2 const& c_pos);
 	void createHeightMap();
 	void terrainsetVerticesAndIndices();
@@ -60,12 +60,9 @@ private:
 	);
 
 private: // find or add info
+	Index2 findChunkIndex(int w_x, int w_z) const;
+	Index2 getChunkIndex(int w_x, int w_z) const;
 	WorldIndex pickBlock(vec3 r_pos, vec3 r_dir);
-	WorldIndex getBlockIndexRay(
-		vec3 const& pos, 
-		vec3 const& r_pos,
-		int dir // 0: yz plane, 1 xy plane, 2 xz plane
-	);
 	WorldIndex getBlockIndex(float x, float y, float z) const;
 	int findBlock(Index2 const& c_idx, int x, int y, int z) const;
 	int findBlock(Index2 const& c_idx, Index3 const& b_idx) const;
@@ -73,8 +70,8 @@ private: // find or add info
 	void addBlock(Index2 const& c_idx, Index3 const& b_idx, int type);
 	int findHeight(Index2 const& c_idx, Index2 const& h_idx) const;
 	int findHeight(Index2 const& c_idx, int x, int z) const;
-	void setHeight(Index2 const& c_idx, int x, int z, int h);
 	void setHeight(Index2 const& c_idx, Index2 const& b_idx, int h);
+	void setHeight(Index2 const& c_idx, int x, int z, int h);
 
 private:
 	int* blocks;

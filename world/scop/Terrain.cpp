@@ -284,6 +284,92 @@ void Terrain::selectBlockTest(vec3 ray_pos, vec3 ray_dir)
 	}
 }
 
+void Terrain::putBlock(
+	vec3 const& ray_pos,
+	vec3 const& ray_dir,
+	int type
+)
+{
+	WorldIndex widx = this->pickBlock(ray_pos, ray_dir);
+	if (widx.flag) {
+		WorldIndex add_idx;
+		Index2& cidx = widx.c_idx;
+		Index3& bidx = widx.b_idx;
+		vec3 const& pos = widx.pos;
+		if (widx.dir == 0) {
+			if (ray_pos.y > pos.y && pos.y + 1 < 256)
+				add_idx = this->getBlockIndex(pos.x, pos.y + 1, pos.z);
+			else if (ray_pos.y < pos.y && pos.y - 1 > -1)
+				add_idx = this->getBlockIndex(pos.x, pos.y - 1, pos.z);
+		}
+		else if (widx.dir == 1) {
+			if (ray_pos.z > pos.z)
+				add_idx = this->getBlockIndex(pos.x, pos.y, pos.z + 1);
+			else
+				add_idx = this->getBlockIndex(pos.x, pos.y, pos.z - 1);
+		}
+		else {
+			if (ray_pos.x > pos.x)
+				add_idx = this->getBlockIndex(pos.x + 1, pos.y, pos.z);
+			else
+				add_idx = this->getBlockIndex(pos.x - 1, pos.y, pos.z);
+		}
+		if (add_idx.flag) {
+			vector<Index2> v_idx;
+			cidx = add_idx.c_idx;
+			bidx = add_idx.b_idx;
+			this->addBlock(cidx, bidx, type);
+			this->chunks[cidx.y][cidx.x]->vertices_idx = 0;
+			int16& max_h = this->chunks[cidx.y][cidx.x]->max_h;
+			max_h = max(max_h, bidx.y + 1);
+			v_idx.push_back(cidx);
+			this->chunksSetVerticesAndIndices(v_idx, 0, v_idx.size());
+		}
+	}
+}
+
+void Terrain::deleteBlock(vec3 const& ray_pos, vec3 const& ray_dir)
+{
+	WorldIndex widx = this->pickBlock(ray_pos, ray_dir);
+	if (widx.flag) {
+		this->addBlock(widx.c_idx, widx.b_idx, 0);
+		this->chunks[widx.c_idx.y][widx.c_idx.x]->vertices_idx = 0;
+		vector<Index2> v_idx;
+		v_idx.push_back(widx.c_idx);
+		Index2 cidx;
+		Index2 const& pos = this->chunks[widx.c_idx.y][widx.c_idx.x]->chunk_pos;
+		if (widx.b_idx.x == 0) {
+			cidx = this->findChunkIndex(pos.x - 16, pos.y);
+			if (cidx.flag) {
+				this->chunks[cidx.y][cidx.x]->vertices_idx = 0;
+				v_idx.push_back(cidx);
+			}
+		}
+		if (widx.b_idx.x == 15) {
+			cidx = this->findChunkIndex(pos.x + 16, pos.y);
+			if (cidx.flag) {
+				this->chunks[cidx.y][cidx.x]->vertices_idx = 0;
+				v_idx.push_back(cidx);
+			}
+		}
+		if (widx.b_idx.z == 0) {
+			cidx = this->findChunkIndex(pos.x, pos.y + 16);
+			if (cidx.flag) {
+				this->chunks[cidx.y][cidx.x]->vertices_idx = 0;
+				v_idx.push_back(cidx);
+			}
+		}
+		if (widx.b_idx.z == 15) {
+			cidx = this->findChunkIndex(pos.x, pos.y - 16);
+			if (cidx.flag) {
+				this->chunks[cidx.y][cidx.x]->vertices_idx = 0;
+				v_idx.push_back(cidx);
+			}
+		}
+		this->chunksSetVerticesAndIndices(v_idx, 0, v_idx.size());
+	}
+}
+
 vec3 Terrain::getBlockIdxToWorld(Index2& c_idx, int x, int y, int z)
 {
 	vec3 pos = this->chunks[c_idx.y][c_idx.x]->start_pos;
@@ -476,25 +562,6 @@ void Terrain::setSightChunk(int cnt)
 	this->c_fov = min(max_fov, cnt);
 }
 
-WorldIndex Terrain::getBlockIndexRay(
-	vec3 const& pos, 
-	vec3 const& r_pos,
-	int dir
-)
-{
-	Index3 b_pos;
-	b_pos.x = static_cast<int>(floor(pos.x));
-	b_pos.y = static_cast<int>(floor(pos.y));
-	b_pos.z = static_cast<int>(floor(pos.z));
-	if (dir == 0 && r_pos.x > b_pos.x)
-		b_pos.x -= 1;
-	else if (dir == 1 && r_pos.z < b_pos.z)
-		b_pos.z += 1;
-	else if (dir == 2 && r_pos.y < b_pos.y)
-		b_pos.y += 1;
-	return this->getBlockIndex(b_pos.x, b_pos.y, b_pos.z);
-}
-
 WorldIndex Terrain::pickBlock(vec3 r_pos, vec3 r_dir)
 {
 	// 1. x y z index 찾기
@@ -620,33 +687,30 @@ WorldIndex Terrain::pickBlock(vec3 r_pos, vec3 r_dir)
 			if (max_x < max_z) {
 				x += step_x;
 				max_x += delta_x;
+				ans.dir = 2;
 			}
 			else {
 				z += step_z;
 				max_z += delta_z;
+				ans.dir = 1;
 			}
 		}
 		else {
 			if (max_y < max_z) {
 				y += step_y;
 				max_y += delta_y;
+				ans.dir = 0;
 			}
 			else {
 				z += step_z;
 				max_z += delta_z;
+				ans.dir = 1;
 			}
 		}
 		ans = this->getBlockIndex(x, y, z);
 		if (ans.flag && this->findBlock(ans.c_idx, ans.b_idx)) {
-			if (this->findBlock(ans.c_idx, ans.b_idx)) {
-				vec3 bp = this->getBlockIdxToWorld(
-					ans.c_idx,
-					ans.b_idx.x,
-					ans.b_idx.y,
-					ans.b_idx.z
-				);
-				return ans;
-			}
+			ans.pos = vec3(x, y, z);
+			return ans;
 		}
 	}
 	ans.flag = false;
