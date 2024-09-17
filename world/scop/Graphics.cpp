@@ -21,6 +21,9 @@ void Graphics::renderBegin()
 		this->render_target_view.GetAddressOf(),
 		this->depth_stencil_view.Get()
 	);
+	/*this->context->OMSetRenderTargets(0, NULL, depth stencil view);
+	뎁스맵만 만드는 경우 아래처럼 초기화는 필요하고 위처럼 랜더타겟을 넣어 줄 필요
+	없다.*/
 	this->context->ClearRenderTargetView(
 		this->render_target_view.Get(),
 		this->clear_color

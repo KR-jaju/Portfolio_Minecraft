@@ -10,7 +10,13 @@ public:
         int octav, 
         double delta_amplitude
     ) const;
-
+    double getNoise3D(
+        double x,
+        double y,
+        double z,
+        int octav,
+        double delta_amplitude
+    );
 private:
     double fade(double t) const;
     double lerp(double a, double b, double u) const;

@@ -105,7 +105,7 @@ Index2 Terrain::findChunkIndex(int w_x, int w_z) const
 
 void Terrain::fillChunk(Index2 const& c_idx, Index2 const& c_pos)
 {
-	float x, z;
+	float x, sy, z;
 	float offset = 0.000001f;
 	int16& max_h = this->chunks[c_idx.y][c_idx.x]->max_h;
 	for (int i = 0; i < 16; i++) {
@@ -113,13 +113,14 @@ void Terrain::fillChunk(Index2 const& c_idx, Index2 const& c_pos)
 		for (int j = 0; j < 16; j++) {
 			x = (c_pos.x + j + offset) / 32.f;
 			double h_ = this->perlin_noise.getNoise2D(x, z, 3, 0.5);
-			int16 h = static_cast<int16>((h_ + 0.8) * 0.5 * 30.f);
+			int16 h = static_cast<int16>((h_ + 0.8) * 0.5 * 50.f);
 			max_h = max(max_h, h);
 			this->setHeight(c_idx, j, i, h);
-			for (int y = 0; y < 10; y++)
-				this->addBlock(c_idx, j, y, i, 1);
-			for (int y = 10; y < h; y++) {
-				this->addBlock(c_idx, j, y, i, 1);
+			for (int y = 0; y < h; y++) {
+				sy = y / 16.f;
+				h_ = this->perlin_noise.getNoise3D(x, sy, z, 3, 0.5);
+				if (h_ < 0.1 || y < 1)
+					this->addBlock(c_idx, j, y, i, 1);
 			}
 		}
 	}
@@ -368,6 +369,14 @@ void Terrain::deleteBlock(vec3 const& ray_pos, vec3 const& ray_dir)
 		}
 		this->chunksSetVerticesAndIndices(v_idx, 0, v_idx.size());
 	}
+}
+
+int Terrain::getBlock(float x, float y, float z)
+{
+	WorldIndex widx = this->getBlockIndex(x, y, z);
+	if (widx.flag)
+		return this->findBlock(widx.c_idx, widx.b_idx);
+	return 0;
 }
 
 vec3 Terrain::getBlockIdxToWorld(Index2& c_idx, int x, int y, int z)

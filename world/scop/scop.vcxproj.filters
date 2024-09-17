@@ -100,6 +100,9 @@
     <Filter Include="헤더 파일\Utils\SimpleMath">
       <UniqueIdentifier>{60c06e56-3714-4101-aae9-cf3e3f0320dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DepthShader">
+      <UniqueIdentifier>{12a409e7-645d-4842-a937-fc04465ab5bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -180,6 +183,9 @@
     <ClInclude Include="Block.h">
       <Filter>소스 파일\World\Block</Filter>
     </ClInclude>
+    <ClInclude Include="DepthMap.h">
+      <Filter>소스 파일\World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -251,6 +257,9 @@
     <ClCompile Include="WICTextureLoader11.cpp">
       <Filter>헤더 파일\Utils\WICTextureLoader</Filter>
     </ClCompile>
+    <ClCompile Include="DepthMap.cpp">
+      <Filter>소스 파일\World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="scop.rc">
@@ -299,6 +308,12 @@
     </FxCompile>
     <FxCompile Include="TestVertexShader2.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\TestShader</Filter>
+    </FxCompile>
+    <FxCompile Include="DepthVertexShader.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DepthShader</Filter>
+    </FxCompile>
+    <FxCompile Include="DepthPixelShader.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DepthShader</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

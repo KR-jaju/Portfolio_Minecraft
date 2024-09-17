@@ -30,6 +30,27 @@ double PerlinNoise::getNoise2D
     return total / total_amplitude;
 }
 
+double PerlinNoise::getNoise3D(
+    double x, 
+    double y, 
+    double z, 
+    int octav, 
+    double delta_amplitude
+)
+{
+    double total = 0;
+    double total_amplitude = 0;
+    double frequency = 1;
+    double amplitude = 1;
+    for (int i = 0; i < octav; i++) {
+        total += perlin(x * frequency, y * frequency, z * frequency) * amplitude;
+        total_amplitude += amplitude;
+        frequency *= 2;
+        amplitude *= delta_amplitude;
+    }
+    return total / total_amplitude;
+}
+
 double PerlinNoise::fade(double t) const
 {
     return t * t * t * (t * (6 * t - 15) + 10);

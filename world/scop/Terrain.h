@@ -29,6 +29,7 @@ public:
 	int16 getHeight(float x, float z) const;
 	void putBlock(vec3 const& ray_pos, vec3 const& ray_dir, int type);
 	void deleteBlock(vec3 const& ray_pos, vec3 const& ray_dir);
+	int getBlock(float x, float y, float z);
 
 public: // test func & temp func
 	void Render(Mat const& proj, Mat const& view, vec3 const& pos);
