@@ -10,6 +10,7 @@ public:
 	void setClearColor(float r, float g, float b, float a);
 	ComPtr<ID3D11Device> getDevice() const;
 	ComPtr<ID3D11DeviceContext> getContext() const;
+	ComPtr<ID3D11RenderTargetView> getRenderTargetVew() const;
 
 private:
 	void createDeviceAndSwapChain();

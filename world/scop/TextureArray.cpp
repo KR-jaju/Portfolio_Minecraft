@@ -173,7 +173,8 @@ TextureArray::TextureArray(
         txtDesc.SampleDesc.Count = 1;
         txtDesc.SampleDesc.Quality = 0;
         txtDesc.Usage = D3D11_USAGE_DEFAULT; // 스테이징 텍스춰로부터 복사 가능
-        txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;// 읽기도 가능하고 결과도 출력 가능
+        txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | 
+			D3D11_BIND_RENDER_TARGET;// 읽기도 가능하고 결과도 출력 가능
         txtDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS; // 밉맵 사용
 
         // 초기 데이터 없이 텍스춰를 만듭니다.

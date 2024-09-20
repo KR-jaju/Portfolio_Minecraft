@@ -142,7 +142,10 @@ struct WorldIndex {
 
 struct CamPos {
 	vec3 pos;
-	float dummy;
 	float r;
-	vec3 dummys;
+};
+
+struct Light {
+	Mat view = Mat::Identity;
+	Mat proj = Mat::Identity;
 };

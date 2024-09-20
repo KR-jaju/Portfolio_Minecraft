@@ -6,7 +6,7 @@
 #include <array>
 
 class Chunk;
-
+class DepthMap;
 // test
 vec3 intersectionRayAndPlane(
 	vec3 const& r_pos,
@@ -32,7 +32,18 @@ public:
 	int getBlock(float x, float y, float z);
 
 public: // test func & temp func
-	void Render(Mat const& proj, Mat const& view, vec3 const& pos);
+	void setRenderPipeLine(int flag);
+	void DepthRender(
+		Mat const& light_view,
+		Mat const& light_proj
+	);
+	void Render(
+		Mat const& cam_view, 
+		Mat const& cam_proj, 
+		vec3 const& cam_pos,
+		Mat const& light_view,
+		Mat const& light_proj
+	);
 	void setRender();
 	void showChunk(Index2 const& c_idx);
 	void selectBlockTest(vec3 ray_pos, vec3 ray_dir);
@@ -89,6 +100,9 @@ private:
 	int size_w;
 	int size_h;
 	int c_fov;
+	UINT window_w;
+	UINT window_h;
+	shared_ptr<DepthMap> depth_map;
 
 private:
 	bool test_flag = false;
@@ -103,8 +117,12 @@ private:
 	vector <shared_ptr<BlendState>> blend_state_arr;
 	shared_ptr<TextureArray> texture_array;
 	shared_ptr<SamplerState> sampler_state;
+	shared_ptr<SamplerState> depth_sampler_state;
 	shared_ptr<VertexShader> vertex_shader;
 	shared_ptr<PixelShader> pixel_shader;
 	shared_ptr<InputLayout> input_layout;
+	shared_ptr<VertexShader> depth_vertex_shader;
+	shared_ptr<PixelShader> depth_pixel_shader;
+	shared_ptr<InputLayout> depth_input_layout;
 };
 

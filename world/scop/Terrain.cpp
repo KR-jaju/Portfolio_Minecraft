@@ -13,6 +13,7 @@
 #include "PixelShader.h"
 #include "ConstantBuffer.h"
 #include "InputLayout.h"
+#include "DepthMap.h"
 #include <fstream>
 
 #include <time.h>
@@ -46,6 +47,8 @@ Terrain::Terrain(
 {
 	this->size_h = size_h;
 	this->size_w = size_w;
+	this->window_w = width;
+	this->window_h = height;
 
 	this->s_pos.x = -8 * this->size_w;
 	this->s_pos.y = 8 * this->size_h;
@@ -208,11 +211,23 @@ void Terrain::setRender()
 		"main",
 		"vs_5_0"
 	);
+	this->depth_vertex_shader = make_shared<VertexShader>(
+		this->graphic->getDevice(),
+		L"DepthVertexShader.hlsl",
+		"main",
+		"vs_5_0"
+	);
 	this->input_layout = make_shared<InputLayout>(
 		this->graphic->getDevice(),
 		layout.data(),
 		layout.size(),
 		this->vertex_shader->getBlob()
+	);
+	this->depth_input_layout = make_shared<InputLayout>(
+		this->graphic->getDevice(),
+		layout.data(),
+		layout.size(),
+		this->depth_vertex_shader->getBlob()
 	);
 	this->pixel_shader = make_shared<PixelShader>(
 		this->graphic->getDevice(),
@@ -220,41 +235,233 @@ void Terrain::setRender()
 		"main",
 		"ps_5_0"
 	);
+	this->depth_pixel_shader = make_shared<PixelShader>(
+		this->graphic->getDevice(),
+		L"DepthPixelShader.hlsl",
+		"main",
+		"ps_5_0"
+	);
+	D3D11_SAMPLER_DESC comparisonSamplerDesc;
+	ZeroMemory(&comparisonSamplerDesc, sizeof(D3D11_SAMPLER_DESC));
+	comparisonSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	comparisonSamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+	comparisonSamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+	comparisonSamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+	comparisonSamplerDesc.BorderColor[0] = 100.f;
+	comparisonSamplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	comparisonSamplerDesc.MinLOD = 0;
+	comparisonSamplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	this->depth_sampler_state = make_shared<SamplerState>(
+		this->graphic->getDevice(),
+		comparisonSamplerDesc
+	);
+}
 
+void Terrain::setRenderPipeLine(int flag)
+{
 	this->graphic->getContext()->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
 	);
-	this->graphic->getContext()->IASetInputLayout(
-		this->input_layout->getComPtr().Get()
-	);
-	
-	this->graphic->getContext()->VSSetShader(
-		this->vertex_shader->getComPtr().Get(),
-		nullptr,
-		0
-	);
+	if (flag == 0) {
+		this->graphic->getContext()->IASetInputLayout(
+			this->input_layout->getComPtr().Get()
+		);
+		this->graphic->getContext()->VSSetShader(
+			this->vertex_shader->getComPtr().Get(),
+			nullptr,
+			0
+		);
+		this->graphic->getContext()->RSSetState(
+			this->rasterizer_state->getComPtr().Get()
+		);
+		this->graphic->getContext()->PSSetShader(
+			this->pixel_shader->getComPtr().Get(),
+			nullptr,
+			0
+		);
+		this->graphic->getContext()->PSSetSamplers(
+			0,
+			1,
+			this->sampler_state->getComPtr().GetAddressOf()
+		);
+		this->graphic->getContext()->PSSetSamplers(
+			1,
+			1,
+			this->depth_sampler_state->getComPtr().GetAddressOf()
+		);
+		this->graphic->getContext()->PSSetShaderResources(
+			0,
+			1,
+			this->texture_array->getComPtr().GetAddressOf()
+		);
+		this->graphic->getContext()->PSSetShaderResources(
+			1,
+			1,
+			this->depth_map->getShaderResourceView().GetAddressOf()
+		);
 
-	this->graphic->getContext()->PSSetShader(
-		this->pixel_shader->getComPtr().Get(),
-		nullptr,
-		0
+		this->graphic->getContext()->OMSetBlendState(
+			this->blend_state_arr[0]->getComPtr().Get(),
+			this->blend_state_arr[0]->getBlendFactor(),
+			this->blend_state_arr[0]->getSampleMask()
+		);
+	}
+	else {
+		this->graphic->getContext()->IASetInputLayout(
+			this->depth_input_layout->getComPtr().Get()
+		);
+
+		this->graphic->getContext()->VSSetShader(
+			this->depth_vertex_shader->getComPtr().Get(),
+			nullptr,
+			0
+		);
+		this->graphic->getContext()->RSSetState(
+			this->rasterizer_state->getComPtr().Get()
+		);
+		this->graphic->getContext()->PSSetShader(
+			this->depth_pixel_shader->getComPtr().Get(),
+			nullptr,
+			0
+		);
+	}
+}
+
+void Terrain::DepthRender(
+	Mat const& light_view, 
+	Mat const& light_proj
+)
+{
+	this->setRenderPipeLine(1);
+	this->depth_map = make_shared<DepthMap>(
+		this->graphic->getDevice(),
+		this->window_w,
+		this->window_h
 	);
-	this->graphic->getContext()->PSSetSamplers(
+	MVP mvp;
+	mvp.view = light_view.Transpose();
+	mvp.proj = light_proj.Transpose();
+	ConstantBuffer vertex_cbuffer(
+		this->graphic->getDevice(),
+		this->graphic->getContext(),
+		mvp
+	);
+	this->graphic->getContext()->VSSetConstantBuffers(
 		0,
 		1,
-		this->sampler_state->getComPtr().GetAddressOf()
+		vertex_cbuffer.getComPtr().GetAddressOf()
 	);
-	this->graphic->getContext()->PSSetShaderResources(
+	this->graphic->getContext()->OMSetRenderTargets(
+		1,
+		this->graphic->getRenderTargetVew().GetAddressOf(),
+		depth_map->getDepthStencilView().Get()
+	);
+	// test
+	float arr[4] = { 0, 0, 0, 1 };
+	this->graphic->getContext()->ClearRenderTargetView(
+		this->graphic->getRenderTargetVew().Get(),
+		arr
+	);
+	// test
+	D3D11_VIEWPORT view_port;
+	ZeroMemory(&view_port, sizeof(view_port));
+	view_port.TopLeftX = 0.0f;
+	view_port.TopLeftY = 0.0f;
+	view_port.Width = static_cast<float>(this->window_w);
+	view_port.Height = static_cast<float>(this->window_h);
+	view_port.MinDepth = 0.0f;
+	view_port.MaxDepth = 1.0f;
+	this->graphic->getContext()->RSSetViewports(1, &(view_port));
+	// test end
+
+	this->graphic->getContext()->ClearDepthStencilView(
+		depth_map->getDepthStencilView().Get(),
+		D3D11_CLEAR_DEPTH,
+		1.0f,
+		0
+	);
+	for (int i = 0; i < this->size_h; i++) {
+		for (int j = 0; j < this->size_w; j++) {
+			if (this->chunks[i][j]->render_flag == false) {
+				continue;
+			}
+			this->chunks[i][j]->setVIBuffer(
+				this->graphic,
+				this->depth_vertex_shader
+			);
+		}
+	}
+
+	//test
+	//this->graphic->renderEnd();
+}
+
+void Terrain::Render
+(
+	Mat const& cam_view,
+	Mat const& cam_proj,
+	vec3 const& cam_pos,
+	Mat const& light_view,
+	Mat const& light_proj
+)
+{
+	this->graphic->renderBegin();
+	this->setRenderPipeLine(0);
+	CamPos cam;
+	cam.pos = cam_pos;
+	cam.r = 16.f * 1.f;
+	MVP mvp;
+	mvp.proj = cam_proj.Transpose();
+	mvp.view = cam_view.Transpose();
+	ConstantBuffer vertex_cbuffer(
+		this->graphic->getDevice(),
+		this->graphic->getContext(),
+		mvp
+	);
+	MVP l_mvp;
+	l_mvp.view = light_view.Transpose();
+	l_mvp.proj = light_proj.Transpose();
+	ConstantBuffer vertex_cbuffer_light(
+		this->graphic->getDevice(),
+		this->graphic->getContext(),
+		l_mvp
+	);
+	this->graphic->getContext()->VSSetConstantBuffers(
 		0,
 		1,
-		this->texture_array->getComPtr().GetAddressOf()
+		vertex_cbuffer.getComPtr().GetAddressOf()
+	);
+	this->graphic->getContext()->VSSetConstantBuffers(
+		1,
+		1,
+		vertex_cbuffer_light.getComPtr().GetAddressOf()
 	);
 
-	this->graphic->getContext()->OMSetBlendState(
-		this->blend_state_arr[0]->getComPtr().Get(),
-		this->blend_state_arr[0]->getBlendFactor(),
-		this->blend_state_arr[0]->getSampleMask()
+	shared_ptr<ConstantBuffer> pixel_cbuffer;
+	pixel_cbuffer = make_shared<ConstantBuffer>(
+		this->graphic->getDevice(),
+		this->graphic->getContext(),
+		cam
 	);
+	pixel_cbuffer->update(cam);
+	this->graphic->getContext()->PSSetConstantBuffers(
+		0,
+		1,
+		pixel_cbuffer->getComPtr().GetAddressOf()
+	);
+	this->graphic->setClearColor(0.3, 0.3, 0.3, 1);
+	for (int i = 0; i < this->size_h; i++) {
+		for (int j = 0; j < this->size_w; j++) {
+			if (this->chunks[i][j]->render_flag == false) {
+				continue;
+			}
+			this->chunks[i][j]->setVIBuffer(
+				this->graphic,
+				this->vertex_shader
+			);
+		}
+	}
+	this->graphic->renderEnd();
 }
 
 void Terrain::showChunk(Index2 const& c_idx)
@@ -384,60 +591,6 @@ vec3 Terrain::getBlockIdxToWorld(Index2& c_idx, int x, int y, int z)
 	vec3 pos = this->chunks[c_idx.y][c_idx.x]->start_pos;
 	pos += vec3(x, y, -z);
 	return pos;
-}
-
-void Terrain::Render
-(
-	Mat const& proj,
-	Mat const& view,
-	vec3 const& cam_pos
-)
-{
-	CamPos cam;
-	cam.pos = cam_pos;
-	cam.r = 16.f * 1.f;
-	MVP mvp;
-	mvp.proj = proj.Transpose();
-	mvp.view = view.Transpose();
-	shared_ptr<ConstantBuffer> vertex_cbuffer;
-	vertex_cbuffer = make_shared<ConstantBuffer>(
-		this->graphic->getDevice(),
-		this->graphic->getContext(),
-		mvp
-	);
-	vertex_cbuffer->update(mvp);
-	this->graphic->getContext()->VSSetConstantBuffers(
-		0,
-		1,
-		vertex_cbuffer->getComPtr().GetAddressOf()
-	);
-
-	shared_ptr<ConstantBuffer> pixel_cbuffer;
-	pixel_cbuffer = make_shared<ConstantBuffer>(
-		this->graphic->getDevice(),
-		this->graphic->getContext(),
-		cam
-	);
-	pixel_cbuffer->update(cam);
-	this->graphic->getContext()->PSSetConstantBuffers(
-		0,
-		1,
-		pixel_cbuffer->getComPtr().GetAddressOf()
-	);
-	this->graphic->setClearColor(0.3, 0.3, 0.3, 1);
-	this->graphic->renderBegin();
-	for (int i = 0; i < this->size_h; i++) {
-		for (int j = 0; j < this->size_w; j++) {
-			if (this->chunks[i][j]->render_flag == false) {
-				continue;
-			}
-			this->chunks[i][j]->setVIBuffer(
-				this->graphic,
-				this->vertex_shader
-			);
-		}
-	}
-	this->graphic->renderEnd();
 }
 
 bool inChunkBoundary(int x, int y, int z) {

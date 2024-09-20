@@ -30,7 +30,7 @@ void Graphics::renderBegin()
 	);
 	this->context->ClearDepthStencilView(
 		this->depth_stencil_view.Get(),
-		D3D11_CLEAR_DEPTH,
+		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 		1.f,
 		0
 	);
@@ -58,6 +58,11 @@ ComPtr<ID3D11Device> Graphics::getDevice() const
 ComPtr<ID3D11DeviceContext> Graphics::getContext() const
 {
 	return this->context;
+}
+
+ComPtr<ID3D11RenderTargetView> Graphics::getRenderTargetVew() const
+{
+	return this->render_target_view;
 }
 
 void Graphics::createDeviceAndSwapChain()
