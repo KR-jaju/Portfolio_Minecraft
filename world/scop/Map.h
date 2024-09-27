@@ -3,6 +3,7 @@
 #include "MapUtils.h"
 #include "TerrainSystem.h"
 #include "LightSystem.h"
+#include "RenderSystem.h"
 
 class Chunk;
 class Graphic;
@@ -42,6 +43,7 @@ public:
 	MapUtils m_info;
 	LightSystem l_system;
 	TerrainSystem t_system;
+	RenderSystem r_system;
 
 private:
 	shared_ptr<Graphics> graphic;

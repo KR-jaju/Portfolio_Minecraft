@@ -28,7 +28,7 @@ public: // test func & temp func
 		Mat const& cam_proj, 
 		vec3 const& cam_pos
 	);
-	void setRender();	
+	void setRender(int depth_flag);	
 
 private:
 	shared_ptr<Map> m_manager;

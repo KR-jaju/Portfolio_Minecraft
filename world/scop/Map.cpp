@@ -13,11 +13,12 @@ Map::Map(
 	int fov_chunk, 
 	int thread_cnt,
 	shared_ptr<Graphics> graphic
-) : m_info(size_w, size_h), l_system(&m_info), t_system(&m_info)
+) : m_info(size_w, size_h), l_system(&m_info), t_system(&m_info), r_system(&m_info)
 {
 	this->c_fov = fov_chunk;
 	this->thread_cnt = thread_cnt;
 	this->graphic = graphic;
+	this->r_system.setGraphic(this->graphic);
 	clock_t start, finish;
 	start = clock();
 	this->t_system.createHeightMap();

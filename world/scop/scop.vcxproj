@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="BlendState.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="InputLayouts.h" />
     <ClInclude Include="LightSystem.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Buffer.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="RasterizerState.h" />
+    <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="scop.h" />
@@ -181,6 +183,7 @@
   <ItemGroup>
     <ClCompile Include="BlendState.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="InputLayouts.cpp" />
     <ClCompile Include="LightSystem.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Buffer.cpp" />
@@ -197,6 +200,7 @@
     <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="RasterizerState.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Terrain.cpp" />

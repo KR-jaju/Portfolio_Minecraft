@@ -47,8 +47,9 @@ float4 main(PS_INPUT input) : SV_TARGET
     float lod = 5 * saturate((dist - distMin) / (distMax - distMin));
     color = texture_arr.SampleLevel(sampler0, uvw, lod);
     
-    /*
+    
     //shadow map
+    /*
     float move = 0.1;
     input.world_pos += move * input.normal;
     float4 lpos = float4(input.world_pos, 1);
@@ -62,7 +63,9 @@ float4 main(PS_INPUT input) : SV_TARGET
     bias = clamp(bias, 0, 0.0001);
     if (depth + bias < lpos.z)
         return color * float4(0.3, 0.3, 0.3, 1);
+    return color;
     */
+    
     if (input.shadow_flag == 0)
         return color * float4(0.3, 0.3, 0.3, 1);
     float sp = input.shadow_flag / 15.f;
