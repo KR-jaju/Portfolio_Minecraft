@@ -9,9 +9,6 @@ struct VS_INPUT
 {
     int type : TYPE;
     float3 pos : POSITION;
-    float2 uv : TEXCOORD;
-    int dir : DIRECTION;
-    //int x_pos : XPOS;
 };
 
 struct PS_INPUT

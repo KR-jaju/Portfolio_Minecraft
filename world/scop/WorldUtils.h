@@ -140,6 +140,21 @@ struct WorldIndex {
 	}
 };
 
+struct VertexBlockUV {
+	int type;
+	vec3 pos;
+	vec3 normal;
+	vec2 uv;
+	int dir;
+	int shadow_flag = 0;
+};
+
+struct VertexBlock {
+	int type;
+	vec3 pos;
+	color col;
+};
+
 struct CamPos {
 	vec3 pos;
 	float r;

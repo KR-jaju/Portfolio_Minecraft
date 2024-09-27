@@ -36,20 +36,6 @@ struct VertexUV {
 	vec2 uv;
 };
 
-struct VertexBlockUV {
-	int type;
-	vec3 pos;
-	vec2 uv;
-	int dir;
-	//int x_pos;
-};
-
-struct VertexBlock {
-	int type;
-	vec3 pos;
-	color col;
-};
-
 struct MVP {
 	Mat model = Mat::Identity;
 	Mat view = Mat::Identity;

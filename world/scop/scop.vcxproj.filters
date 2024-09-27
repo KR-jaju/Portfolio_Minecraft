@@ -91,9 +91,6 @@
     <Filter Include="소스 파일\World\TestCam">
       <UniqueIdentifier>{1c81632f-c82d-418c-b2a8-b1a4e4a5cea0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\World\Map">
-      <UniqueIdentifier>{7e7a0dc6-b5f2-44b0-b090-c9bcf401b95d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Utils\WICTextureLoader">
       <UniqueIdentifier>{84562d8d-e3d2-48a6-aa82-609c84bc2068}</UniqueIdentifier>
     </Filter>
@@ -102,6 +99,21 @@
     </Filter>
     <Filter Include="소스 파일\World\WorldShaderFIle\DepthShader">
       <UniqueIdentifier>{12a409e7-645d-4842-a937-fc04465ab5bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map">
+      <UniqueIdentifier>{7e7a0dc6-b5f2-44b0-b090-c9bcf401b95d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\MapUtils">
+      <UniqueIdentifier>{103abc11-a445-4c10-ada7-77038019557c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System">
+      <UniqueIdentifier>{9272344e-7151-4d07-bb0e-90ccb5ca9cb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\LightSystem">
+      <UniqueIdentifier>{d6c5ce7e-56c1-4ee7-a37e-d0ee40057f55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\TerrainSystem">
+      <UniqueIdentifier>{e9a43b52-258a-44b3-98c9-276d04167ab3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -171,9 +183,6 @@
     <ClInclude Include="TestCam.h">
       <Filter>소스 파일\World\TestCam</Filter>
     </ClInclude>
-    <ClInclude Include="MapGenerator.h">
-      <Filter>소스 파일\World\Map</Filter>
-    </ClInclude>
     <ClInclude Include="SimpleMath.h">
       <Filter>헤더 파일\Utils\SimpleMath</Filter>
     </ClInclude>
@@ -185,6 +194,18 @@
     </ClInclude>
     <ClInclude Include="DepthMap.h">
       <Filter>소스 파일\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>소스 파일\World\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="MapUtils.h">
+      <Filter>소스 파일\World\Map\MapUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSystem.h">
+      <Filter>소스 파일\World\Map\System\LightSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainSystem.h">
+      <Filter>소스 파일\World\Map\System\TerrainSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -248,9 +269,6 @@
     <ClCompile Include="TestCam.cpp">
       <Filter>소스 파일\World\TestCam</Filter>
     </ClCompile>
-    <ClCompile Include="MapGenerator.cpp">
-      <Filter>소스 파일\World\Map</Filter>
-    </ClCompile>
     <ClCompile Include="SimpleMath.cpp">
       <Filter>헤더 파일\Utils\SimpleMath</Filter>
     </ClCompile>
@@ -259,6 +277,18 @@
     </ClCompile>
     <ClCompile Include="DepthMap.cpp">
       <Filter>소스 파일\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>소스 파일\World\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="MapUtils.cpp">
+      <Filter>소스 파일\World\Map\MapUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="LightSystem.cpp">
+      <Filter>소스 파일\World\Map\System\LightSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainSystem.cpp">
+      <Filter>소스 파일\World\Map\System\TerrainSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
