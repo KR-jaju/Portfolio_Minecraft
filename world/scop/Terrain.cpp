@@ -1,21 +1,7 @@
 #include "pch.h"
 #include "Terrain.h"
-#include "Block.h"
-#include "Chunk.h"
-#include "thread"
-
 #include "Graphics.h"
-#include "TextureArray.h"
-#include "RasterizerState.h"
-#include "BlendState.h"
-#include "SamplerState.h"
-#include "VertexShader.h"
-#include "PixelShader.h"
-#include "ConstantBuffer.h"
-#include "InputLayout.h"
-#include "Buffer.h"
-
-#include <time.h>
+#include "Chunk.h"
 
 Terrain::Terrain(
 	int size_w,
