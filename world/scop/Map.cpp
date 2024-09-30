@@ -22,9 +22,12 @@ Map::Map(
 	clock_t start, finish;
 	start = clock();
 	this->t_system.createHeightMap();
+	finish = clock();
+	cout << "set height(ms)" << static_cast<double>(finish - start) << endl;
+	start = clock();
 	this->l_system.createLightMap();
 	finish = clock();
-	cout << "set height(ms): " << static_cast<double>(finish - start) << endl;
+	cout << "set light(ms): " << static_cast<double>(finish - start) << endl;
 	start = clock();
 	this->terrainsetVerticesAndIndices();
 	finish = clock();
@@ -214,7 +217,7 @@ void Map::userPositionCheck(float x, float z)
 				this->m_info.chunks[cidx.y][cidx.x]->setPos(cpos);
 				this->resetChunk(cidx);
 				this->t_system.fillChunk(cidx, cpos);
-				this->l_system.fillLight(cidx, cpos);
+				this->l_system.fillLight(cidx);
 				v_idxs.push_back(cidx);
 				cidx = this->m_info.findChunkIndex(this->m_info.ev_pos.x - 16, cpos.y);
 				this->m_info.chunks[cidx.y][cidx.x]->render_flag = false;
@@ -235,7 +238,7 @@ void Map::userPositionCheck(float x, float z)
 				this->m_info.chunks[cidx.y][cidx.x]->setPos(cpos);
 				this->resetChunk(cidx);
 				this->t_system.fillChunk(cidx, cpos);
-				this->l_system.fillLight(cidx, cpos);
+				this->l_system.fillLight(cidx);
 				v_idxs.push_back(cidx);
 				cidx = this->m_info.findChunkIndex(this->m_info.sv_pos.x, cpos.y);
 				this->m_info.chunks[cidx.y][cidx.x]->render_flag = false;
@@ -257,7 +260,7 @@ void Map::userPositionCheck(float x, float z)
 				this->m_info.chunks[cidx.y][cidx.x]->setPos(cpos);
 				this->resetChunk(cidx);
 				this->t_system.fillChunk(cidx, cpos);
-				this->l_system.fillLight(cidx, cpos);
+				this->l_system.fillLight(cidx);
 				v_idxs.push_back(cidx);
 				cidx = this->m_info.findChunkIndex(cpos.x, this->m_info.ev_pos.y + 16);
 				this->m_info.chunks[cidx.y][cidx.x]->render_flag = false;
@@ -278,7 +281,7 @@ void Map::userPositionCheck(float x, float z)
 				this->m_info.chunks[cidx.y][cidx.x]->setPos(cpos);
 				this->resetChunk(cidx);
 				this->t_system.fillChunk(cidx, cpos);
-				this->l_system.fillLight(cidx, cpos);
+				this->l_system.fillLight(cidx);
 				v_idxs.push_back(cidx);
 				cidx = this->m_info.getChunkIndex(cpos.x, this->m_info.sv_pos.y);
 				this->m_info.chunks[cidx.y][cidx.x]->render_flag = false;
@@ -298,6 +301,7 @@ void Map::userPositionCheck(float x, float z)
 			this->m_info.chunks[cidx.y][cidx.x]->setPos(pos);
 			this->resetChunk(cidx);
 			this->t_system.fillChunk(cidx, pos);
+			this->l_system.fillLight(cidx);
 		}
 	}
 	if (v_idxs.size()) {

@@ -66,10 +66,8 @@ float4 main(PS_INPUT input) : SV_TARGET
     return color;
     */
     
-    if (input.shadow_flag == 0)
-        return color * float4(0.3, 0.3, 0.3, 1);
-    float sp = input.shadow_flag / 15.f;
-    if (sp != 1)
-        sp *= 0.6;
+    float sp = input.shadow_flag;
+    sp /= 15.f;
+    sp = max(sp, 0.3);
     return color * float4(sp, sp, sp, 1);
 }

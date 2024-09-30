@@ -17,6 +17,7 @@ public:
 		vec3 const& p_dir
 	);
 	bool inChunkBoundary(int x, int y, int z);
+	bool inChunkBoundary(Index3 const& bidx);
 
 public:
 	int findBlock(Index2 const& c_idx, int x, int y, int z) const;

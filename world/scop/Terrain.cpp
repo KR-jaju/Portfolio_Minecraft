@@ -136,6 +136,7 @@ void Terrain::putBlock(
 			}
 			this->m_manager->m_info.addBlock(cidx, bidx, type);
 			Index3 bidx;
+			// TODO: light system 적용
 			for (int y = bidx.y; y >= 0; y--) {
 				this->m_manager->m_info.setLight(cidx, bidx.x, y, bidx.z, 0);
 			}
@@ -153,8 +154,8 @@ void Terrain::deleteBlock(vec3 const& ray_pos, vec3 const& ray_dir)
 	WorldIndex widx = this->m_manager->m_info.pickBlock(ray_pos, ray_dir);
 	if (widx.flag) {
 		this->m_manager->m_info.addBlock(widx.c_idx, widx.b_idx, 0);
+		// TODO light system
 		this->m_manager->l_system.lightPropagationGather(widx.c_idx, widx.b_idx);
-		
 		this->m_manager->m_info.chunks[widx.c_idx.y][widx.c_idx.x]->vertices_idx = 0;
 		vector<Index2> v_idx;
 		v_idx.push_back(widx.c_idx);

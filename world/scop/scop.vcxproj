@@ -115,7 +115,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Libraries/Lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -136,7 +136,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -151,6 +151,7 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="InputLayouts.h" />
     <ClInclude Include="LightSystem.h" />
+    <ClInclude Include="MyQueue.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Chunk.h" />
@@ -185,6 +186,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="InputLayouts.cpp" />
     <ClCompile Include="LightSystem.cpp" />
+    <ClCompile Include="MyQueue.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Chunk.cpp" />

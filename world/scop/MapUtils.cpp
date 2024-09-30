@@ -50,6 +50,14 @@ bool MapUtils::inChunkBoundary(int x, int y, int z) {
 	return false;
 }
 
+bool MapUtils::inChunkBoundary(Index3 const& bidx)
+{
+	if (bidx.x >= 0 && bidx.x < 16 && 
+		bidx.z >= 0 && bidx.z < 16 && bidx.y >= 0 && bidx.y < 256)
+		return true;
+	return false;
+}
+
 WorldIndex MapUtils::getBlockIndex(float x, float y, float z) const
 {
 	WorldIndex ans;

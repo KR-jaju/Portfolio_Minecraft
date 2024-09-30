@@ -1,7 +1,6 @@
 #pragma once
-#include <queue>
-
 #include "WorldUtils.h"
+#include "MyQueue.h"
 
 class MapUtils;
 
@@ -12,14 +11,23 @@ public:
 	
 public:
 	void createLightMap();
-	void fillLight(Index2 const& c_idx, Index2 const& c_pos);
+	void fillLight(Index2 const& c_idx);
 	void resetLight(Index2 const& c_idx);
 	void lightPropagationGather(
 		Index2 const& cidx,
 		Index3 const& bidx
 	);
-	void lightBFS(queue<pair<Index2, Index3>>& que);
+	void lightBFS();
+
+private:
+	void fillLightThread(
+		vector<Index2> const& vec, 
+		int st, 
+		int ed
+	);
+	void checkBoundary(Index2 const& c_idx);
 private:
 	MapUtils* m_info;
+	MyQueue que;
 };
 

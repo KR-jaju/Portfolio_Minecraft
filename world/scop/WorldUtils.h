@@ -87,6 +87,14 @@ struct Index2 {
 		this->flag = idx2.flag;
 		return *this;
 	}
+
+	Index2& operator+=(Index2 const& idx2) {
+		this->x += idx2.x;
+		this->y += idx2.y;
+		this->flag |= idx2.flag;
+		return *this;
+	}
+
 	bool operator<(Index2 const& idx2) const {
 		if (this->x == idx2.x) {
 			return this->y < idx2.y;
@@ -120,6 +128,17 @@ struct Index2Hash {
 		return hash<int>()(idx2.x) ^ hash<int>()(idx2.y);
 	}
 };
+
+inline void setIndex3(Index3& idx3, int x, int y, int z) {
+	idx3.x = x;
+	idx3.y = y;
+	idx3.z = z;
+}
+
+inline void setIndex2(Index2& idx2, int x, int y) {
+	idx2.x = x;
+	idx2.y = y;
+}
 
 // c_idx : chunk index, b_idx : block index
 struct WorldIndex {
