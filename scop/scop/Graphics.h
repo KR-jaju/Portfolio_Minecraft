@@ -1,4 +1,6 @@
 #pragma once
+// Graphics 클래스는 초반 Device, DeviceContext, SwapChain 설정 및
+// renderBegin(), renderEnd()를 설정하는 클래스다.
 class Graphics
 {
 public:

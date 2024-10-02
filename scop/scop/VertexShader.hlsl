@@ -1,3 +1,13 @@
+cbuffer CameraData : register(b0)
+{
+    matrix view;
+    matrix proj;
+}
+
+cbuffer TransformData : register(b1)
+{
+    row_major matrix matWorld;
+}
 struct VS_INPUT
 {
     float3 pos : POSITION;
@@ -10,12 +20,6 @@ struct VS_OUTPUT
     float4 col : COLOR;
 };
 
-cbuffer MVPMat : register(b0)
-{
-    matrix model;
-    matrix view;
-    matrix proj;
-};
 
 VS_OUTPUT main( VS_INPUT input )
 {
@@ -23,11 +27,10 @@ VS_OUTPUT main( VS_INPUT input )
     output.pos = float4(input.pos, 1.f);
     output.col = input.col;
     
-    output.pos = mul(output.pos, model);
+    output.pos = mul(output.pos, matWorld);
     output.pos = mul(output.pos, view);
     output.pos = mul(output.pos, proj);
-    matrix mvp = mul(model, view);
-    mvp = mul(mvp, proj);
+
     //output.pos = mul(output.pos, mvp);
     //matrix mvp = mul(proj, view);
     //mvp = mul(mvp, model);

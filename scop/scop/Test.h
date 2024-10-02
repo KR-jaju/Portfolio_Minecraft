@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Buffer.h"
+#include "Camera.h"
 #include "InputLayout.h"
 #include "Graphics.h"
 #include "ConstantBuffer.h"
@@ -10,41 +11,40 @@
 #include "RasterizerState.h"
 #include "BlendState.h"
 #include "SamplerState.h"
+#include "CameraMove.h"
+#include "RenderSystem.h"
+#include "SceneSystem.h"
+#include "ResourceSystem.h"
+class InputSystem;
+class RenderSystem;
+class ResourceSystem;
+class SceneSystem;
+class TimeSystem;
 
 class Test
 {
 public:
 	Test(HWND hwnd, UINT width, UINT height);
 	~Test();
-	void setDrawBox();
-	void setDrawTexSkel();
-	void render();
-	void renderUV();
-	void update();
-	void setContext();
+	void Update();
+	void Render();
+	
+	shared_ptr<InputSystem> GetInputSystem() { return this->input_system; }
+	shared_ptr<RenderSystem> GetRenderSystem() { return this->render_system; }
+	shared_ptr<ResourceSystem> GetResourceSystem() { return this->resource_system; }
+	shared_ptr<SceneSystem> GetSceneSystem() { return this->scene_system; }
+	shared_ptr<TimeSystem> GetTimeSystem() { return this->time_system; }
+
 private:
-	void geometrySkel();
-	void geometryBox();
+	HWND hwnd;
 
 private:
 	// 밖에서 정의됨
 	shared_ptr<Graphics> graphic;
-	
-	// 실제 object들이 render 하기 위해 갖고 있을 부분
-	shared_ptr<Buffer<Vertex>> vertex_buffer;
-	shared_ptr<Buffer<VertexUV>> vertex_uv_buffer;
-	shared_ptr<Buffer<uint32>> index_buffer;
-	shared_ptr<InputLayout> input_layout;
-	shared_ptr<ConstantBuffer> constant_buffer;
-	shared_ptr<VertexShader> vertex_shader;
-	shared_ptr<PixelShader> pixel_shader;
-	shared_ptr<Texture> texture;
-	shared_ptr<RasterizerState> rasterizer_state;
-	shared_ptr<SamplerState> sampler_state;
-	shared_ptr<BlendState> blend_state;
-
-	vector<Vertex> vertices;
-	vector<uint32> indices;
-	vector<VertexUV> vertices_uv;
+	shared_ptr<TimeSystem> time_system;
+	shared_ptr<InputSystem> input_system;
+	shared_ptr<SceneSystem> scene_system;
+	shared_ptr<ResourceSystem> resource_system;
+	shared_ptr<RenderSystem> render_system;
 };
 

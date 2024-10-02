@@ -4,7 +4,8 @@
 #include "framework.h"
 #include "scop.h"
 #include "Game.h"
-
+#include "InputSystem.h"
+#include "TimeSystem.h"
 #include "Test.h"
 
 #define MAX_LOADSTRING 100
@@ -21,6 +22,17 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
+void SetCursorInClient(HWND hwnd, int client_x, int client_y)
+{
+    POINT pt;
+    pt.x = client_x;
+    pt.y = client_y;
+
+    ClientToScreen(hwnd, &pt);
+    SetCursorPos(pt.x, pt.y);
+}
+
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
@@ -36,14 +48,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SCOP));
 
-    /*Game game;
-    game.Init(hWnd, 2);*/
+
 
 
     Test test(hWnd, 800, 650);
-    //test.setDrawBox();
-    test.setDrawTexSkel();
+    
+    
     MSG msg = {};
+    ShowCursor(FALSE);
 
     // 기본 메시지 루프입니다:
     while (1) //msg.message != WM_QUIT)
@@ -51,21 +63,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
             TranslateMessage(&msg);
-            if (msg.message == WM_KEYDOWN)
-                cout << "hi hi hi" << endl;
+ /*           if (msg.message == WM_KEYDOWN)
+                cout << "hi hi hi" << endl;*/
             DispatchMessage(&msg);
         }
         else
         {
-            //game.Update();
-            //game.Render();
-            //test.update();
-            //test.render();
+ 
+            test.Update();
+            SetCursorInClient(hWnd, 400, 325);
+            test.Render();
             //test.renderUV();
         }
-        test.update();
-        //test.render();
-        test.renderUV();
     }
 
     return (int) msg.wParam;

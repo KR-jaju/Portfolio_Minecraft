@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Graphics.h"
-
 Graphics::Graphics(HWND hwnd, UINT width, UINT height)
 	: hwnd(hwnd), width(width), height(height)
 {

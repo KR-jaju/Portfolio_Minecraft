@@ -150,42 +150,87 @@
   <ItemGroup>
     <ClInclude Include="BlendState.h" />
     <ClInclude Include="Buffer.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Geometry.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="InputLayout.h" />
+    <ClInclude Include="InputSystem.h" />
+    <ClInclude Include="CameraMove.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshRenderer.h" />
+    <ClInclude Include="model.h" />
+    <ClInclude Include="MonoBehaviour.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Pipeline.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="RasterizerState.h" />
+    <ClInclude Include="RenderData.h" />
+    <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceBase.h" />
+    <ClInclude Include="ResourceSystem.h" />
     <ClInclude Include="SamplerState.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneSystem.h" />
     <ClInclude Include="scop.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TextureResource.h" />
+    <ClInclude Include="TimeSystem.h" />
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="VertexData.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BlendState.cpp" />
     <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
-    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="InputLayout.cpp" />
+    <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="CameraMove.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshRenderer.cpp" />
+    <ClCompile Include="model.cpp" />
+    <ClCompile Include="MonoBehaviour.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Pipeline.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="RasterizerState.cpp" />
+    <ClCompile Include="RenderData.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
+    <ClCompile Include="ResourceBase.cpp" />
+    <ClCompile Include="ResourceSystem.cpp" />
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneSystem.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
+    <ClCompile Include="TextureResource.cpp" />
+    <ClCompile Include="TimeSystem.cpp" />
+    <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="VertexData.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -196,6 +241,7 @@
     <Image Include="scop.ico" />
     <Image Include="Skeleton.png" />
     <Image Include="small.ico" />
+    <Image Include="steve.png" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelShader.hlsl">
@@ -221,6 +267,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="ConstantBuffer.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="VertexShaderUV.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>

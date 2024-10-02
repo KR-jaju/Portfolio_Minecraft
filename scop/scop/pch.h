@@ -2,6 +2,9 @@
 #include <windows.h>
 #include "DirectXMath.h"
 #include "SimpleMath.h"
+#include <dinput.h>
+
+
 
 using int8 = __int8;
 using int16 = __int16;
@@ -19,6 +22,7 @@ using vec4 = DirectX::SimpleMath::Vector4;
 using color = DirectX::XMFLOAT4;
 
 using Mat = DirectX::SimpleMath::Matrix;
+using Quaternion = DirectX::SimpleMath::Quaternion;
 
 struct Vertex {
 	vec3 pos;
@@ -29,6 +33,7 @@ struct VertexUV {
 	vec3 pos;
 	vec2 uv;
 };
+
 
 struct MVP {
 	Mat model = Mat::Identity;
@@ -41,6 +46,7 @@ struct MVP {
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <array>
 
 using namespace std;
 

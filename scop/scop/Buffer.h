@@ -1,6 +1,6 @@
 #pragma once
 
-
+// Index Buffer 및 Vertex Buffer를 생성하는 곳이다. 
 template<typename Data>
 class Buffer
 {
