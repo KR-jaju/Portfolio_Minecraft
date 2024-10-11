@@ -17,7 +17,6 @@ struct PS_INPUT
 cbuffer eyePos : register(b0)
 {
     float3 pos;
-    float r;
 };
 
 cbuffer lightMat : register(b1)
@@ -65,6 +64,8 @@ float4 main(PS_INPUT input) : SV_TARGET
         return color * float4(0.3, 0.3, 0.3, 1);
     return color;
     */
+    
+    //test
     
     float sp = input.shadow_flag;
     sp /= 15.f;

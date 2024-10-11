@@ -3,6 +3,7 @@
 #include "DepthMap.h"
 #include "Buffer.h"
 #include "Graphics.h"
+#include "DeferredGraphics.h"
 #include "PixelShader.h"
 #include "VertexShader.h"
 #include "ConstantBuffer.h"
@@ -112,10 +113,64 @@ void Chunk::setDepthRender(
 	);
 }
 
+void Chunk::setGeoRender(
+	ComPtr<ID3D11DeviceContext> context,
+	shared_ptr<VertexShader> vertex_shader
+)
+{
+
+	uint32 stride = this->geo_vbuffer->getStride();
+	uint32 offset = this->geo_vbuffer->getOffset();
+	context->IASetVertexBuffers(
+		0,
+		1,
+		this->geo_vbuffer->getComPtr().GetAddressOf(),
+		&stride,
+		&offset
+	);
+	context->IASetIndexBuffer(
+		this->geo_ibuffer->getComPtr().Get(),
+		DXGI_FORMAT_R32_UINT,
+		0
+	);
+	context->DrawIndexed(
+		this->geo_ibuffer->getCount(),
+		0,
+		0
+	);
+}
+
+void Chunk::setShadowRender(
+	ComPtr<ID3D11DeviceContext> context,
+	shared_ptr<VertexShader> vertex_shader
+)
+{
+	uint32 stride = this->shadow_vbuffer->getStride();
+	uint32 offset = this->shadow_vbuffer->getOffset();
+	context->IASetVertexBuffers(
+		0,
+		1,
+		this->shadow_vbuffer->getComPtr().GetAddressOf(),
+		&stride,
+		&offset
+	);
+	context->IASetIndexBuffer(
+		this->shadow_ibuffer->getComPtr().Get(),
+		DXGI_FORMAT_R32_UINT,
+		0
+	);
+	context->DrawIndexed(
+		this->shadow_ibuffer->getCount(),
+		0,
+		0
+	);
+}
+
 void Chunk::createVIBuffer(
 	shared_ptr<Graphics> graphic,
-	vector<VertexBlockUV> const& vertices, 
-	vector<uint32> const& indices)
+	vector<VertexBlockUV> const& vertices,
+	vector<uint32> const& indices
+)
 {
 	this->vertex_buffer = make_shared<Buffer<VertexBlockUV>>(
 		graphic->getDevice(),
@@ -130,6 +185,48 @@ void Chunk::createVIBuffer(
 		D3D11_BIND_INDEX_BUFFER
 	);
 	this->createDepthMap(graphic);
+	this->render_flag = true;
+}
+
+void Chunk::createGeoBuffer(
+	ComPtr<ID3D11Device> device,
+	vector<VertexGeo> const& vertices,
+	vector<uint32> const& indices
+)
+{
+	this->geo_vbuffer = make_shared<Buffer<VertexGeo>>(
+		device,
+		vertices.data(),
+		vertices.size(),
+		D3D11_BIND_VERTEX_BUFFER
+	);
+	this->geo_ibuffer = make_shared<Buffer<uint32>>(
+		device,
+		indices.data(),
+		indices.size(),
+		D3D11_BIND_INDEX_BUFFER
+	);
+	this->render_flag = true;
+}
+
+void Chunk::createShadowBuffer(
+	ComPtr<ID3D11Device> device,
+	vector<VertexShadow> const& vertices,
+	vector<uint32> const& indices
+)
+{
+	this->shadow_vbuffer = make_shared<Buffer<VertexShadow>>(
+		device,
+		vertices.data(),
+		vertices.size(),
+		D3D11_BIND_VERTEX_BUFFER
+	);
+	this->shadow_ibuffer = make_shared<Buffer<uint32>>(
+		device,
+		indices.data(),
+		indices.size(),
+		D3D11_BIND_INDEX_BUFFER
+	);
 	this->render_flag = true;
 }
 

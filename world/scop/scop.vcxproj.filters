@@ -124,6 +124,27 @@
     <Filter Include="소스 파일\World\Map\System\LightSystem\LightUtils">
       <UniqueIdentifier>{7823df89-7b72-44b6-ae69-5d01a89620c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader">
+      <UniqueIdentifier>{6272f0a6-5c5f-480d-9c2f-5bebc2bb704d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\Geometry">
+      <UniqueIdentifier>{e6077c36-ad56-402f-9396-6e0000106c1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\Shadow">
+      <UniqueIdentifier>{3e527fc0-a097-4aed-82eb-a9e4f74b3880}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\GeoRender">
+      <UniqueIdentifier>{1c9a78b1-25c0-4e33-9e60-ca96cd93364b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\ShadowRender">
+      <UniqueIdentifier>{fabe4eb9-248b-4966-9f0b-18fc06c6f590}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\DeferredRender">
+      <UniqueIdentifier>{103ef51b-849c-4ef5-baa2-63cb6bb5300f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\DeferredGraphic">
+      <UniqueIdentifier>{ad67f954-44c5-402f-aa3d-e75ab747dac0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -216,14 +237,29 @@
     <ClInclude Include="TerrainSystem.h">
       <Filter>소스 파일\World\Map\System\TerrainSystem</Filter>
     </ClInclude>
-    <ClInclude Include="RenderSystem.h">
-      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
-    </ClInclude>
     <ClInclude Include="InputLayouts.h">
       <Filter>소스 파일\World\Map\System\RenderSystem\InputLayouts</Filter>
     </ClInclude>
     <ClInclude Include="MyQueue.h">
       <Filter>소스 파일\World\Map\System\LightSystem\LightUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredGraphics.h">
+      <Filter>소스 파일\World\DeferredGraphic</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredRendering.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\DeferredRender</Filter>
+    </ClInclude>
+    <ClInclude Include="GeoRender.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\GeoRender</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowRender.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\ShadowRender</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredBuffer.h">
+      <Filter>소스 파일\World\DeferredGraphic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -308,14 +344,29 @@
     <ClCompile Include="TerrainSystem.cpp">
       <Filter>소스 파일\World\Map\System\TerrainSystem</Filter>
     </ClCompile>
-    <ClCompile Include="RenderSystem.cpp">
-      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
-    </ClCompile>
     <ClCompile Include="InputLayouts.cpp">
       <Filter>소스 파일\World\Map\System\RenderSystem\InputLayouts</Filter>
     </ClCompile>
     <ClCompile Include="MyQueue.cpp">
       <Filter>소스 파일\World\Map\System\LightSystem\LightUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredGraphics.cpp">
+      <Filter>소스 파일\World\DeferredGraphic</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredRendering.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\DeferredRender</Filter>
+    </ClCompile>
+    <ClCompile Include="GeoRender.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\GeoRender</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowRender.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\ShadowRender</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredBuffer.cpp">
+      <Filter>소스 파일\World\DeferredGraphic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -344,22 +395,12 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="PixelShader.hlsl" />
-    <FxCompile Include="VertexShader.hlsl" />
-    <FxCompile Include="PixelShaderUV.hlsl" />
     <FxCompile Include="TestVertexShader.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\TestShader</Filter>
     </FxCompile>
     <FxCompile Include="TestPixelShader.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\TestShader</Filter>
     </FxCompile>
-    <FxCompile Include="WorldVertexShader.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle</Filter>
-    </FxCompile>
-    <FxCompile Include="WorldPixelShader.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle</Filter>
-    </FxCompile>
-    <FxCompile Include="VertexShaderUV.hlsl" />
     <FxCompile Include="TestPixelShader2.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\TestShader</Filter>
     </FxCompile>
@@ -371,6 +412,24 @@
     </FxCompile>
     <FxCompile Include="DepthPixelShader.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DepthShader</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

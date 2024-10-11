@@ -20,19 +20,22 @@ public:
 	void deleteBlock(vec3 const& ray_pos, vec3 const& ray_dir);
 	pair<int, int> getBlock(float x, float y, float z);
 
+public: // test
+	void testClickLightBlock(vec3 const& ray_pos, 
+		vec3 const& ray_dir);
+
 public:
-	void setRenderPipeLine(int flag);
-	void DepthRender();
 	void Render(
 		Mat const& cam_view, 
-		Mat const& cam_proj, 
-		vec3 const& cam_pos
+		Mat const& cam_proj,
+		vec3 const& cam_pos,
+		Mat const& shadow_view,
+		Mat const& shadow_proj
 	);
-	void setRender(int depth_flag);	
 
 private:
 	shared_ptr<Map> m_manager;
-	shared_ptr<Graphics> graphic;
+	shared_ptr<DeferredGraphics> deff_graphic;
 	set<string> file_book;
 	map<vec3, uint32> object_book;
 	map<vec3, shared_ptr<Chunk>> tmp_storage;

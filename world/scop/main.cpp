@@ -65,7 +65,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     //cam.setDir(vec3(0, 0, 1));
     //cam.movePos(0, 15, -25);
     terrain.setSightChunk(1);
-    terrain.setRender(0);
     // test code
 
     MSG msg = {};
@@ -86,7 +85,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
         {
             if (lb_flag) {
-                terrain.putBlock(cam.getPos(), cam.getDir(), 1);
+                //terrain.putBlock(cam.getPos(), cam.getDir(), 1);
+                terrain.testClickLightBlock(cam.getPos(), 
+                    cam.getDir());
                 lb_flag = false;
             }
             if (rb_flag) {
@@ -96,17 +97,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             cam.update();
             terrain.userPositionCheck(cam.getPos().x,
                 cam.getPos().z);
-            //terrain.DepthRender();
             terrain.Render(
                 cam.getViewProj().view,
                 cam.getViewProj().proj,
-                cam.getPos()
+                cam.getPos(),
+                cam.getViewProj().view,
+                cam.getViewProj().proj
             );
         }
-        //chunk.renderTest();
-        //test.update();
-        //test.render();
-        //test.renderUV();
     }
     return (int) msg.wParam;
 }

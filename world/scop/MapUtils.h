@@ -7,7 +7,8 @@ class Chunk;
 class MapUtils
 {
 public:
-	MapUtils(int size_w, int size_h);
+	MapUtils(int size_w, int size_h, HWND hwnd, 
+		UINT w_width, UINT w_heigh);
 	~MapUtils();
 public:
 	vec3 intersectionRayAndPlane(
@@ -47,6 +48,9 @@ public:
 	Index2 sv_pos;
 	Index2 ev_pos;
 	shared_ptr<Chunk> chunks[30][30];
+	HWND hWnd;
+	UINT width;
+	UINT height;
 
 private:
 	int* blocks;

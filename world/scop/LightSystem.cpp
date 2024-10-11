@@ -5,9 +5,12 @@
 #include "MyQueue.h"
 #include <thread>
 
-LightSystem::LightSystem(MapUtils* minfo)
+LightSystem::LightSystem(MapUtils* minfo, int thread_cnt)
 {
 	this->m_info = minfo;
+	this->thread_cnt = thread_cnt;
+	if (this->thread_cnt > 8)
+		this->thread_cnt = 8;
 }
 
 void LightSystem::lightPropagationGather(
@@ -23,54 +26,9 @@ void LightSystem::lightPropagationGather(
 		Index3(-1, 0, 0),
 		Index3(1, 0, 0)
 	};
-	Index3 nbidx;
-	Index2 ncidx = cidx, pos;
-	uint8 light;
-	uint8 nlight = m_info->findLight(cidx, bidx.x, bidx.y, bidx.z);
-	for (int i = 0; i < 6; i++) {
-		ncidx = cidx;
-		nbidx = bidx + move_arr[i];
-		pos = m_info->chunks[cidx.y][cidx.x]->chunk_pos;
-		if (nbidx.y > 255)
-			light = 15;
-		else if (nbidx.y < 0)
-			continue;
-		else if (nbidx.x < 0) {
-			pos = pos + Index2(-16, 0);
-			ncidx = m_info->findChunkIndex(pos.x, pos.y);
-			if (ncidx.flag == false)
-				continue;
-			light = m_info->findLight(ncidx, 15, nbidx.y, nbidx.z);
-		}
-		else if (nbidx.x > 15) {
-			pos = pos + Index2(16, 0);
-			ncidx = m_info->findChunkIndex(pos.x, pos.y);
-			if (ncidx.flag == false)
-				continue;
-			light = m_info->findLight(ncidx, 0, nbidx.y, nbidx.z);
-		}
-		else if (nbidx.z < 0) {
-			pos = pos + Index2(0, 16);
-			ncidx = m_info->findChunkIndex(pos.x, pos.y);
-			if (ncidx.flag == false)
-				continue;
-			light = m_info->findLight(ncidx, nbidx.x, nbidx.y, 15);
-		}
-		else if (nbidx.z > 15) {
-			pos = pos + Index2(0, -16);
-			ncidx = m_info->findChunkIndex(pos.x, pos.y);
-			if (ncidx.flag == false)
-				continue;
-			light = m_info->findLight(ncidx, nbidx.x, nbidx.y, 0);
-		}
-		else
-			light = m_info->findLight(ncidx, nbidx.x, nbidx.y, nbidx.z);
-		nlight = max(nlight, light);
-	}
-	m_info->setLight(cidx, bidx.x, bidx.y, bidx.z, nlight);
 }
 
-void LightSystem::lightBFS()
+void LightSystem::lightBFS(int idx)
 {
 	static const Index3 move_arr[6] = {
 		Index3(0, 1, 0),
@@ -85,10 +43,10 @@ void LightSystem::lightBFS()
 	Index3 next;
 	Index2 cpos;
 	uint8 light;
-	while (this->que.size()) {
-		here = this->que.front();
+	while (this->que[idx].size()) {
+		here = this->que[idx].front();
+		this->que[idx].pop();
 		light = this->m_info->findLight(here.first, here.second);
-		this->que.pop();
 		if (light <= 1)
 			continue;
 		for (int i = 0; i < 6; i++) {
@@ -100,12 +58,29 @@ void LightSystem::lightBFS()
 			if (light - 1 <= this->m_info->findLight(here.first, next))
 				continue;
 			this->m_info->setLight(here.first, next, light - 1);
-			this->que.push(here.first, next);
+			this->que[idx].push(here.first, next);
 		}
 	}
 }
 
-void LightSystem::checkBoundary(Index2 const& c_idx)
+void LightSystem::fillLightThread(
+	vector<Index2> const& vec, 
+	int st, 
+	int ed,
+	int idx
+)
+{
+	if (idx > 8)
+		idx = 8;
+	for (int i = st; i < ed; i++)
+		this->fillLight(vec[i], idx);
+}
+
+void LightSystem::checkBoundary(
+	Index2 const& c_idx,
+	vector<Index2>& cidxs,
+	int dir
+)
 {
 	Index2 apz_idx, amz_idx, apx_idx, amx_idx;
 	Index2 cpos, tpos;
@@ -120,7 +95,9 @@ void LightSystem::checkBoundary(Index2 const& c_idx)
 	apx_idx = this->m_info->findChunkIndex(tpos.x, tpos.y);
 	tpos = cpos + Index2(-16, 0);
 	amx_idx = this->m_info->findChunkIndex(tpos.x, tpos.y);
-	this->que.clear();
+	this->que[0].clear();
+	this->que[1].clear();
+	int dir_flag = 0;
 	if (apz_idx.flag) {
 		for (int i = 0; i < 256; i++) {
 			for (int j = 0; j < 16; j++) {
@@ -128,11 +105,18 @@ void LightSystem::checkBoundary(Index2 const& c_idx)
 				setIndex3(bidx, j, i, 0);
 				if (this->m_info->findBlock(c_idx, bidx))
 					continue;
+				if (this->m_info->findBlock(apz_idx, adj))
+					continue;
 				light = this->m_info->findLight(c_idx, bidx);
 				alight = this->m_info->findLight(apz_idx, adj);
 				if (light < alight - 1) {
 					this->m_info->setLight(c_idx, bidx, alight);
-					this->que.push(c_idx, bidx);
+					this->que[0].push(c_idx, bidx);
+				}
+				else if (light > alight + 1) {
+					this->m_info->setLight(apz_idx, adj, light - 1);
+					this->que[1].push(apz_idx, adj);
+					dir_flag |= 8;
 				}
 			}
 		}
@@ -144,11 +128,18 @@ void LightSystem::checkBoundary(Index2 const& c_idx)
 				setIndex3(bidx, j, i, 15);
 				if (this->m_info->findBlock(c_idx, bidx))
 					continue;
+				if (this->m_info->findBlock(amz_idx, adj))
+					continue;
 				light = this->m_info->findLight(c_idx, bidx);
 				alight = this->m_info->findLight(amz_idx, adj);
 				if (light < alight - 1) {
 					this->m_info->setLight(c_idx, bidx, alight);
-					this->que.push(c_idx, bidx);
+					this->que[0].push(c_idx, bidx);
+				}
+				else if (light > alight + 1) {
+					this->m_info->setLight(amz_idx, adj, light - 1);
+					this->que[1].push(amz_idx, adj);
+					dir_flag |= 4;
 				}
 			}
 		}
@@ -160,11 +151,18 @@ void LightSystem::checkBoundary(Index2 const& c_idx)
 				setIndex3(bidx, 15, i, j);
 				if (this->m_info->findBlock(c_idx, bidx))
 					continue;
+				if (this->m_info->findBlock(apx_idx, adj))
+					continue;
 				light = this->m_info->findLight(c_idx, bidx);
 				alight = this->m_info->findLight(apx_idx, adj);
 				if (light < alight - 1) {
 					this->m_info->setLight(c_idx, bidx, alight);
-					this->que.push(c_idx, bidx);
+					this->que[0].push(c_idx, bidx);
+				}
+				else if (light > alight + 1) {
+					this->m_info->setLight(apx_idx, adj, light - 1);
+					this->que[1].push(apx_idx, adj);
+					dir_flag |= 1;
 				}
 			}
 		}
@@ -176,31 +174,72 @@ void LightSystem::checkBoundary(Index2 const& c_idx)
 				setIndex3(bidx, 0, i, j);
 				if (this->m_info->findBlock(c_idx, bidx))
 					continue;
+				if (this->m_info->findBlock(amx_idx, adj))
+					continue;
 				light = this->m_info->findLight(c_idx, bidx);
 				alight = this->m_info->findLight(amx_idx, adj);
 				if (light < alight - 1) {
 					this->m_info->setLight(c_idx, bidx, alight);
-					this->que.push(c_idx, bidx);
+					this->que[0].push(c_idx, bidx);
+				}
+				else if (light > alight + 1) {
+					this->m_info->setLight(amx_idx, adj, light - 1);
+					this->que[1].push(amx_idx, adj);
+					dir_flag |= 2;
 				}
 			}
 		}
 	}
-	if (this->que.size())
-		this->lightBFS();
+	if ((dir_flag & 1) && (dir & 1))
+		cidxs.push_back(apx_idx);
+	if ((dir_flag & 2) && (dir & 2))
+		cidxs.push_back(amx_idx);
+	if ((dir_flag & 4) && (dir & 4))
+		cidxs.push_back(amz_idx);
+	if ((dir_flag & 8) && (dir & 8))
+		cidxs.push_back(apz_idx);
+	thread t1;
+	thread t2;
+	t1 = thread(&LightSystem::lightBFS, this, 0);
+	t2 = thread(&LightSystem::lightBFS, this, 1);
+	t1.join();
+	t2.join();
 }
 
 
 
 void LightSystem::createLightMap()
 {
+	vector<thread> threads;
+	vector<Index2> cidxs;
 	for (int i = 0; i < this->m_info->size_h; i++) {
 		for (int j = 0; j < this->m_info->size_w; j++) {
 			Index2 c_pos = this->m_info->s_pos + Index2(j * 16, -i * 16);
 			Index2 c_idx;
 			c_idx = this->m_info->getChunkIndex(c_pos.x, c_pos.y);
-			this->fillLight(c_idx);
+			cidxs.push_back(c_idx);
 		}
 	}
+	int t = cidxs.size() / this->thread_cnt;
+	int m = cidxs.size() % this->thread_cnt;
+	int st = 0;
+	int siz;
+	int idx = 0;
+	for (int i = 0; i < this->thread_cnt; i++) {
+		if (m) {
+			siz = t + 1;
+			m--;
+		}
+		else
+			siz = t;
+		threads.push_back(thread(&LightSystem::fillLightThread,
+			this, cidxs, st, st + siz, idx));
+		st = st + siz;
+		idx++;
+	}
+	for (int i = 0; i < this->thread_cnt; i++)
+		threads[i].join();
+
 	for (int i = 0; i < this->m_info->size_h; i++) {
 		for (int j = 0; j < this->m_info->size_w; j++) {
 			Index2 c_pos = this->m_info->s_pos + Index2(j * 16, -i * 16);
@@ -211,9 +250,40 @@ void LightSystem::createLightMap()
 	}
 }
 
-void LightSystem::fillLight(Index2 const& c_idx)
+void LightSystem::createLightMap(
+	vector<Index2>& cidxs,
+	int dir
+)
 {
-	this->que.clear();
+	vector<thread> threads;
+	int t = cidxs.size() / this->thread_cnt;
+	int m = cidxs.size() % this->thread_cnt;
+	int st = 0;
+	int siz;
+	int idx = 0;
+	for (int i = 0; i < this->thread_cnt; i++) {
+		if (m) {
+			siz = t + 1;
+			m--;
+		}
+		else
+			siz = t;
+		threads.push_back(thread(&LightSystem::fillLightThread,
+			this, cidxs, st, st + siz, idx));
+		st = st + siz;
+		idx++;
+	}
+	for (int i = 0; i < this->thread_cnt; i++)
+		threads[i].join();
+	size_t cidxs_size = cidxs.size();
+	for (int i = 0; i < cidxs_size; i++) {
+		this->checkBoundary(cidxs[i], cidxs, dir);
+	}
+}
+
+void LightSystem::fillLight(Index2 const& c_idx, int idx)
+{
+	this->que[idx].clear();
 	for (int i = 0; i < 16; i++) {
 		for (int j = 0; j < 16; j++) {
 			for (int y = 255; y >= 0; y--) {
@@ -221,11 +291,11 @@ void LightSystem::fillLight(Index2 const& c_idx)
 					break;
 				Index3 bidx(j, y, i);
 				m_info->setLight(c_idx, bidx, 15);
-				this->que.push(c_idx, bidx);
+				this->que[idx].push(c_idx, bidx);
 			}
 		}
 	}
-	this->lightBFS();
+	this->lightBFS(idx);
 }
 
 void LightSystem::resetLight(Index2 const& c_idx)

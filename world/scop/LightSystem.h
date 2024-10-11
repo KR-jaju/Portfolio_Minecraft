@@ -7,27 +7,38 @@ class MapUtils;
 class LightSystem
 {
 public:
-	LightSystem(MapUtils* minfo);
+	LightSystem(MapUtils* minfo, int thread_cnt);
 	
 public:
 	void createLightMap();
-	void fillLight(Index2 const& c_idx);
+	void createLightMap(
+		vector<Index2>& cidxs,
+		int dir
+	);
 	void resetLight(Index2 const& c_idx);
 	void lightPropagationGather(
 		Index2 const& cidx,
 		Index3 const& bidx
 	);
-	void lightBFS();
+	void lightBFS(int idx);
+	void fillLightThread(
+		vector<Index2> const& vec,
+		int st,
+		int ed,
+		int idx
+	);
+	void fillLight(Index2 const& c_idx, int idx);
 
 private:
-	void fillLightThread(
-		vector<Index2> const& vec, 
-		int st, 
-		int ed
+	void checkBoundary(
+		Index2 const& c_idx,
+		vector<Index2>& cidxs = 
+		*(new vector<Index2>(0)),
+		int dir = 0
 	);
-	void checkBoundary(Index2 const& c_idx);
 private:
 	MapUtils* m_info;
-	MyQueue que;
+	MyQueue que[8];
+	int thread_cnt;
 };
 

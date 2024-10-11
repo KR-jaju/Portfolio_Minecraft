@@ -167,7 +167,7 @@ TextureArray::TextureArray(
         ZeroMemory(&txtDesc, sizeof(txtDesc));
         txtDesc.Width = UINT(width);
         txtDesc.Height = UINT(height);
-        txtDesc.MipLevels = 0; // 밉맵 레벨 최대
+        txtDesc.MipLevels = mip_level; // 밉맵 내가 만들수 있는 만큼 = 0
         txtDesc.ArraySize = size;
         txtDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
         txtDesc.SampleDesc.Count = 1;
