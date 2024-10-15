@@ -12,7 +12,10 @@ public:
 		UINT height
 	);
 	~DeferredGraphics();
-	void renderBegin(DeferredBuffer* d_buffer = nullptr);
+	void renderBegin(
+		DeferredBuffer* d_buffer = nullptr,
+		ComPtr<ID3D11DepthStencilView> dsv = nullptr
+	);
 	void renderEnd();
 	ComPtr<ID3D11Device> getDevice();
 	ComPtr<ID3D11DeviceContext> getContext();

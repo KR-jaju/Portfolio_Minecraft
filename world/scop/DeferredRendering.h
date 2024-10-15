@@ -9,6 +9,7 @@ class DeferredGraphics;
 class MapUtils;
 template <typename T> class Buffer;
 class Graphics;
+class Texture;
 
 class DeferredRendering
 {
@@ -39,6 +40,7 @@ private:
 	GeoRender g_render;
 	InputLayouts layout;
 	DeferredGraphics* d_graphic;
+	shared_ptr<Texture> texture;
 	shared_ptr<RasterizerState> rasterizer_state;
 	shared_ptr<SamplerState> sampler_state;
 	shared_ptr<VertexShader> vertex_shader;

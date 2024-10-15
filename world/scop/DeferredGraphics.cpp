@@ -18,7 +18,10 @@ DeferredGraphics::~DeferredGraphics()
 {
 }
 
-void DeferredGraphics::renderBegin(DeferredBuffer* d_buffer)
+void DeferredGraphics::renderBegin(
+	DeferredBuffer* d_buffer,
+	ComPtr<ID3D11DepthStencilView> dsv
+)
 {
 	int cnt = 1;
 	if (d_buffer)
@@ -41,13 +44,18 @@ void DeferredGraphics::renderBegin(DeferredBuffer* d_buffer)
 			this->clear_color
 		);
 	}
+	ComPtr<ID3D11DepthStencilView> depth_stencil_view;
+	if (dsv)
+		depth_stencil_view = dsv;
+	else
+		depth_stencil_view = this->DSV;
 	this->context->OMSetRenderTargets(
 		cnt,
 		views.data(),
-		this->DSV.Get()
+		depth_stencil_view.Get()
 	);
 	this->context->ClearDepthStencilView(
-		this->DSV.Get(),
+		depth_stencil_view.Get(),
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 		1.f,
 		0
@@ -76,12 +84,10 @@ void DeferredGraphics::createSwapChainAndDevice()
 	desc.SampleDesc.Quality = 0;
 	desc.BufferUsage = DXGI_USAGE_SHADER_INPUT |
 		DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	//desc.BufferCount = 4;
 	desc.BufferCount = 2;
 	desc.OutputWindow = this->hWnd;
 	desc.Windowed = TRUE;
 	desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	//desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 
 	HREFTYPE hr = D3D11CreateDeviceAndSwapChain(
 		nullptr,

@@ -10,6 +10,7 @@
 #include "ConstantBuffer.h"
 #include "Chunk.h"
 #include "BlendState.h"
+#include "DepthMap.h"
 
 ShadowRender::ShadowRender(
 	MapUtils* minfo,
@@ -48,6 +49,9 @@ ShadowRender::ShadowRender(
 		this->vertex_shader->getBlob()
 	);
 	this->blend_state = make_shared<BlendState>(
+		this->d_graphic->getDevice()
+	);
+	this->depth_map = make_shared<DepthMap>(
 		this->d_graphic->getDevice()
 	);
 }
@@ -97,7 +101,10 @@ void ShadowRender::render(
 		context,
 		mvp
 	);
-	this->d_graphic->renderBegin(this->d_buffer.get());
+	this->d_graphic->renderBegin(
+		this->d_buffer.get(),
+		this->depth_map->getDepthStencilView()
+	);
 	context->VSSetConstantBuffers(
 		0, 1, cbuffer.getComPtr().GetAddressOf());
 	for (int i = 0; i < this->m_info->size_h; i++) {
@@ -116,4 +123,9 @@ void ShadowRender::render(
 ComPtr<ID3D11ShaderResourceView> ShadowRender::getSRV()
 {
 	return this->d_buffer->getSRV(0);
+}
+
+ComPtr<ID3D11ShaderResourceView> ShadowRender::getDepthSRV()
+{
+	return this->depth_map->getShaderResourceView();
 }

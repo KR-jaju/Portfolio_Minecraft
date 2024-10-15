@@ -10,13 +10,6 @@ struct PS_INPUT
     float2 uv : TEXCOORD;
 };
 
-cbuffer MVP : register(b0)
-{
-    matrix world;
-    matrix view;
-    matrix proj;
-}
-
 PS_INPUT main( VS_INPUT input )
 {
     PS_INPUT output;

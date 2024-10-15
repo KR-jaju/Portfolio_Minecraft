@@ -4,8 +4,8 @@
 DepthMap::DepthMap(ComPtr<ID3D11Device> const& device)
 {
 	int times = 10;
-	this->width = pow(2, times);
-	this->height = pow(2, times);
+	this->width = 800;
+	this->height = 650;
 
 	D3D11_TEXTURE2D_DESC desc;
 	ZeroMemory(&desc, sizeof(desc));

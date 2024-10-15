@@ -29,7 +29,7 @@ PS_INPUT main(VS_INPUT input)
 {
     PS_INPUT output;
     output.pos = float4(input.pos, 1);
-    output.world_pos = input.pos;
+    output.world_pos = output.pos;
     output.normal = input.normal;
     output.uv = input.uv;
     output.dir = input.dir;
