@@ -17,39 +17,42 @@ cbuffer Index : register(b0)
 {
     int idx;
     float3 cam_pos;
-    float2 screen;
-    float2 padding2;
+    matrix proj;
 };
 
-static float g_sample_rad = 1.0f;
-static float g_scale = 0.1f;
-static float g_bias = 0.06f;
-static float g_intensity = 1.0f;
-
-float3 getPosition(float2 uv)
+cbuffer Offset : register(b1)
 {
-    return position_map.Sample(sampler0, uv).xyz;
+    float4 offsets[14];
+};
+
+static float g_surface_epsilon = 0.01f;
+static float g_occlusion_fade_end = 2.0f;
+static float g_occlusion_fade_start = 0.2f;
+static float g_occlusion_r = 0.1f;
+
+float occlusionFunction(float dist_z)
+{
+    float occlusion = 0.0f;
+    if (dist_z > g_surface_epsilon && dist_z < g_occlusion_fade_end)
+    {
+        float fade_length = g_occlusion_fade_end - g_occlusion_fade_start;
+        occlusion = saturate((g_occlusion_fade_end - dist_z) / fade_length);
+    }
+    return occlusion;
 }
 
-float3 getNormal(float2 uv)
+float ndcDepthToViewDepth(float z_ndc)
 {
-    return normal_map.Sample(sampler0, uv).xyz;
+    float view_z = proj[3][2] / (z_ndc - proj[2][2]);
+    return view_z;
 }
 
-float doAmbientOcclusion(float2 tcoord, float2 uv, float3 p, float3 n)
+float2 ndcToTextureUV(float2 ndc)
 {
-    float3 diff = getPosition(tcoord + uv) - p;
-    if (diff.z < 0)
-        return 0;
-    const float3 v = normalize(diff);
-    const float d = length(diff) * g_scale;
-    return max(0.0, dot(n, v)) * (1.0 / (1.0 + d)) * g_intensity;
-}
-
-float2 getRandom(float2 uv)
-{
-    return normalize(random_map.Sample(sampler0, 
-        screen * uv / 64 * 64).xy * 2.f - 1.f);
+    float2 uv;
+    uv.x = (ndc.x + 1.0f) / 2.0f;
+    uv.y = (-ndc.y + 1.0f) / 2.0f;
+    return uv;
 }
 
 float4 main(PS_INPUT input) : SV_TARGET
@@ -59,33 +62,33 @@ float4 main(PS_INPUT input) : SV_TARGET
     sp /= 15.f;
     sp = max(sp, 0.3);
     
-    const float2 vec[4] = { 
-        float2(1, 0), float2(-1, 0), 
-        float2(0, 1), float2(0, -1) };
-    float3 p = getPosition(input.uv);
-    float3 n = getNormal(input.uv);
-    float2 rand = getRandom(input.uv);
-    float ao = 0;
-    if (g_sample_rad == 0)
-        return color;
-    float d = length(p - cam_pos);
-    float rad = g_sample_rad / d;
-    int total = 4;
-    for (int i = 0; i < total; i++)
+    float3 n = normal_map.Sample(sampler0, input.uv).xyz;
+    float3 p = position_map.Sample(sampler0, input.uv).xyz;
+    float3 rand_vec = random_map.Sample(sampler0, input.uv).xyz;
+    rand_vec = 2.0f * rand_vec - 1.0f;
+    rand_vec = normalize(rand_vec);
+    float total_occlusion = 0.0f;
+    for (int i = 0; i < 14; i++)
     {
-        float2 coord1 = reflect(vec[i], rand) * rad;
-        float2 coord2 = float2(coord1.x * 0.707 - coord1.y * 0.707, 
-            coord1.x * 0.707 + coord1.y * 0.707);
-        if (coord2.x == 0 && coord2.y == 0)
-            return float4(0, 1, 0, 1);
-        ao += doAmbientOcclusion(input.uv, coord1 * 0.25, p, n);
-        ao += doAmbientOcclusion(input.uv, coord2 * 0.5, p, n);
-        ao += doAmbientOcclusion(input.uv, coord1 * 0.75, p, n);
-        ao += doAmbientOcclusion(input.uv, coord2, p, n);
+        float3 offset = reflect(offsets[i].xyz, rand_vec);
+        float flip = sign(dot(offset, n));
+        float3 q = p + flip * g_occlusion_r * offset;
+        float4 ndc_q = mul(float4(q, 1), proj);
+        ndc_q /= ndc_q.w;
+        float2 uv = ndcToTextureUV(ndc_q.xy);
+        float rz = depth_map.Sample(sampler0, uv).r;
+        rz = ndcDepthToViewDepth(rz);
+        float3 r = (rz / q.z) * q;
+        
+        float dist_z = p.z - r.z;
+        float dp = max(dot(n, normalize(r - p)), 0.0f);
+        float occlusion = dp * occlusionFunction(dist_z);
+        total_occlusion += occlusion;
     }
-    ao /= total * 4;
-    ao = saturate(ao);
-    sp *= 1 - ao;
-    sp = pow(sp, 2);
+    total_occlusion /= 14;
+    float access = 1.0f - total_occlusion;
+    access = saturate(pow(access, 4.0f));
+    return access;
+    sp *= access;
     return color * float4(sp, sp, sp, 1);
 }

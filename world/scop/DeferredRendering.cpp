@@ -16,15 +16,15 @@
 struct defferConst {
 	int idx;
 	vec3 cam_pos;
-	vec2 screen;
-	vec2 dummy;
+	Mat proj;
 };
 
 DeferredRendering::DeferredRendering(
 	MapUtils* minfo,
 	DeferredGraphics* defer_graphic
 )
-	: m_info(minfo), s_render(minfo, defer_graphic), g_render(minfo, defer_graphic)
+	: m_info(minfo), s_render(minfo, defer_graphic), 
+	g_render(minfo, defer_graphic), ssao(defer_graphic->getDevice())
 {
 	this->d_graphic = defer_graphic;
 	ComPtr<ID3D11Device> device = this->d_graphic->getDevice();
@@ -118,7 +118,7 @@ void DeferredRendering::Render(
 	defferConst dc;
 	dc.idx = 1;
 	dc.cam_pos = cam_pos;
-	dc.screen = vec2(this->m_info->width, this->m_info->height);
+	dc.proj = cam_proj.Transpose();
 	ConstantBuffer cbuffer(
 		this->d_graphic->getDevice(),
 		this->d_graphic->getContext(),
@@ -146,7 +146,7 @@ void DeferredRendering::Render(
 	context->PSSetShaderResources(
 		5,
 		1,
-		this->texture->getComPtr().GetAddressOf()
+		this->ssao.random_vec_SRV.GetAddressOf()
 	);
 	context->DrawIndexed(
 		this->ibuffer->getCount(),
@@ -201,6 +201,12 @@ void DeferredRendering::setPipe()
 		this->blend_state->getBlendFactor(),
 		this->blend_state->getSampleMask()
 	);
+	ConstantBuffer cbuffer(
+		this->d_graphic->getDevice(),
+		context,
+		this->ssao.mOffsets
+	);
+	context->PSSetConstantBuffers(1, 1, cbuffer.getComPtr().GetAddressOf());
 }
 
 

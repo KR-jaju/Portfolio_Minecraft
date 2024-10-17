@@ -261,6 +261,12 @@
     <ClInclude Include="DeferredBuffer.h">
       <Filter>소스 파일\World\DeferredGraphic</Filter>
     </ClInclude>
+    <ClInclude Include="MathHelper.h">
+      <Filter>소스 파일\World\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Ssao.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\DeferredRender</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -367,6 +373,12 @@
     </ClCompile>
     <ClCompile Include="DeferredBuffer.cpp">
       <Filter>소스 파일\World\DeferredGraphic</Filter>
+    </ClCompile>
+    <ClCompile Include="MathHelper.cpp">
+      <Filter>소스 파일\World\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Ssao.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\DeferredRender</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

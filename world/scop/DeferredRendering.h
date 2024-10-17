@@ -4,6 +4,7 @@
 #include "GeoRender.h"
 #include "WorldUtils.h"
 #include "BlendState.h"
+#include "Ssao.h"
 
 class DeferredGraphics;
 class MapUtils;
@@ -39,6 +40,7 @@ private:
 	ShadowRender s_render;
 	GeoRender g_render;
 	InputLayouts layout;
+	Ssao ssao;
 	DeferredGraphics* d_graphic;
 	shared_ptr<Texture> texture;
 	shared_ptr<RasterizerState> rasterizer_state;

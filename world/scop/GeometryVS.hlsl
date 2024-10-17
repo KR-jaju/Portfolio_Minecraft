@@ -29,8 +29,8 @@ PS_INPUT main(VS_INPUT input)
 {
     PS_INPUT output;
     output.pos = float4(input.pos, 1);
-    output.world_pos = output.pos;
-    output.normal = input.normal;
+    output.world_pos = mul(output.pos, view).xyz;
+    output.normal = mul(input.normal, (float3x3) view);
     output.uv = input.uv;
     output.dir = input.dir;
     output.type = input.type;
