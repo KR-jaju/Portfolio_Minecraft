@@ -28,7 +28,7 @@ struct PS_INPUT
     float2 uv : TEXCOORD;
 };
 
-cbuffer Index : register(b0) 
+cbuffer Index : register(b0)
 {
     matrix proj; // projection matrix
 };

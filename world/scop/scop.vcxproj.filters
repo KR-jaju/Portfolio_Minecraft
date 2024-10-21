@@ -145,6 +145,21 @@
     <Filter Include="소스 파일\World\DeferredGraphic">
       <UniqueIdentifier>{ad67f954-44c5-402f-aa3d-e75ab747dac0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\SsaoRender">
+      <UniqueIdentifier>{5f8d742e-9b44-44d0-a478-1f1af9607434}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\SsaoBlur">
+      <UniqueIdentifier>{239ac719-1e45-4ea0-a247-86c099614391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\Shadow\ShadowBlur">
+      <UniqueIdentifier>{5d1cc827-1078-4a06-a4bf-66f8df3d8c96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\Ssao">
+      <UniqueIdentifier>{0f92ee97-4ff7-4cb8-ac0b-18297c59ae61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\Ssao\SsaoBlur">
+      <UniqueIdentifier>{573bcc8b-3cfc-4c8c-9d6a-92a763c10702}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -264,8 +279,11 @@
     <ClInclude Include="MathHelper.h">
       <Filter>소스 파일\World\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Ssao.h">
-      <Filter>소스 파일\World\Map\System\RenderSystem\DeferredRender</Filter>
+    <ClInclude Include="SsaoBlur.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\SsaoBlur</Filter>
+    </ClInclude>
+    <ClInclude Include="SsaoRender.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\SsaoRender</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -377,8 +395,11 @@
     <ClCompile Include="MathHelper.cpp">
       <Filter>소스 파일\World\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Ssao.cpp">
-      <Filter>소스 파일\World\Map\System\RenderSystem\DeferredRender</Filter>
+    <ClCompile Include="SsaoBlur.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\SsaoBlur</Filter>
+    </ClCompile>
+    <ClCompile Include="SsaoRender.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\SsaoRender</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -442,6 +463,30 @@
     </FxCompile>
     <FxCompile Include="ShadowPS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="SsaoBlurPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Ssao\SsaoBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="SsaoBlurVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Ssao\SsaoBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowBlurVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow\ShadowBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowBlurPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow\ShadowBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="ResultVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader</Filter>
+    </FxCompile>
+    <FxCompile Include="ResultPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader</Filter>
+    </FxCompile>
+    <FxCompile Include="SsaoVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Ssao</Filter>
+    </FxCompile>
+    <FxCompile Include="SsaoPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Ssao</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

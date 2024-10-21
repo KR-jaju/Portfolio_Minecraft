@@ -78,7 +78,7 @@ void LightSystem::fillLightThread(
 
 void LightSystem::checkBoundary(
 	Index2 const& c_idx,
-	vector<Index2>& cidxs,
+	vector<Index2>* cidxs,
 	int dir
 )
 {
@@ -191,13 +191,13 @@ void LightSystem::checkBoundary(
 		}
 	}
 	if ((dir_flag & 1) && (dir & 1))
-		cidxs.push_back(apx_idx);
+		cidxs->push_back(apx_idx);
 	if ((dir_flag & 2) && (dir & 2))
-		cidxs.push_back(amx_idx);
+		cidxs->push_back(amx_idx);
 	if ((dir_flag & 4) && (dir & 4))
-		cidxs.push_back(amz_idx);
+		cidxs->push_back(amz_idx);
 	if ((dir_flag & 8) && (dir & 8))
-		cidxs.push_back(apz_idx);
+		cidxs->push_back(apz_idx);
 	thread t1;
 	thread t2;
 	t1 = thread(&LightSystem::lightBFS, this, 0);
@@ -277,7 +277,7 @@ void LightSystem::createLightMap(
 		threads[i].join();
 	size_t cidxs_size = cidxs.size();
 	for (int i = 0; i < cidxs_size; i++) {
-		this->checkBoundary(cidxs[i], cidxs, dir);
+		this->checkBoundary(cidxs[i], &cidxs, dir);
 	}
 }
 

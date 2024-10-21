@@ -89,6 +89,7 @@ void GeoRender::render(
 	CamPos cam;
 	cam.pos = cam_pos;
 	cam.r = 0;
+	cam.view = view.Transpose();
 	ConstantBuffer cpbuffer(
 		this->d_graphic->getDevice(),
 		context,
@@ -117,7 +118,8 @@ ComPtr<ID3D11ShaderResourceView> GeoRender::getSRV(int idx)
 
 void GeoRender::setPipe()
 {
-	ComPtr<ID3D11DeviceContext> context = this->d_graphic->getContext();
+	ComPtr<ID3D11DeviceContext> context = 
+		this->d_graphic->getContext();
 	context->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
 	);

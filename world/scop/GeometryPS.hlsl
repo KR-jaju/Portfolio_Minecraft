@@ -22,6 +22,7 @@ cbuffer eyePos : register(b0)
 {
     float3 pos;
     float r;
+    matrix view;
 };
 
 PS_OUTPUT main(PS_INPUT input)
@@ -31,8 +32,9 @@ PS_OUTPUT main(PS_INPUT input)
     float offset = (input.type - 1) * 3;
     PS_OUTPUT output;
     
-    output.normal = float4(input.normal, 1);
+    output.normal = float4(mul(input.normal, (float3x3) view), 1);
     output.position = float4(input.world_pos, 1);
+    output.position = mul(output.position, view);
     if (input.dir == 0 || input.dir == 1)
         uvw = float3(input.uv, input.dir + offset);
     else

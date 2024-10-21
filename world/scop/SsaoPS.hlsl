@@ -1,9 +1,7 @@
-Texture2D color_map : register(t0);
-Texture2D normal_map : register(t1); // view space
-Texture2D position_map : register(t2); // view space
-Texture2D shadow_map : register(t3);
-Texture2D depth_map : register(t4); // ndc
-Texture2D random_map : register(t5);
+Texture2D normal_map : register(t0); // view space
+Texture2D position_map : register(t1); // view space
+Texture2D depth_map : register(t2); // ndc
+Texture2D random_map : register(t3);
 
 SamplerState sampler0 : register(s0);
 
@@ -28,7 +26,7 @@ struct PS_INPUT
     float2 uv : TEXCOORD;
 };
 
-cbuffer Index : register(b0) 
+cbuffer Index : register(b0)
 {
     matrix proj; // projection matrix
 };
@@ -41,7 +39,7 @@ cbuffer Offset : register(b1)
 static float g_surface_epsilon = 0.05f;
 static float g_occlusion_fade_end = 2.0f;
 static float g_occlusion_fade_start = 0.2f;
-static float g_occlusion_r = 0.5;
+static float g_occlusion_r = 0.3;
 
 float occlusionFunction(float dist_z)
 {
@@ -69,12 +67,7 @@ float2 ndcToTextureUV(float2 ndc)
 }
 
 float4 main(PS_INPUT input) : SV_TARGET
-{
-    float4 color = color_map.Sample(sampler0, input.uv);
-    float sp = shadow_map.Sample(sampler0, input.uv).r;
-    sp /= 15.f;
-    sp = max(sp, 0.1);
-    
+{   
     float3 n = normal_map.Sample(normal_depth_sampler, input.uv).xyz;
     float3 p = position_map.Sample(sampler0, input.uv).xyz;
     float3 rand_vec = random_map.Sample(random_vector_sampler, input.uv).xyz;
@@ -100,6 +93,5 @@ float4 main(PS_INPUT input) : SV_TARGET
     total_occlusion /= 14.0f;
     float access = 1.0f - total_occlusion;
     access = saturate(pow(access, 4.0f));
-    sp *= access;
-    return color * float4(sp, sp, sp, 1);
+    return access;
 }

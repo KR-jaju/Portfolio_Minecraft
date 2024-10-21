@@ -32,8 +32,7 @@ public:
 private:
 	void checkBoundary(
 		Index2 const& c_idx,
-		vector<Index2>& cidxs = 
-		*(new vector<Index2>(0)),
+		vector<Index2>* cidxs = nullptr,
 		int dir = 0
 	);
 private:

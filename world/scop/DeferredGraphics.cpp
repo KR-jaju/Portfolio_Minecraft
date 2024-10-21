@@ -18,6 +18,11 @@ DeferredGraphics::~DeferredGraphics()
 {
 }
 
+void DeferredGraphics::setViewPort(D3D11_VIEWPORT& view_port)
+{
+	this->context->RSSetViewports(1, &(view_port));
+}
+
 void DeferredGraphics::renderBegin(
 	DeferredBuffer* d_buffer,
 	ComPtr<ID3D11DepthStencilView> dsv

@@ -57,7 +57,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SCOP));
 
     // test code
-    Terrain terrain(10, 10, hWnd, w_width, w_height, 1, 8); // 짝수 단위로만
+    Terrain terrain(12, 12, hWnd, w_width, w_height, 1, 8); // 짝수 단위로만
     float h = terrain.getHeight(0.5, 0.5) + 0.5;
     cam.movePos(0.5, h, 0.5);
     cam.setDir(vec3(0, 0, 1));
@@ -85,9 +85,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
         {
             if (lb_flag) {
-                //terrain.putBlock(cam.getPos(), cam.getDir(), 1);
-                terrain.testClickLightBlock(cam.getPos(), 
-                    cam.getDir());
+                /*terrain.testClickLightBlock(cam.getPos(),
+                    cam.getDir());*/
+                terrain.putBlock(cam.getPos(), 
+                    cam.getDir(), 1);
                 lb_flag = false;
             }
             if (rb_flag) {
