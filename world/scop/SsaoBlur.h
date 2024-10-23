@@ -16,7 +16,7 @@ class SsaoBlur
 {
 public:
 	SsaoBlur(DeferredGraphics* d_graphic, UINT width, UINT height);
-	void render(int wh_flag);
+	void render(int wh_flag, Mat const& proj, float num);
 	ComPtr<ID3D11ShaderResourceView> getWidthSRV();
 	ComPtr<ID3D11ShaderResourceView> getHeightSRV();
 	shared_ptr<DeferredBuffer> const& getWidthDBuffer();

@@ -30,6 +30,7 @@ public:
 	
 private:
 	void setPipe();
+	void ssaoBlur(int cnt, Mat const& proj);
 
 private:
 	shared_ptr<Buffer<VertexDefer>> vbuffer;

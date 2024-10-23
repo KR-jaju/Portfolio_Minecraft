@@ -93,5 +93,5 @@ float4 main(PS_INPUT input) : SV_TARGET
     total_occlusion /= 14.0f;
     float access = 1.0f - total_occlusion;
     access = saturate(pow(access, 4.0f));
-    return access;
+    return float4(access, access, access, 1.0f);
 }

@@ -22,8 +22,8 @@ SsaoRender::SsaoRender(DeferredGraphics* d_graphic,
 	this->d_buffer = make_shared<DeferredBuffer>(1);
 	this->d_buffer->setRTVsAndSRVs(
 		device,
-		width / 2.0f,
-		height / 2.0f
+		width / 2,
+		height / 2
 	);
 	this->rasterizer_state = make_shared<RasterizerState>(
 		device,
@@ -52,9 +52,9 @@ SsaoRender::SsaoRender(DeferredGraphics* d_graphic,
 
 	vector<vec3> sample_pos = {
 		// front
-		{-1.f, -1.f, 0.f},
-		{-1.f, +1.f, 0.f},
-		{+1.f, +1.f, 0.f},
+		{-1.0f, -1.0f, 0.f},
+		{-1.0f, +1.0f, 0.f},
+		{+1.0f, +1.0f, 0.f},
 		{+1.f, -1.f, 0.f},
 	};
 	vector<vec2> sample_uv = {
@@ -92,8 +92,8 @@ SsaoRender::SsaoRender(DeferredGraphics* d_graphic,
 	this->blend_state = make_shared<BlendState>(device);
 	this->view_port.TopLeftX = 0.0f;
 	this->view_port.TopLeftY = 0.0f;
-	this->view_port.Width = width / 2.0f;
-	this->view_port.Height = height / 2.0f;
+	this->view_port.Width = width / 2;
+	this->view_port.Height = height / 2;
 	this->view_port.MinDepth = 0.f;
 	this->view_port.MaxDepth = 1.f;
 }

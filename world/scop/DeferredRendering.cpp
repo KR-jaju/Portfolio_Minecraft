@@ -96,6 +96,58 @@ DeferredRendering::~DeferredRendering()
 {
 }
 
+void DeferredRendering::ssaoBlur(int cnt, Mat const& proj)
+{
+	ComPtr<ID3D11DeviceContext> context;
+	context = this->d_graphic->getContext();
+	//// ssao blur width start
+	this->d_graphic->renderBegin(
+		this->ssao_blur.getWidthDBuffer().get());
+	context->PSSetShaderResources(0, 1,
+		this->g_render.getSRV(1).GetAddressOf());
+	context->PSSetShaderResources(1, 1,
+		this->s_render.getDepthSRV().GetAddressOf());
+	context->PSSetShaderResources(2, 1,
+		this->ssao_render.getSRV().GetAddressOf());
+	this->ssao_blur.render(0, proj, 2.0f);
+
+	//// ssao blur height start
+	this->d_graphic->renderBegin(
+		this->ssao_blur.getHeightDBuffer().get());
+	context->PSSetShaderResources(0, 1,
+		this->g_render.getSRV(1).GetAddressOf());
+	context->PSSetShaderResources(1, 1,
+		this->s_render.getDepthSRV().GetAddressOf());
+	context->PSSetShaderResources(2, 1,
+		this->ssao_blur.getWidthSRV().GetAddressOf());
+	this->ssao_blur.render(1, proj, 1.0f);
+
+	for (int i = 1; i < cnt; i++) {
+		// ssao blur width start
+		this->d_graphic->renderBegin(
+			this->ssao_blur.getWidthDBuffer().get());
+		context->PSSetShaderResources(0, 1,
+			this->g_render.getSRV(1).GetAddressOf());
+		context->PSSetShaderResources(1, 1,
+			this->s_render.getDepthSRV().GetAddressOf());
+		context->PSSetShaderResources(2, 1,
+			this->ssao_blur.getHeightSRV().GetAddressOf());
+		this->ssao_blur.render(0, proj, 1.0f);
+
+		// ssao blur height start
+		this->d_graphic->renderBegin(
+			this->ssao_blur.getHeightDBuffer().get());
+		context->PSSetShaderResources(0, 1,
+			this->g_render.getSRV(1).GetAddressOf());
+		context->PSSetShaderResources(1, 1,
+			this->s_render.getDepthSRV().GetAddressOf());
+		context->PSSetShaderResources(2, 1,
+			this->ssao_blur.getWidthSRV().GetAddressOf());
+		this->ssao_blur.render(1, proj, 1.0f);
+	}
+}
+
+
 void DeferredRendering::Render(
 	Mat const& cam_view, 
 	Mat const& cam_proj, 
@@ -125,28 +177,9 @@ void DeferredRendering::Render(
 	);
 	this->ssao_render.render(cam_proj);
 	
-	// ssao blur width start
-	this->d_graphic->renderBegin(
-		this->ssao_blur.getWidthDBuffer().get());
-	context->PSSetShaderResources(0, 1,
-		this->g_render.getSRV(1).GetAddressOf());
-	context->PSSetShaderResources(1, 1,
-		this->s_render.getDepthSRV().GetAddressOf());
-	context->PSSetShaderResources(2, 1,
-		this->ssao_render.getSRV().GetAddressOf());
-	this->ssao_blur.render(1);
-
-	// ssao blur height start
-	this->d_graphic->renderBegin(
-		this->ssao_blur.getHeightDBuffer().get());
-	context->PSSetShaderResources(0, 1,
-		this->g_render.getSRV(1).GetAddressOf());
-	context->PSSetShaderResources(1, 1,
-		this->s_render.getDepthSRV().GetAddressOf());
-	context->PSSetShaderResources(2, 1,
-		this->ssao_blur.getWidthSRV().GetAddressOf());
-	this->ssao_blur.render(0);
-
+	// ssao blur start
+	this->ssaoBlur(4, cam_proj);
+	
 	// result render start
 	this->setPipe();
 	this->d_graphic->setViewPort(this->view_port);
@@ -156,7 +189,6 @@ void DeferredRendering::Render(
 		this->s_render.getSRV().GetAddressOf());
 	this->d_graphic->renderBegin();
 	context->PSSetShaderResources(2, 1, this->ssao_blur.getHeightSRV().GetAddressOf());
-	//context->PSSetShaderResources(2, 1, this->ssao_render.getSRV().GetAddressOf());
 	context->DrawIndexed(
 		this->ibuffer->getCount(),
 		0, 0);

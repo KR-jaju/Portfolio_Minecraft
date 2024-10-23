@@ -1,17 +1,21 @@
-Texture2D normal_map : register(t0);
-Texture2D depth_map : register(t1);
+Texture2D normal_map : register(t0); // view space
+Texture2D depth_map : register(t1); // ndc space
 Texture2D ssao_map : register(t2);
 
 cbuffer cbPerFrame : register(b0)
 {
-    float gTexelWidth; // 1.0f / ssao_width 
-    float gTexelHeight; // 1.0f / ssao_height
-    int wh_flag;
+    float gTexelWidth; // 입력 texture의  1.0f / 너비
+    float gTexelHeight; // 입력 texture의 1.0f / 높이
+    float gWidth; // 화면의 1.0f / 너비
+    float gHeight; // 화면의 1.0f / 높이
+    int wh_flag; // 0 가로, 1이 세로
+    float3 dummy;
+    matrix proj; // 투영행렬
 };
 
 cbuffer cbSettings : register(b1)
 {
-    float gWeights[11] = {0.05f, 0.05f, 0.1f, 0.1f, 0.1f, 0.2f, 
+    static float gWeights[11] = {0.05f, 0.05f, 0.1f, 0.1f, 0.1f, 0.2f, 
         0.1f, 0.1f, 0.1f, 0.05f, 0.05f};
 };
 
@@ -36,6 +40,12 @@ SamplerState sample_image
     AddressV = CLAMP;
 };
 
+float NdcDepthToViewDepth(float z_ndc)
+{
+    float z_view = proj[3][2] / (z_ndc - proj[2][2]);
+    return z_view;
+}
+
 struct PS_INPUT
 {
     float4 pos : SV_Position;
@@ -45,15 +55,22 @@ struct PS_INPUT
 float4 main(PS_INPUT input) : SV_TARGET
 {
     float2 texOffset;
+    float2 offset;
     if (wh_flag == 0)
     {
-        texOffset = float2(gTexelHeight, 0.0f);
+        texOffset = float2(gTexelWidth, 0.0f);
+        offset = float2(gWidth, 0.0f);
     }
     else
     {
-        texOffset = float2(0.0f, gTexelWidth);
+        texOffset = float2(0.0f, gTexelHeight);
+        offset = float2(0.0f, gHeight);
     }
-    
+    if (gTexelHeight == 0 || gTexelWidth == 0 || gWidth == 0 ||
+        gHeight == 0)
+        return float4(1, 0, 0, 1);
+    if (texOffset.x == 0 && wh_flag == 0)
+        return float4(0, 1, 0, 1);
     float4 color = gWeights[5] * ssao_map.Sample(sample_image,
         input.uv);
     float total_weight = gWeights[5];
@@ -61,16 +78,21 @@ float4 main(PS_INPUT input) : SV_TARGET
         input.uv).xyz;
     float center_depth = depth_map.Sample(sample_normal_depth,
         input.uv).r;
+    center_depth = NdcDepthToViewDepth(center_depth);
     
-    for (int i = -gBlurRadius; i < gBlurRadius; i++)
+    if (gTexelHeight == 0 || gTexelWidth == 0)
+        return float4(1, 0, 0, 1);
+    for (int i = -gBlurRadius; i <= gBlurRadius; i++)
     {
         if (i == 0)
             continue;
         float2 tex = input.uv + i * texOffset;
+        float2 nd_tex = input.uv + i * offset;
         float3 neighbor_normal =
-            normal_map.Sample(sample_normal_depth, tex).xyz;
+            normal_map.Sample(sample_normal_depth, nd_tex).xyz;
         float neighbor_depth =
-            depth_map.Sample(sample_normal_depth, tex).r;
+            depth_map.Sample(sample_normal_depth, nd_tex).r;
+        neighbor_depth = NdcDepthToViewDepth(neighbor_depth);
         if (dot(neighbor_normal, center_normal) >= 0.8 &&
             abs(neighbor_depth - center_depth) <= 0.2f)
         {
@@ -80,5 +102,6 @@ float4 main(PS_INPUT input) : SV_TARGET
             total_weight += weight;
         }
     }
-    return color / total_weight;
+    color /= total_weight;
+    return color;
 }
