@@ -22,7 +22,12 @@ public:
 	);
 	void setDeffGraphic(shared_ptr<DeferredGraphics> defer_graphic);
 	void userPositionCheck(float x, float z);
-	void chunksSetVerticesAndIndices(
+	void chunksSetVerticesAndIndices( // 그림자와 면 생성
+		vector<Index2> const& v_idx,
+		int st,
+		int ed
+	);
+	void chunkSetVerticesAndIndicesShadow( // 그림자만 생성
 		vector<Index2> const& v_idx,
 		int st,
 		int ed
@@ -41,7 +46,9 @@ public:
 		Index2 const& adj_idx,
 		Index3 const& move,
 		int dir,
-		vector<VertexShadow>& vertices
+		vector<VertexShadow>& vertices,
+		vector<uint32>* indices = nullptr,
+		uint32* index = nullptr
 	);
 	void setSightChunk(int chunk_cnt);
 

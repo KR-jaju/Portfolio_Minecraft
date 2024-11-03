@@ -1,7 +1,6 @@
 #pragma once
 
-#include "MapUtils.h"
-#include "InputLayouts.h"
+#include "WorldUtils.h"
 
 class DeferredGraphics;
 template <typename T> class Buffer;
@@ -33,7 +32,6 @@ private:
 	DeferredGraphics* d_graphic;
 	UINT width;
 	UINT height;
-	InputLayouts layout;
 	D3D11_VIEWPORT view_port = { 0, };
 	shared_ptr<DeferredBuffer> d_buffer_width;
 	shared_ptr<DeferredBuffer> d_buffer_height;

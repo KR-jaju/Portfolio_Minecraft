@@ -1,6 +1,5 @@
 #pragma once
 
-#include "InputLayouts.h"
 #include "DeferredRendering.h"
 
 class Graphics;

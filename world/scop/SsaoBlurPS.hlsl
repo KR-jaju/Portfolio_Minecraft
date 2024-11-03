@@ -66,11 +66,6 @@ float4 main(PS_INPUT input) : SV_TARGET
         texOffset = float2(0.0f, gTexelHeight);
         offset = float2(0.0f, gHeight);
     }
-    if (gTexelHeight == 0 || gTexelWidth == 0 || gWidth == 0 ||
-        gHeight == 0)
-        return float4(1, 0, 0, 1);
-    if (texOffset.x == 0 && wh_flag == 0)
-        return float4(0, 1, 0, 1);
     float4 color = gWeights[5] * ssao_map.Sample(sample_image,
         input.uv);
     float total_weight = gWeights[5];

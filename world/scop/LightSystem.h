@@ -10,26 +10,22 @@ public:
 	LightSystem(MapUtils* minfo, int thread_cnt);
 	
 public:
-	void createLightMap();
-	void createLightMap(
-		vector<Index2>& cidxs,
-		int dir
+	void createLightMap(); // 빛을 모든 chunk에 대해 채움
+	void createLightMap( // 빛을 특정청크에 대해 채움
+		vector<Index2>& cidxs, // 특정 청크 인덱스
+		int dir // 방향
 	);
 	void resetLight(Index2 const& c_idx);
-	void lightPropagationGather(
-		Index2 const& cidx,
-		Index3 const& bidx
-	);
-	void lightBFS(int idx);
-	void fillLightThread(
+
+private:
+	void lightBFS(int idx); // 빛 퍼짐 알고리즘
+	void fillLightThread( // [st, ed) 까지 빛 채우기
 		vector<Index2> const& vec,
 		int st,
 		int ed,
 		int idx
 	);
-	void fillLight(Index2 const& c_idx, int idx);
-
-private:
+	void fillLight(Index2 const& c_idx, int idx); // 특정 청크 빛
 	void checkBoundary(
 		Index2 const& c_idx,
 		vector<Index2>* cidxs = nullptr,

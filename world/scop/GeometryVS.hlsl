@@ -1,10 +1,3 @@
-cbuffer MVP : register(b0)
-{
-    matrix world;
-    matrix view;
-    matrix proj;
-};
-
 struct VS_INPUT
 {
     int type : TYPE;
@@ -14,7 +7,7 @@ struct VS_INPUT
     int dir : DIRECTION;
 };
 
-struct PS_INPUT
+struct HS_INPUT
 {
     int type : TYPE;
     float4 pos : SV_Position;
@@ -25,18 +18,14 @@ struct PS_INPUT
 };
 
 
-PS_INPUT main(VS_INPUT input)
+HS_INPUT main(VS_INPUT input)
 {
-    PS_INPUT output;
+    HS_INPUT output;
     output.pos = float4(input.pos, 1);
     output.world_pos = input.pos;
     output.normal = input.normal;
     output.uv = input.uv;
     output.dir = input.dir;
     output.type = input.type;
-    
-    output.pos = mul(output.pos, world);
-    output.pos = mul(output.pos, view);
-    output.pos = mul(output.pos, proj);
     return output;
 }

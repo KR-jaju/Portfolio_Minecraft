@@ -7,6 +7,7 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "InputLayout.h"
+#include "InputLayouts.h"
 #include "ConstantBuffer.h"
 #include "Chunk.h"
 #include "BlendState.h"
@@ -44,8 +45,8 @@ ShadowRender::ShadowRender(
 	);
 	this->input_layout = make_shared<InputLayout>(
 		this->d_graphic->getDevice(),
-		this->layout.layout_shadow.data(),
-		this->layout.layout_shadow.size(),
+		InputLayouts::layout_shadow.data(),
+		InputLayouts::layout_shadow.size(),
 		this->vertex_shader->getBlob()
 	);
 	this->blend_state = make_shared<BlendState>(
@@ -117,7 +118,6 @@ void ShadowRender::render(
 			);
 		}
 	}
-	this->d_graphic->getContext()->Flush();
 }
 
 ComPtr<ID3D11ShaderResourceView> ShadowRender::getSRV()

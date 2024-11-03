@@ -13,21 +13,6 @@ LightSystem::LightSystem(MapUtils* minfo, int thread_cnt)
 		this->thread_cnt = 8;
 }
 
-void LightSystem::lightPropagationGather(
-	Index2 const& cidx,
-	Index3 const& bidx
-)
-{
-	static const Index3 move_arr[6] = {
-		Index3(0, 1, 0),
-		Index3(0, -1, 0),
-		Index3(0, 0, -1),
-		Index3(0, 0, 1),
-		Index3(-1, 0, 0),
-		Index3(1, 0, 0)
-	};
-}
-
 void LightSystem::lightBFS(int idx)
 {
 	static const Index3 move_arr[6] = {

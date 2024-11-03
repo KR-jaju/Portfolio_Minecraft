@@ -1,7 +1,5 @@
 #pragma once
 
-#include "InputLayouts.h"
-
 class MapUtils;
 class DeferredGraphics;
 class DeferredBuffer;
@@ -32,7 +30,6 @@ private:
 
 private:
 	MapUtils* m_info;
-	InputLayouts layout;
 	DeferredGraphics* d_graphic;
 	shared_ptr<DepthMap> depth_map;
 	shared_ptr<DeferredBuffer> d_buffer;

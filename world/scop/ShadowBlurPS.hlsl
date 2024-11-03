@@ -1,3 +1,5 @@
+// 보류: blur 가 많은 성능을 잡아먹음
+
 Texture2D shadow_map : register(t3);
 
 SamplerState sampler0

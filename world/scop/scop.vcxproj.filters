@@ -67,12 +67,6 @@
     <Filter Include="소스 파일\World\Block">
       <UniqueIdentifier>{1c1212bc-c614-49e6-b2fa-0bc3653620c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\World\Block\InactiveBlock">
-      <UniqueIdentifier>{14b6fc32-3b7c-471a-af60-1c93bc2fdc37}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\World\Block\ActiveBlock">
-      <UniqueIdentifier>{4abbb7dd-979b-402d-9756-c3cbc4d229e6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\World\WorldShaderFIle">
       <UniqueIdentifier>{e9ceb38c-5083-4ca9-ac73-2de4bff11fe8}</UniqueIdentifier>
     </Filter>
@@ -159,6 +153,54 @@
     </Filter>
     <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\Ssao\SsaoBlur">
       <UniqueIdentifier>{573bcc8b-3cfc-4c8c-9d6a-92a763c10702}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox">
+      <UniqueIdentifier>{ebdbaf69-4823-46af-ab1d-c4458fa5ab0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox\SunMoon">
+      <UniqueIdentifier>{84673491-15b9-4f7f-971a-256c0027b4a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Engine\Pipeline\3_Shader\ComputeShader">
+      <UniqueIdentifier>{837fc306-591b-4d32-8205-e8d14a4a333d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\Wallpaper">
+      <UniqueIdentifier>{f8af4932-3717-41a5-8222-88d01f6a2704}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\Wallpaper\cubemap">
+      <UniqueIdentifier>{a7973095-e4cd-42b1-8aad-66b44c0ef85e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon">
+      <UniqueIdentifier>{f3759840-a3d6-410e-81b8-201f76e06ee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon\Blur">
+      <UniqueIdentifier>{a73a7cb9-6374-4627-875f-1cf9dcc2aa93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox\SunMoon\Blur">
+      <UniqueIdentifier>{c029516e-190c-459b-8d1e-2470b76b5844}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox\SunMoon\Sampling">
+      <UniqueIdentifier>{de5ed660-f4e0-4f1f-9b24-b59cc7644ddd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox\SunMoon\Object">
+      <UniqueIdentifier>{b31d9d50-41bc-4b43-8a85-224d6e22bdf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon\Object">
+      <UniqueIdentifier>{1a447a19-1fe9-4202-810b-679cfa5da5a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon\Object\Moon">
+      <UniqueIdentifier>{7b2df57c-a174-4ee7-bbdf-e4a5975b6a83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon\Object\Sun">
+      <UniqueIdentifier>{61e1663b-8c1a-41b4-9d26-ada09a42569b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox\SunMoon\SemiCombine">
+      <UniqueIdentifier>{2b02307e-1773-4c63-a3bc-e527da3ea666}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Engine\Pipeline\3_Shader\HullShader">
+      <UniqueIdentifier>{0a7d9432-e6dc-4211-9999-329abd7aba9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Engine\Pipeline\3_Shader\DomainShader">
+      <UniqueIdentifier>{06808725-e567-49bd-a468-fa57e9452d13}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -285,6 +327,39 @@
     <ClInclude Include="SsaoRender.h">
       <Filter>소스 파일\World\Map\System\RenderSystem\SsaoRender</Filter>
     </ClInclude>
+    <ClInclude Include="CubeMap.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper\cubemap</Filter>
+    </ClInclude>
+    <ClInclude Include="Sun.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon\Object\Sun</Filter>
+    </ClInclude>
+    <ClInclude Include="Moon.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon\Object\Moon</Filter>
+    </ClInclude>
+    <ClInclude Include="Blur.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon\Blur</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputeShader.h">
+      <Filter>소스 파일\Engine\Pipeline\3_Shader\ComputeShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Filter.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon\Blur</Filter>
+    </ClInclude>
+    <ClInclude Include="SunMoon.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultSM.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon</Filter>
+    </ClInclude>
+    <ClInclude Include="Wallpaper.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper</Filter>
+    </ClInclude>
+    <ClInclude Include="HullShader.h">
+      <Filter>소스 파일\Engine\Pipeline\3_Shader\HullShader</Filter>
+    </ClInclude>
+    <ClInclude Include="DomainShader.h">
+      <Filter>소스 파일\Engine\Pipeline\3_Shader\DomainShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -401,6 +476,39 @@
     <ClCompile Include="SsaoRender.cpp">
       <Filter>소스 파일\World\Map\System\RenderSystem\SsaoRender</Filter>
     </ClCompile>
+    <ClCompile Include="CubeMap.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper\cubemap</Filter>
+    </ClCompile>
+    <ClCompile Include="Sun.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon\Object\Sun</Filter>
+    </ClCompile>
+    <ClCompile Include="Moon.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon\Object\Moon</Filter>
+    </ClCompile>
+    <ClCompile Include="Blur.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon\Blur</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeShader.cpp">
+      <Filter>소스 파일\Engine\Pipeline\3_Shader\ComputeShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Filter.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon\Blur</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultSM.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon</Filter>
+    </ClCompile>
+    <ClCompile Include="SunMoon.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper\SunMoon\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Wallpaper.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\Wallpaper</Filter>
+    </ClCompile>
+    <ClCompile Include="HullShader.cpp">
+      <Filter>소스 파일\Engine\Pipeline\3_Shader\HullShader</Filter>
+    </ClCompile>
+    <ClCompile Include="DomainShader.cpp">
+      <Filter>소스 파일\Engine\Pipeline\3_Shader\DomainShader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="scop.rc">
@@ -487,6 +595,48 @@
     </FxCompile>
     <FxCompile Include="SsaoPS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Ssao</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyBoxVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyBoxPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox</Filter>
+    </FxCompile>
+    <FxCompile Include="CombineVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox</Filter>
+    </FxCompile>
+    <FxCompile Include="CombinePS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox</Filter>
+    </FxCompile>
+    <FxCompile Include="BlurXPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox\SunMoon\Blur</Filter>
+    </FxCompile>
+    <FxCompile Include="BlurYPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox\SunMoon\Blur</Filter>
+    </FxCompile>
+    <FxCompile Include="SamplingPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox\SunMoon\Sampling</Filter>
+    </FxCompile>
+    <FxCompile Include="SamplingVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox\SunMoon\Sampling</Filter>
+    </FxCompile>
+    <FxCompile Include="SunMoonPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox\SunMoon\Object</Filter>
+    </FxCompile>
+    <FxCompile Include="SunMoonVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox\SunMoon\Object</Filter>
+    </FxCompile>
+    <FxCompile Include="SemiCombinePS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox\SunMoon\SemiCombine</Filter>
+    </FxCompile>
+    <FxCompile Include="SemiCombineVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox\SunMoon\SemiCombine</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryHS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryDS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

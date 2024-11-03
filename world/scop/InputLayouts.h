@@ -1,7 +1,7 @@
 #pragma once
 
-struct InputLayouts {
-	vector<D3D11_INPUT_ELEMENT_DESC> layout_0 = {
+namespace InputLayouts {
+	static vector<D3D11_INPUT_ELEMENT_DESC> layout_0 = {
 		{
 			"TYPE",
 			0,
@@ -57,7 +57,7 @@ struct InputLayouts {
 			0
 		}
 	};
-	vector<D3D11_INPUT_ELEMENT_DESC> layout_Geo = {
+	static vector<D3D11_INPUT_ELEMENT_DESC> layout_Geo = {
 		{
 			"TYPE",
 			0,
@@ -104,7 +104,7 @@ struct InputLayouts {
 			0
 		},
 	};
-	vector<D3D11_INPUT_ELEMENT_DESC> layout_shadow = {
+	static vector<D3D11_INPUT_ELEMENT_DESC> layout_shadow = {
 		{
 			"POSITION",
 			0,
@@ -124,7 +124,7 @@ struct InputLayouts {
 			0
 		},
 	};
-	vector<D3D11_INPUT_ELEMENT_DESC> layout_deferred = {
+	static vector<D3D11_INPUT_ELEMENT_DESC> layout_deferred = {
 		{
 			"POSITION",
 			0,
@@ -138,6 +138,26 @@ struct InputLayouts {
 			"TEXCOORD",
 			0,
 			DXGI_FORMAT_R32G32_FLOAT,
+			0,
+			12,
+			D3D11_INPUT_PER_VERTEX_DATA,
+			0
+		}
+	};
+	static vector<D3D11_INPUT_ELEMENT_DESC> layout_color = {
+		{
+			"POSITION",
+			0,
+			DXGI_FORMAT_R32G32B32_FLOAT,
+			0,
+			0,
+			D3D11_INPUT_PER_VERTEX_DATA,
+			0
+		},
+		{
+			"COLOR",
+			0,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
 			0,
 			12,
 			D3D11_INPUT_PER_VERTEX_DATA,

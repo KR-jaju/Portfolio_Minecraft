@@ -1,7 +1,5 @@
 #pragma once
 
-#include "InputLayouts.h"
-
 class MapUtils;
 class DeferredGraphics;
 class BlendState; // 바뀔 수 있음 나중에(ex OIT)
@@ -12,6 +10,8 @@ class PixelShader;
 class InputLayout;
 class RasterizerState;
 class DeferredBuffer;
+class HullShader;
+class DomainShader;
 
 class GeoRender
 {
@@ -33,7 +33,6 @@ private:
 
 private:
 	MapUtils* m_info;
-	InputLayouts layout;
 	DeferredGraphics* d_graphic;
 	shared_ptr<DeferredBuffer> d_buffer;
 	shared_ptr<RasterizerState> rasterizer_state;
@@ -42,5 +41,7 @@ private:
 	shared_ptr<VertexShader> vertex_shader;
 	shared_ptr<PixelShader> pixel_shader;
 	shared_ptr<InputLayout> input_layout;
+	shared_ptr<HullShader> hull_shader;
+	shared_ptr<DomainShader> domain_shader;
 };
 

@@ -179,3 +179,8 @@ ComPtr<ID3D11DeviceContext> DeferredGraphics::getContext()
 {
 	return this->context;
 }
+
+ComPtr<ID3D11DepthStencilView> DeferredGraphics::getDSV()
+{
+	return this->DSV;
+}

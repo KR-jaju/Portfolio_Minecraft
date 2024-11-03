@@ -93,7 +93,8 @@ void Terrain::putBlock(
 			cidx = add_idx.c_idx;
 			bidx = add_idx.b_idx;
 			Index2 adj_idx;
-			Index2 const& cpos = this->m_manager->m_info.chunks[cidx.y][cidx.x]->chunk_pos;
+			Index2 const& cpos = 
+				this->m_manager->m_info.chunks[cidx.y][cidx.x]->chunk_pos;
 			if (bidx.x == 0) {
 				adj_idx = this->m_manager->m_info.findChunkIndex(cpos.x - 16, cpos.y);
 				if (adj_idx.flag && this->m_manager->m_info.findBlock(adj_idx, 15, bidx.y, bidx.z)) {
@@ -142,7 +143,6 @@ void Terrain::deleteBlock(vec3 const& ray_pos, vec3 const& ray_dir)
 	if (widx.flag) {
 		this->m_manager->m_info.addBlock(widx.c_idx, widx.b_idx, 0);
 		// TODO light system
-		this->m_manager->l_system.lightPropagationGather(widx.c_idx, widx.b_idx);
 		this->m_manager->m_info.chunks[widx.c_idx.y][widx.c_idx.x]->vertices_idx = 0;
 		vector<Index2> v_idx;
 		v_idx.push_back(widx.c_idx);

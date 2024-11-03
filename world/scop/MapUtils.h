@@ -42,15 +42,15 @@ public:
 	Index2 getChunkIndex(int w_x, int w_z) const;
 
 public:
-	int size_w;
-	int size_h;
-	Index2 s_pos;
-	Index2 sv_pos;
-	Index2 ev_pos;
+	int size_w; // 맵 세로 크기
+	int size_h; // 맵 가로 크기
+	Index2 s_pos; // 맵의 시작 위치
+	Index2 sv_pos; // 실제로 보이는 부분의 시작위치
+	Index2 ev_pos; // 실제로 보이는 부분의 끝 위치
 	shared_ptr<Chunk> chunks[30][30];
 	HWND hWnd;
-	UINT width;
-	UINT height;
+	UINT width; // 창 가로 크기
+	UINT height; // 창 세로 크기
 
 private:
 	int* blocks;

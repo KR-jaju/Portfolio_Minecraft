@@ -29,7 +29,6 @@ void DeferredBuffer::setRTVsAndSRVs(
 	t_desc.BindFlags = D3D11_BIND_RENDER_TARGET |
 		D3D11_BIND_SHADER_RESOURCE;
 	t_desc.CPUAccessFlags = 0;
-	t_desc.MipLevels = 0;
 	t_desc.SampleDesc.Count = 1;
 	t_desc.SampleDesc.Quality = 0;
 	HRESULT hr;

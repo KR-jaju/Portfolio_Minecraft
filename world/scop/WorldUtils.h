@@ -148,16 +148,7 @@ struct WorldIndex {
 	}
 };
 
-struct VertexBlockUV {
-	int type;
-	vec3 pos;
-	vec3 normal;
-	vec2 uv;
-	int dir;
-	int shadow_flag = 0;
-};
-
-struct VertexGeo { // temp
+struct VertexGeo {
 	int type;
 	vec3 pos;
 	vec3 normal;
@@ -165,7 +156,7 @@ struct VertexGeo { // temp
 	int dir;
 };
 
-struct VertexShadow { // temp
+struct VertexShadow {
 	vec3 pos;
 	int shadow_flag = 0;
 };
@@ -175,8 +166,7 @@ struct VertexDefer {
 	vec2 uv;
 };
 
-struct VertexBlock {
-	int type;
+struct VertexColor {
 	vec3 pos;
 	color col;
 };
@@ -185,9 +175,4 @@ struct CamPos {
 	vec3 pos;
 	float r;
 	Mat view;
-};
-
-struct Light {
-	Mat view = Mat::Identity;
-	Mat proj = Mat::Identity;
 };

@@ -20,6 +20,7 @@ public:
 	void renderEnd();
 	ComPtr<ID3D11Device> getDevice();
 	ComPtr<ID3D11DeviceContext> getContext();
+	ComPtr<ID3D11DepthStencilView> getDSV();
 
 private:
 	void createSwapChainAndDevice();

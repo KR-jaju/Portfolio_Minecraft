@@ -9,10 +9,10 @@ MapUtils::MapUtils(
 	UINT w_width, UINT w_height
 )
 {
-	this->size_h = size_h; // chunk height size
-	this->size_w = size_w; // chunk width size
-	this->width = w_width; // window width size
-	this->height = w_height; // window height size
+	this->size_h = size_h;
+	this->size_w = size_w;
+	this->width = w_width;
+	this->height = w_height;
 	this->hWnd = hwnd;
 	this->s_pos.x = -8 * this->size_w;
 	this->s_pos.y = 8 * this->size_h;

@@ -9,7 +9,10 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "InputLayout.h"
+#include "InputLayouts.h"
 #include "ConstantBuffer.h"
+#include "HullShader.h"
+#include "DomainShader.h"
 #include "Chunk.h"
 
 GeoRender::GeoRender(
@@ -29,13 +32,14 @@ GeoRender::GeoRender(
 	ComPtr<ID3D11DeviceContext> context = this->d_graphic->getContext();
 	this->rasterizer_state = make_shared<RasterizerState>(
 		device,
-		D3D11_FILL_SOLID,
+		//D3D11_FILL_SOLID,
+		D3D11_FILL_WIREFRAME,
 		D3D11_CULL_BACK
 	);
 	vector<wstring> path_arr = {
-		L"grass_top.png",
-		L"grass_bottom.png",
-		L"grass_side.png"
+		L"./textures/blocks/grass_top.png",
+		L"./textures/blocks/grass_bottom.png",
+		L"./textures/blocks/grass_side.png"
 	};
 	this->texture_array = make_shared<TextureArray>(
 		device,
@@ -58,9 +62,21 @@ GeoRender::GeoRender(
 	);
 	this->input_layout = make_shared<InputLayout>(
 		device,
-		layout.layout_Geo.data(),
-		layout.layout_Geo.size(),
+		InputLayouts::layout_Geo.data(),
+		InputLayouts::layout_Geo.size(),
 		this->vertex_shader->getBlob()
+	);
+	this->hull_shader = make_shared<HullShader>(
+		device,
+		L"GeometryHS.hlsl",
+		"main",
+		"hs_5_0"
+	);
+	this->domain_shader = make_shared<DomainShader>(
+		device,
+		L"GeometryDS.hlsl",
+		"main",
+		"ds_5_0"
 	);
 }
 
@@ -74,30 +90,32 @@ void GeoRender::render(
 	vec3 const& cam_pos
 )
 {
-	this->setPipe();
 	ComPtr<ID3D11DeviceContext> context = this->d_graphic->getContext();
+	ComPtr<ID3D11Device> device = this->d_graphic->getDevice();
+	this->d_graphic->renderBegin(this->d_buffer.get());
+	this->setPipe();
 	MVP mvp;
 	mvp.view = view.Transpose();
 	mvp.proj = proj.Transpose();
-	ConstantBuffer cbuffer(
-		this->d_graphic->getDevice(),
-		context,
-		mvp
-	);
+	ConstantBuffer cbuffer(device, context, mvp);
 	context->VSSetConstantBuffers(0, 1,
 		cbuffer.getComPtr().GetAddressOf());
 	CamPos cam;
 	cam.pos = cam_pos;
 	cam.r = 0;
 	cam.view = view.Transpose();
-	ConstantBuffer cpbuffer(
-		this->d_graphic->getDevice(),
-		context,
-		cam
-	);
+	ConstantBuffer cpbuffer(device, context, cam);
+	vec4 test_eye;
+	test_eye.x = cam_pos.x;
+	test_eye.y = cam_pos.y;
+	test_eye.z = cam_pos.z;
+	ConstantBuffer chbuffer(device, context, test_eye);
+	context->HSSetConstantBuffers(0, 1,
+		chbuffer.getComPtr().GetAddressOf());
+	context->DSSetConstantBuffers(0, 1,
+		cbuffer.getComPtr().GetAddressOf());
 	context->PSSetConstantBuffers(0, 1, 
 		cpbuffer.getComPtr().GetAddressOf());
-	this->d_graphic->renderBegin(this->d_buffer.get());
 	for (int i = 0; i < this->m_info->size_h; i++) {
 		for (int j = 0; j < this->m_info->size_w; j++) {
 			if (this->m_info->chunks[i][j]->render_flag == false)
@@ -108,7 +126,8 @@ void GeoRender::render(
 			);
 		}
 	}
-	this->d_graphic->getContext()->Flush();
+	context->HSSetShader(nullptr, nullptr, 0);
+	context->DSSetShader(nullptr, nullptr, 0);
 }
 
 ComPtr<ID3D11ShaderResourceView> GeoRender::getSRV(int idx)
@@ -120,8 +139,11 @@ void GeoRender::setPipe()
 {
 	ComPtr<ID3D11DeviceContext> context = 
 		this->d_graphic->getContext();
-	context->IASetPrimitiveTopology(
+	/*context->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
+	);*/
+	context->IASetPrimitiveTopology(
+		D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST
 	);
 	context->IASetInputLayout(this->input_layout->getComPtr().Get());
 	context->VSSetShader(
@@ -144,5 +166,15 @@ void GeoRender::setPipe()
 		0,
 		1,
 		this->texture_array->getComPtr().GetAddressOf()
+	);
+	context->HSSetShader(
+		this->hull_shader->getComPtr().Get(),
+		nullptr,
+		0
+	);
+	context->DSSetShader(
+		this->domain_shader->getComPtr().Get(),
+		nullptr,
+		0
 	);
 }

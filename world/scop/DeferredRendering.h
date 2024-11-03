@@ -10,7 +10,7 @@
 class DeferredGraphics;
 class MapUtils;
 template <typename T> class Buffer;
-class Texture;
+class Wallpaper;
 
 class DeferredRendering
 {
@@ -43,9 +43,9 @@ private:
 	GeoRender g_render;
 	SsaoRender ssao_render;
 	SsaoBlur ssao_blur;
+	shared_ptr<Wallpaper> cube_map;
 
 private:
-	InputLayouts layout;
 	D3D11_VIEWPORT view_port;
 	shared_ptr<VertexShader> vertex_shader;
 	shared_ptr<PixelShader> pixel_shader;

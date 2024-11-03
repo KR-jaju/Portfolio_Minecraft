@@ -5,6 +5,7 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "InputLayout.h"
+#include "InputLayouts.h"
 #include "Buffer.h"
 #include "ConstantBuffer.h"
 #include "DeferredBuffer.h"
@@ -37,8 +38,8 @@ SsaoBlur::SsaoBlur(
 	);
 	this->input_layout = make_shared<InputLayout>(
 		device,
-		layout.layout_deferred.data(),
-		layout.layout_deferred.size(),
+		InputLayouts::layout_deferred.data(),
+		InputLayouts::layout_deferred.size(),
 		this->vertex_shader->getBlob()
 	);
 	this->rasterizer_state = make_shared<RasterizerState>(
@@ -132,7 +133,6 @@ void SsaoBlur::render(int wh_flag, Mat const& proj, float num)
 		0,
 		0
 	);
-	context->Flush();
 }
 
 ComPtr<ID3D11ShaderResourceView> SsaoBlur::getWidthSRV()
