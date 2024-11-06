@@ -5,6 +5,7 @@
 #include "MapUtils.h"
 #include "RasterizerState.h"
 #include "TextureArray.h"
+#include "Texture.h"
 #include "SamplerState.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
@@ -22,7 +23,7 @@ GeoRender::GeoRender(
 {
 	this->m_info = minfo;
 	this->d_graphic = dgraphic;
-	this->d_buffer = make_shared<DeferredBuffer>(3);
+	this->d_buffer = make_shared<DeferredBuffer>(4);
 	this->d_buffer->setRTVsAndSRVs(
 		this->d_graphic->getDevice(),
 		this->m_info->width,
@@ -41,6 +42,20 @@ GeoRender::GeoRender(
 		L"./textures/blocks/grass_bottom.png",
 		L"./textures/blocks/grass_side.png"
 	};
+	
+	this->tmp_tex = make_shared<Texture>(
+		device,
+		context,
+		"./textures/pbr/grass_top/grass_basecolor.png",
+		0
+	);
+	this->tmp_tex_normal = make_shared<Texture>(
+		device,
+		context,
+		"./textures/pbr/grass_top/grass_normal.png",
+		0
+	);
+
 	this->texture_array = make_shared<TextureArray>(
 		device,
 		context,
@@ -114,6 +129,8 @@ void GeoRender::render(
 		chbuffer.getComPtr().GetAddressOf());
 	context->DSSetConstantBuffers(0, 1,
 		cbuffer.getComPtr().GetAddressOf());
+	context->DSSetConstantBuffers(1, 1,
+		chbuffer.getComPtr().GetAddressOf());
 	context->PSSetConstantBuffers(0, 1, 
 		cpbuffer.getComPtr().GetAddressOf());
 	for (int i = 0; i < this->m_info->size_h; i++) {
@@ -139,12 +156,8 @@ void GeoRender::setPipe()
 {
 	ComPtr<ID3D11DeviceContext> context = 
 		this->d_graphic->getContext();
-	/*context->IASetPrimitiveTopology(
-		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
-	);*/
 	context->IASetPrimitiveTopology(
-		D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST
-	);
+		D3D_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
 	context->IASetInputLayout(this->input_layout->getComPtr().Get());
 	context->VSSetShader(
 		this->vertex_shader->getComPtr().Get(),
@@ -167,6 +180,11 @@ void GeoRender::setPipe()
 		1,
 		this->texture_array->getComPtr().GetAddressOf()
 	);
+	context->PSSetShaderResources(
+		1,
+		1,
+		this->tmp_tex->getComPtr().GetAddressOf()
+	);
 	context->HSSetShader(
 		this->hull_shader->getComPtr().Get(),
 		nullptr,
@@ -177,4 +195,6 @@ void GeoRender::setPipe()
 		nullptr,
 		0
 	);
+	context->DSSetShaderResources(0, 1,
+		this->tmp_tex_normal->getComPtr().GetAddressOf());
 }

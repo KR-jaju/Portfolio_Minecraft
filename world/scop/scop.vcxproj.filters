@@ -554,12 +554,6 @@
     <FxCompile Include="DepthPixelShader.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DepthShader</Filter>
     </FxCompile>
-    <FxCompile Include="DeferredVS.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader</Filter>
-    </FxCompile>
-    <FxCompile Include="DeferredPS.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader</Filter>
-    </FxCompile>
     <FxCompile Include="GeometryVS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
     </FxCompile>

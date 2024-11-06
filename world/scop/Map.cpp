@@ -92,8 +92,7 @@ void Map::vertexAndIndexGenerator(
 	Index2 const& adj_idx,
 	Index3 const& move,
 	int dir,
-	vector<VertexGeo>& vertices,
-	vector<uint32>& indices
+	vector<VertexGeo>& vertices
 )
 {
 	uint32 index = this->m_info.chunks[c_idx.y][c_idx.x]->vertices_idx;
@@ -118,14 +117,12 @@ void Map::vertexAndIndexGenerator(
 					if (next.z == 16 && this->m_info.findBlock(adj_idx, next.x, next.y, 0))
 						continue;
 				}
-				Block::addBlockFacePosAndTex(
+				Block::addFaceQuadPosAndTex(
 					this->m_info.chunks[c_idx.y][c_idx.x]->start_pos,
 					dir,
 					x, y, z, type,
 					vertices
 				);
-				Block::addBlockFaceIndices(index, indices);
-				index += 4;
 			}
 		}
 	}
@@ -215,11 +212,14 @@ void Map::chunksSetVerticesAndIndices(
 	vector<VertexGeo> vertices_geo;
 	vector<VertexShadow> vertices_shadow;
 	vector<uint32> indices;
+	vector<uint32> s_indices;
+	uint32 s_idx;
 	ed = min(ed, v_idx.size());
 	for (int i = st; i < ed; i++) {
 		Index2 const& c_idx = v_idx[i];
 		this->m_info.chunks[c_idx.y][c_idx.x]->vertices_idx = 0;
 		Index2 apos = this->m_info.chunks[c_idx.y][c_idx.x]->chunk_pos;
+		s_idx = 0;
 		for (int dir = 0; dir < 6; dir++) {
 			Index2 pos = apos + Index2(16 * move_arr[dir].x,
 				16 * move_arr[dir].z);
@@ -229,30 +229,30 @@ void Map::chunksSetVerticesAndIndices(
 				adj_idx,
 				move_arr[dir],
 				dir,
-				vertices_geo,
-				indices
+				vertices_geo
 			);
 			this->vertexShadowGenerator(
 				c_idx,
 				adj_idx,
 				move_arr[dir],
 				dir,
-				vertices_shadow
+				vertices_shadow,
+				&s_indices,
+				&s_idx
 			);
 		}
 		this->m_info.chunks[c_idx.y][c_idx.x]->createGeoBuffer(
 			this->d_graphic->getDevice(),
-			vertices_geo,
-			indices
+			vertices_geo
 		);
 		this->m_info.chunks[c_idx.y][c_idx.x]->createShadowBuffer(
 			this->d_graphic->getDevice(),
 			vertices_shadow,
-			indices
+			s_indices
 		);
 		vertices_shadow.clear();
 		vertices_geo.clear();
-		indices.clear();
+		s_indices.clear();
 	}
 }
 

@@ -86,23 +86,23 @@ namespace InputLayouts {
 			0
 		},
 		{
-			"TEXCOORD",
+			"TANGENT",
 			0,
-			DXGI_FORMAT_R32G32_FLOAT,
+			DXGI_FORMAT_R32G32B32_FLOAT,
 			0,
 			28,
 			D3D11_INPUT_PER_VERTEX_DATA,
 			0
 		},
 		{
-			"DIRECTION",
+			"TEXCOORD",
 			0,
-			DXGI_FORMAT_R32_SINT,
+			DXGI_FORMAT_R32G32_FLOAT,
 			0,
-			36,
+			40,
 			D3D11_INPUT_PER_VERTEX_DATA,
 			0
-		},
+		}
 	};
 	static vector<D3D11_INPUT_ELEMENT_DESC> layout_shadow = {
 		{

@@ -3,18 +3,18 @@ struct VS_INPUT
     int type : TYPE;
     float3 pos : POSITION;
     float3 normal : NORMAL;
+    float3 tangent : TANGENT;
     float2 uv : TEXCOORD;
-    int dir : DIRECTION;
 };
 
 struct HS_INPUT
 {
     int type : TYPE;
-    float4 pos : SV_Position;
+    float4 pos : POSITION;
     float3 normal : NORMAL;
-    float3 world_pos : POSITION;
+    float3 tangent : TANGENT;
+    float3 world_pos : POSITION_WORLD;
     float2 uv : TEXCOORD;
-    int dir : DIRECTION;
 };
 
 
@@ -25,7 +25,7 @@ HS_INPUT main(VS_INPUT input)
     output.world_pos = input.pos;
     output.normal = input.normal;
     output.uv = input.uv;
-    output.dir = input.dir;
+    output.tangent = input.tangent;
     output.type = input.type;
     return output;
 }

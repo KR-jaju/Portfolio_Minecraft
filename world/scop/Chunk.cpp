@@ -35,16 +35,7 @@ void Chunk::setGeoRender(
 		&stride,
 		&offset
 	);
-	context->IASetIndexBuffer(
-		this->geo_ibuffer->getComPtr().Get(),
-		DXGI_FORMAT_R32_UINT,
-		0
-	);
-	context->DrawIndexed(
-		this->geo_ibuffer->getCount(),
-		0,
-		0
-	);
+	context->Draw(this->geo_vbuffer->getCount(), 0);
 }
 
 void Chunk::setShadowRender(
@@ -75,8 +66,7 @@ void Chunk::setShadowRender(
 
 void Chunk::createGeoBuffer(
 	ComPtr<ID3D11Device> device,
-	vector<VertexGeo> const& vertices,
-	vector<uint32> const& indices
+	vector<VertexGeo> const& vertices
 )
 {
 	this->geo_vbuffer = make_shared<Buffer<VertexGeo>>(
@@ -84,12 +74,6 @@ void Chunk::createGeoBuffer(
 		vertices.data(),
 		vertices.size(),
 		D3D11_BIND_VERTEX_BUFFER
-	);
-	this->geo_ibuffer = make_shared<Buffer<uint32>>(
-		device,
-		indices.data(),
-		indices.size(),
-		D3D11_BIND_INDEX_BUFFER
 	);
 	this->render_flag = true;
 }

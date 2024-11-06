@@ -6,6 +6,12 @@ public:
 		ComPtr<ID3D11Device> device,
 		wstring const& path
 	);
+	Texture(
+		ComPtr<ID3D11Device>& device,
+		ComPtr<ID3D11DeviceContext>& context,
+		string const& path,
+		int mip_level
+	);
 	Texture(Texture const&) = delete;
 	~Texture();
 	Texture& operator=(Texture const&) = delete;
