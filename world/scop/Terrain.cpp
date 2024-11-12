@@ -3,6 +3,8 @@
 #include "Chunk.h"
 #include "DeferredGraphics.h"
 #include "Graphics.h"
+#include "EntityDataAsset.h"
+#include "Model.h"
 
 Terrain::Terrain(
 	int size_w,
@@ -26,6 +28,22 @@ Terrain::Terrain(
 		height
 	);
 	this->m_manager->setDeffGraphic(this->deff_graphic);
+	this->ega = make_shared<EntityDataAsset>(this->deff_graphic);
+	this->ega->registerGeometry("test", humanoid_model);
+	this->ega->registerTexture("test", L"grass_top.png");
+	Entity ent(this->ega->getGeometry("test"), this->ega->getTexture("test"));
+	uint32 id = this->m_manager->e_info.addEntity(std::move(ent));
+	Entity& entity = this->m_manager->e_info.getEntity(id);
+
+	//humanoid_model.bindposes
+	BoneData& bone = entity.getBoneTransforms();
+	vector<Mat> const& bindposes = humanoid_model.bindposes;
+	vector<Mat> const& bone_transform = humanoid_model.default_pose;
+	for (int i = 0; i < bindposes.size(); ++i)
+	{
+		bone.matrix[i] = XMMatrixMultiply(bone_transform[i], bindposes[i]);
+		//bone.matrix[i] = Mat::Identity;
+	}
 }
 
 Terrain::~Terrain()

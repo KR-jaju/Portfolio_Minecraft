@@ -1,8 +1,9 @@
 #include "pch.h"
-#include "GeoRender.h"
+#include "EntityRender.h"
 #include "DeferredGraphics.h"
 #include "DeferredBuffer.h"
 #include "MapUtils.h"
+#include "EntityUtils.h"
 #include "RasterizerState.h"
 #include "TextureArray.h"
 #include "SamplerState.h"
@@ -12,12 +13,14 @@
 #include "ConstantBuffer.h"
 #include "Chunk.h"
 
-GeoRender::GeoRender(
+EntityRender::EntityRender(
 	MapUtils* minfo,
+	EntityUtils* einfo,
 	DeferredGraphics* dgraphic
 )
 {
 	this->m_info = minfo;
+	this->e_info = einfo;
 	this->d_graphic = dgraphic;
 	ComPtr<ID3D11Device> device = this->d_graphic->getDevice();
 	ComPtr<ID3D11DeviceContext> context = this->d_graphic->getContext();
@@ -25,7 +28,7 @@ GeoRender::GeoRender(
 		device,
 		D3D11_FILL_SOLID,
 		D3D11_CULL_BACK
-	);
+		);
 	vector<wstring> path_arr = {
 		L"grass_top.png",
 		L"grass_bottom.png",
@@ -36,34 +39,31 @@ GeoRender::GeoRender(
 		context,
 		path_arr,
 		0
-	);
+		);
+	//this->texture
 	this->sampler_state = make_shared<SamplerState>(device);
 	this->vertex_shader = make_shared<VertexShader>(
 		device,
-		L"GeometryVS.hlsl",
+		L"EntityVS.hlsl",
 		"main",
 		"vs_5_0"
-	);
+		);
 	this->pixel_shader = make_shared<PixelShader>(
 		device,
-		L"GeometryPS.hlsl",
+		L"EntityPS.hlsl",
 		"main",
 		"ps_5_0"
-	);
+		);
 	this->input_layout = make_shared<InputLayout>(
 		device,
-		layout.layout_Geo.data(),
-		layout.layout_Geo.size(),
+		layout.layout_Entity.data(),
+		layout.layout_Entity.size(),
 		this->vertex_shader->getBlob()
-	);
+		);
 }
 
-GeoRender::~GeoRender()
-{
-}
-
-void GeoRender::render(
-	Mat const& view, 
+void EntityRender::render(
+	Mat const& view,
 	Mat const& proj,
 	vec3 const& cam_pos
 )
@@ -89,29 +89,19 @@ void GeoRender::render(
 		context,
 		cam
 	);
-	context->PSSetConstantBuffers(0, 1, 
+	context->PSSetConstantBuffers(0, 1,
 		cpbuffer.getComPtr().GetAddressOf());
-	for (int i = 0; i < this->m_info->size_h; i++) {
-		for (int j = 0; j < this->m_info->size_w; j++) {
-			if (this->m_info->chunks[i][j]->render_flag == false)
-				continue;
-			this->m_info->chunks[i][j]->setGeoRender(
-				this->d_graphic->getContext(),
-				this->vertex_shader
-			);
-		}
-	}
+	this->e_info->render(this->d_graphic->getContext());
 }
 
-
-void	GeoRender::setDBuffer(shared_ptr<DeferredBuffer> d_buffer)
+void	EntityRender::setDBuffer(shared_ptr<DeferredBuffer> d_buffer)
 {
 	this->d_buffer = d_buffer;
 }
 
-void GeoRender::setPipe()
+void EntityRender::setPipe()
 {
-	ComPtr<ID3D11DeviceContext> context = 
+	ComPtr<ID3D11DeviceContext> context =
 		this->d_graphic->getContext();
 	context->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST

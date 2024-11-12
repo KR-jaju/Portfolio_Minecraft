@@ -35,13 +35,14 @@ public:
 	void update(const Data& resource) {
 		D3D11_MAPPED_SUBRESOURCE subresource;
 		ZeroMemory(&subresource, sizeof(subresource));
-		this->context->Map(
+		HRESULT hr = this->context->Map(
 			this->buffer.Get(),
 			0,
 			D3D11_MAP_WRITE_DISCARD,
 			0,
 			&subresource
 		);
+		CHECK(hr);
 		memcpy(subresource.pData, &resource, sizeof(resource));
 		this->context->Unmap(
 			this->buffer.Get(),

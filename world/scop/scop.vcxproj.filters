@@ -160,6 +160,18 @@
     <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\Ssao\SsaoBlur">
       <UniqueIdentifier>{573bcc8b-3cfc-4c8c-9d6a-92a763c10702}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\Map\EntityUtils">
+      <UniqueIdentifier>{2c4c2b0e-f321-46db-a8db-dd612993d3ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Entity">
+      <UniqueIdentifier>{8175fa1d-f96f-47eb-a3f2-f44efb8fe2ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\EntityRender">
+      <UniqueIdentifier>{204b3fb5-0a9c-4eff-8af0-bff460cc746a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\Entity">
+      <UniqueIdentifier>{0c1f6665-bdd3-4288-a52b-f0c721e26ba4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -285,6 +297,27 @@
     <ClInclude Include="SsaoRender.h">
       <Filter>소스 파일\World\Map\System\RenderSystem\SsaoRender</Filter>
     </ClInclude>
+    <ClInclude Include="EntityUtils.h">
+      <Filter>소스 파일\World\Map\EntityUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityRender.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\EntityRender</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityDataAsset.h">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityGeometry.h">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityVertex.h">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -401,6 +434,24 @@
     <ClCompile Include="SsaoRender.cpp">
       <Filter>소스 파일\World\Map\System\RenderSystem\SsaoRender</Filter>
     </ClCompile>
+    <ClCompile Include="EntityUtils.cpp">
+      <Filter>소스 파일\World\Map\EntityUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityRender.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\EntityRender</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityDataAsset.cpp">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityGeometry.cpp">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Humanoid.cpp">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="scop.rc">
@@ -487,6 +538,12 @@
     </FxCompile>
     <FxCompile Include="SsaoPS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Ssao</Filter>
+    </FxCompile>
+    <FxCompile Include="EntityVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Entity</Filter>
+    </FxCompile>
+    <FxCompile Include="EntityPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Entity</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

@@ -2,13 +2,16 @@
 
 #include "ShadowRender.h"
 #include "GeoRender.h"
+#include "EntityRender.h"
 #include "WorldUtils.h"
 #include "BlendState.h"
 #include "SsaoRender.h"
 #include "SsaoBlur.h"
 
 class DeferredGraphics;
+class DeferredBuffer;
 class MapUtils;
+class EntityUtils;
 template <typename T> class Buffer;
 class Texture;
 
@@ -17,6 +20,7 @@ class DeferredRendering
 public:
 	DeferredRendering(
 		MapUtils* minfo,
+		EntityUtils* einfo,
 		DeferredGraphics* defer_graphic
 	);
 	~DeferredRendering();
@@ -39,8 +43,10 @@ private:
 private:
 	MapUtils* m_info = nullptr;
 	DeferredGraphics* d_graphic;
+	shared_ptr<DeferredBuffer> d_buffer;
 	ShadowRender s_render;
 	GeoRender g_render;
+	EntityRender e_render;
 	SsaoRender ssao_render;
 	SsaoBlur ssao_blur;
 

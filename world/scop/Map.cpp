@@ -16,8 +16,9 @@ Map::Map(
 	UINT window_w,
 	UINT window_h
 ) : m_info(size_w, size_h, hwnd, window_w, window_h), 
+	e_info(),
 	l_system(&m_info, thread_cnt), 
-	t_system(&m_info), r_system(&m_info)
+	t_system(&m_info), r_system(&m_info, &e_info)
 {
 	this->c_fov = fov_chunk;
 	this->thread_cnt = thread_cnt;
@@ -26,6 +27,9 @@ Map::Map(
 void Map::setDeffGraphic(shared_ptr<DeferredGraphics> defer_graphic)
 {
 	this->d_graphic = defer_graphic.get();
+
+	this->e_info.init(defer_graphic->getDevice(), defer_graphic->getContext());
+
 	this->r_system.setDeffGraphics(this->d_graphic);
 	clock_t start, finish;
 	start = clock();

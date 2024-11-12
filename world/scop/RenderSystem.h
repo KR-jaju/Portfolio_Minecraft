@@ -8,7 +8,7 @@ class Graphics;
 class RenderSystem
 {
 public:
-	RenderSystem(MapUtils* minfo);
+	RenderSystem(MapUtils* minfo, EntityUtils* einfo);
 	~RenderSystem();
 	void setDeffGraphics(DeferredGraphics* defer_graphic);
 	void Render(
@@ -21,6 +21,7 @@ public:
 
 private:
 	MapUtils* m_info;
+	EntityUtils* e_info;
 	shared_ptr<DeferredRendering> r_deff;
 };
 

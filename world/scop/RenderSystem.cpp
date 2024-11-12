@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "RenderSystem.h"
 
-RenderSystem::RenderSystem(MapUtils* minfo) 
-	: m_info(minfo)
+RenderSystem::RenderSystem(MapUtils* minfo, EntityUtils* einfo) 
+	: m_info(minfo), e_info(einfo)
 {
 }
 
@@ -14,6 +14,7 @@ void RenderSystem::setDeffGraphics(DeferredGraphics* defer_graphic)
 {
 	this->r_deff = make_shared<DeferredRendering>(
 		this->m_info,
+		this->e_info,
 		defer_graphic
 	);
 }

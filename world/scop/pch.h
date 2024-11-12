@@ -24,6 +24,11 @@ using vec3 = DirectX::SimpleMath::Vector3;
 using vec4 = DirectX::SimpleMath::Vector4;
 using color = DirectX::XMFLOAT4;
 
+using ivec2 = DirectX::XMINT2;
+using ivec3 = DirectX::XMINT3;
+using ivec4 = DirectX::XMINT4;
+
+
 using Mat = DirectX::SimpleMath::Matrix;
 
 struct Vertex {
@@ -40,6 +45,10 @@ struct MVP {
 	Mat model = Mat::Identity;
 	Mat view = Mat::Identity;
 	Mat proj = Mat::Identity;
+};
+
+struct BoneData {
+	Mat matrix[32];
 };
 
 #include <map>

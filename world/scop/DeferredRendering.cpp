@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "DeferredRendering.h"
 #include "MapUtils.h"
+#include "EntityUtils.h"
 #include "DeferredGraphics.h"
+#include "DeferredBuffer.h"
 #include "RasterizerState.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
@@ -12,15 +14,23 @@
 
 DeferredRendering::DeferredRendering(
 	MapUtils* minfo,
+	EntityUtils* einfo,
 	DeferredGraphics* defer_graphic
 )
-	: m_info(minfo), s_render(minfo, defer_graphic), 
+	: m_info(minfo), s_render(minfo, defer_graphic), e_render(minfo, einfo, defer_graphic),
 	g_render(minfo, defer_graphic), ssao_render(defer_graphic, 
 		minfo->width, minfo->height), 
 	ssao_blur(defer_graphic, minfo->width, minfo->height)
 {
 	this->d_graphic = defer_graphic;
 	ComPtr<ID3D11Device> device = this->d_graphic->getDevice();
+	this->d_buffer = make_shared<DeferredBuffer>(3);
+	this->d_buffer->setRTVsAndSRVs(
+		device,
+		this->m_info->width,
+		this->m_info->height
+	);
+	this->g_render.setDBuffer(this->d_buffer);
 	this->vertex_shader = make_shared<VertexShader>(
 		device,
 		L"ResultVS.hlsl",
@@ -104,7 +114,7 @@ void DeferredRendering::ssaoBlur(int cnt, Mat const& proj)
 	this->d_graphic->renderBegin(
 		this->ssao_blur.getWidthDBuffer().get());
 	context->PSSetShaderResources(0, 1,
-		this->g_render.getSRV(1).GetAddressOf());
+		this->d_buffer->getSRV(1).GetAddressOf());
 	context->PSSetShaderResources(1, 1,
 		this->s_render.getDepthSRV().GetAddressOf());
 	context->PSSetShaderResources(2, 1,
@@ -115,7 +125,7 @@ void DeferredRendering::ssaoBlur(int cnt, Mat const& proj)
 	this->d_graphic->renderBegin(
 		this->ssao_blur.getHeightDBuffer().get());
 	context->PSSetShaderResources(0, 1,
-		this->g_render.getSRV(1).GetAddressOf());
+		this->d_buffer->getSRV(1).GetAddressOf());
 	context->PSSetShaderResources(1, 1,
 		this->s_render.getDepthSRV().GetAddressOf());
 	context->PSSetShaderResources(2, 1,
@@ -127,7 +137,7 @@ void DeferredRendering::ssaoBlur(int cnt, Mat const& proj)
 		this->d_graphic->renderBegin(
 			this->ssao_blur.getWidthDBuffer().get());
 		context->PSSetShaderResources(0, 1,
-			this->g_render.getSRV(1).GetAddressOf());
+			this->d_buffer->getSRV(1).GetAddressOf());
 		context->PSSetShaderResources(1, 1,
 			this->s_render.getDepthSRV().GetAddressOf());
 		context->PSSetShaderResources(2, 1,
@@ -138,7 +148,7 @@ void DeferredRendering::ssaoBlur(int cnt, Mat const& proj)
 		this->d_graphic->renderBegin(
 			this->ssao_blur.getHeightDBuffer().get());
 		context->PSSetShaderResources(0, 1,
-			this->g_render.getSRV(1).GetAddressOf());
+			this->d_buffer->getSRV(1).GetAddressOf());
 		context->PSSetShaderResources(1, 1,
 			this->s_render.getDepthSRV().GetAddressOf());
 		context->PSSetShaderResources(2, 1,
@@ -156,7 +166,10 @@ void DeferredRendering::Render(
 	Mat const& s_proj
 )
 {
+	this->d_graphic->renderBegin(this->d_buffer.get());
+	this->e_render.render(cam_view, cam_proj, cam_pos);
 	this->g_render.render(cam_view, cam_proj, cam_pos);
+	this->d_graphic->getContext()->Flush();
 	this->s_render.render(s_view, s_proj);
 	ComPtr<ID3D11DeviceContext> context;
 	context = this->d_graphic->getContext();
@@ -167,7 +180,7 @@ void DeferredRendering::Render(
 		context->PSSetShaderResources(
 			i - 1,
 			1,
-			this->g_render.getSRV(i).GetAddressOf()
+			this->d_buffer->getSRV(i).GetAddressOf()
 		);
 	}
 	context->PSSetShaderResources(
@@ -184,7 +197,7 @@ void DeferredRendering::Render(
 	this->setPipe();
 	this->d_graphic->setViewPort(this->view_port);
 	context->PSSetShaderResources(0, 1,
-		this->g_render.getSRV(0).GetAddressOf());
+		this->d_buffer->getSRV(0).GetAddressOf());
 	context->PSSetShaderResources(1, 1,
 		this->s_render.getSRV().GetAddressOf());
 	this->d_graphic->renderBegin();

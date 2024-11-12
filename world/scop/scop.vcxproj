@@ -122,6 +122,9 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -152,10 +155,17 @@
     <ClInclude Include="DeferredGraphics.h" />
     <ClInclude Include="DeferredRendering.h" />
     <ClInclude Include="DeferredBuffer.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityGeometry.h" />
+    <ClInclude Include="EntityRender.h" />
+    <ClInclude Include="EntityUtils.h" />
+    <ClInclude Include="EntityVertex.h" />
     <ClInclude Include="GeoRender.h" />
     <ClInclude Include="InputLayouts.h" />
     <ClInclude Include="LightSystem.h" />
     <ClInclude Include="MathHelper.h" />
+    <ClInclude Include="EntityDataAsset.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="MyQueue.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Buffer.h" />
@@ -195,7 +205,13 @@
     <ClCompile Include="DeferredGraphics.cpp" />
     <ClCompile Include="DeferredRendering.cpp" />
     <ClCompile Include="DeferredBuffer.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityGeometry.cpp" />
+    <ClCompile Include="EntityDataAsset.cpp" />
+    <ClCompile Include="EntityRender.cpp" />
+    <ClCompile Include="EntityUtils.cpp" />
     <ClCompile Include="GeoRender.cpp" />
+    <ClCompile Include="Humanoid.cpp" />
     <ClCompile Include="InputLayouts.cpp" />
     <ClCompile Include="LightSystem.cpp" />
     <ClCompile Include="MathHelper.cpp" />
@@ -275,6 +291,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="EntityPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="EntityVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="GeometryPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

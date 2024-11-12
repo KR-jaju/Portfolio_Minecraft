@@ -1,10 +1,11 @@
 #pragma once
 
 #include "InputLayouts.h"
+#include "ConstantBuffer.h"
 
 class MapUtils;
 class DeferredGraphics;
-class BlendState; // ë°”ë€” ìˆ˜ ìˆìŒ ë‚˜ì¤‘ì—(ex OIT)
+class BlendState; // ¹Ù²ğ ¼ö ÀÖÀ½ ³ªÁß¿¡(ex OIT)
 class TextureArray;
 class SamplerState;
 class VertexShader;
@@ -12,28 +13,24 @@ class PixelShader;
 class InputLayout;
 class RasterizerState;
 class DeferredBuffer;
+class EntityUtils;
 
-class GeoRender
+class EntityRender
 {
 public:
-	GeoRender(
+	EntityRender(
 		MapUtils* minfo,
+		EntityUtils* einfo,
 		DeferredGraphics* dgraphic
 	);
-	~GeoRender();
-	void render(
-		Mat const& view,
-		Mat const& proj,
-		vec3 const& cam_pos
-	);
+	void render(Mat const& view, Mat const& proj, vec3 const& cam_pos);
 	void	setDBuffer(shared_ptr<DeferredBuffer> d_buffer);
-	/*ComPtr<ID3D11ShaderResourceView> getSRV(int idx);*/
-
 private:
 	void setPipe();
-
 private:
+
 	MapUtils* m_info;
+	EntityUtils	*e_info;
 	InputLayouts layout;
 	DeferredGraphics* d_graphic;
 	shared_ptr<DeferredBuffer> d_buffer;

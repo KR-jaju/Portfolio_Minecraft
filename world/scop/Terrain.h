@@ -2,6 +2,8 @@
 
 #include "Map.h"
 
+class EntityDataAsset;
+
 // test
 
 class Terrain
@@ -34,6 +36,7 @@ public:
 	);
 
 private:
+	shared_ptr<EntityDataAsset> ega;
 	shared_ptr<Map> m_manager;
 	shared_ptr<DeferredGraphics> deff_graphic;
 	set<string> file_book;

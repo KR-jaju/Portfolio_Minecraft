@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MapUtils.h"
+#include "EntityUtils.h"
 #include "TerrainSystem.h"
 #include "LightSystem.h"
 #include "RenderSystem.h"
@@ -52,6 +53,7 @@ private:
 
 public:
 	MapUtils m_info;
+	EntityUtils e_info;
 	LightSystem l_system;
 	TerrainSystem t_system;
 	RenderSystem r_system;
