@@ -1,6 +1,6 @@
 struct HS_INPUT
 {
-    int type : TYPE;
+    int tex_arr_idx : INDEX;
     float4 pos : POSITION;
     float3 normal : NORMAL;
     float3 tangent : TANGENT;
@@ -10,7 +10,7 @@ struct HS_INPUT
 
 struct DS_INPUT
 {
-    int type : TYPE;
+    int tex_arr_idx : INDEX;
     float4 pos : POSITION;
     float3 normal : NORMAL;
     float3 tangent : TANGENT;
@@ -44,9 +44,9 @@ PatchConstOutput CalcHSPatchConstants(
     float dist = length(center - eye_pos);
     float dist_min = 0.5;
     float dist_max = 20;
-    float tess = 32 * 
+    float tess = 64 * 
         saturate((dist_max - dist) / (dist_max - dist_min)) + 1;
-    
+    //tess = 64;
     output.edges[0] = tess;
     output.edges[1] = tess;
     output.edges[2] = tess;
@@ -73,7 +73,7 @@ DS_INPUT main(
     output.normal = ip[i].normal;
     output.pos = ip[i].pos;
     output.pos.w = 1;
-    output.type = ip[i].type;
+    output.tex_arr_idx = ip[i].tex_arr_idx;
     output.uv = ip[i].uv;
     output.world_pos = ip[i].world_pos;
 

@@ -112,3 +112,41 @@ void Chunk::setPos(Index2 const& c_pos)
 	this->start_pos = vec3(c_pos.x + 0.5f, 0.5f, c_pos.y - 0.5f);
 }
 
+void Chunk::createGeoIBuffer(
+	ComPtr<ID3D11Device> device, 
+	vector<uint32> const& indices
+)
+{
+	this->geo_ibuffer = make_shared<Buffer<uint32>>(
+		device,
+		indices.data(),
+		indices.size(),
+		D3D11_BIND_INDEX_BUFFER
+	);
+}
+
+void Chunk::setGeoRender(
+	ComPtr<ID3D11DeviceContext> const& context, 
+	shared_ptr<VertexShader> const& v_shader, 
+	int test_flag
+)
+{
+	uint32 stride = this->geo_vbuffer->getStride();
+	uint32 offset = this->geo_vbuffer->getOffset();
+	context->IASetVertexBuffers(
+		0,
+		1,
+		this->geo_vbuffer->getComPtr().GetAddressOf(),
+		&stride,
+		&offset
+	);
+	context->IASetIndexBuffer(
+		this->geo_ibuffer->getComPtr().Get(),
+		DXGI_FORMAT_R32_UINT,
+		0
+	);
+	context->DrawIndexed(
+		this->geo_ibuffer->getCount(),
+		0, 0);
+}
+

@@ -23,12 +23,10 @@ public:
 		Mat const& cam_proj
 	);
 	ComPtr<ID3D11ShaderResourceView> getSRV();
+	vec3 getLightPos();
 
 private:
 	void setPipe();
-	// 지표면 위의 달과 태양 중 하나의 위치 
-	// (둘 다 지표면위면 태양의 위치)
-	vec3 getLightPos();
 
 private:
 	shared_ptr<Sun> sun;

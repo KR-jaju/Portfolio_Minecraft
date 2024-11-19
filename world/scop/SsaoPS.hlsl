@@ -38,7 +38,7 @@ cbuffer Offset : register(b1)
 
 static float g_surface_epsilon = 0.05f;
 static float g_occlusion_fade_end = 2.0f;
-static float g_occlusion_fade_start = 0.2f;
+static float g_occlusion_fade_start = 0.1f;
 static float g_occlusion_r = 0.3;
 
 float occlusionFunction(float dist_z)
@@ -93,5 +93,5 @@ float4 main(PS_INPUT input) : SV_TARGET
     total_occlusion /= 14.0f;
     float access = 1.0f - total_occlusion;
     access = saturate(pow(access, 4.0f));
-    return float4(access, access, access, 1.0f);
+    return float4(access, access, access, 0.0f);
 }

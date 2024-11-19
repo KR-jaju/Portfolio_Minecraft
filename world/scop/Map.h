@@ -38,7 +38,9 @@ public:
 		Index2 const& adj_idx,
 		Index3 const& move,
 		int dir,
-		vector<VertexGeo>& vertices
+		vector<VertexGeo>& vertices,
+		vector<uint32>* indices = nullptr,
+		uint32* index = nullptr
 	);
 	void vertexShadowGenerator(
 		Index2 const& c_idx,

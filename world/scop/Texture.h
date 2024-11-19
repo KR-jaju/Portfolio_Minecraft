@@ -12,6 +12,11 @@ public:
 		string const& path,
 		int mip_level
 	);
+	Texture(
+		ComPtr<ID3D11Device>& device,
+		const wchar_t* filename,
+		bool isCubeMap
+	);
 	Texture(Texture const&) = delete;
 	~Texture();
 	Texture& operator=(Texture const&) = delete;

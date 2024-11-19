@@ -16,8 +16,8 @@ Blur::Blur(
 	this->height = height;
 	this->start_srv = start_srv.Get();
 	ComPtr<ID3D11Device> device = graphic->getDevice();
-	this->makeFilter();
-	//this->makeFilterMultiLevel();
+	//this->makeFilter();
+	this->makeFilterMultiLevel();
 }
 
 ComPtr<ID3D11ShaderResourceView> Blur::getSRV()

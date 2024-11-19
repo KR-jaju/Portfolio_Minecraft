@@ -2,6 +2,7 @@
 
 #include "WorldUtils.h"
 
+// grass type 1
 
 inline Mat calcTangentSpace(
 	vec3 pos1, vec3 pos2, vec3 pos3,
@@ -35,7 +36,9 @@ inline Mat calcTangentSpace(
 
 	return res;
 }
+
 namespace Block {
+
 	inline void addFaceQuadPosAndTex(
 		vec3 const& start_pos,
 		int dir,
@@ -132,23 +135,45 @@ namespace Block {
 		static vector<vec3> tangents = {
 			{1, 0, 0},
 			{1, 0, 0},
-			{1, 0, 0},
-			{-1, 0, 0},
-			{0, 0, -1},
-			{0, 0, -1}
+			{1, 0, 0}, // front
+			{-1, 0, 0}, // back
+			{0, 0, -1}, // left
+			{0, 0, -1} // right
 		};
 		VertexGeo vertex;
 		x = start_pos.x + x;
 		y = start_pos.y + y;
 		z = start_pos.z - z;
+		
+		int idx;
+		type -= 1;
+		if (dir == 0)
+			idx = type;
+		else if (dir == 1)
+			idx = type + 2;
+		else
+			idx = type + 1;
 		for (int i = dir * 4; i < dir * 4 + 4; i++) {
 			vertex.pos = pos[i] + vec3(x, y, z);
 			vertex.normal = normals[dir];
 			vertex.tangent = tangents[dir];
 			vertex.uv = uv[i];
-			vertex.type = type;
+			vertex.tex_arr_idx = idx;
 			vertices.push_back(vertex);
 		}
+	}
+
+	inline void addBlocQuadIndices( // test
+		uint32 start,
+		vector<uint32>& indices
+	)
+	{
+		indices.push_back(start);
+		indices.push_back(start + 1);
+		indices.push_back(start + 2);
+		indices.push_back(start + 3);
+		indices.push_back(start + 2);
+		indices.push_back(start + 1);
 	}
 
 	inline void addBlockFacePosAndTex(

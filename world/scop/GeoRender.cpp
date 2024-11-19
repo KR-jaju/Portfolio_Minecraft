@@ -11,6 +11,7 @@
 #include "PixelShader.h"
 #include "InputLayout.h"
 #include "InputLayouts.h"
+#include "BlendState.h"
 #include "ConstantBuffer.h"
 #include "HullShader.h"
 #include "DomainShader.h"
@@ -23,7 +24,7 @@ GeoRender::GeoRender(
 {
 	this->m_info = minfo;
 	this->d_graphic = dgraphic;
-	this->d_buffer = make_shared<DeferredBuffer>(4);
+	this->d_buffer = make_shared<DeferredBuffer>(7);
 	this->d_buffer->setRTVsAndSRVs(
 		this->d_graphic->getDevice(),
 		this->m_info->width,
@@ -33,36 +34,47 @@ GeoRender::GeoRender(
 	ComPtr<ID3D11DeviceContext> context = this->d_graphic->getContext();
 	this->rasterizer_state = make_shared<RasterizerState>(
 		device,
-		//D3D11_FILL_SOLID,
-		D3D11_FILL_WIREFRAME,
+		D3D11_FILL_SOLID,
+		//D3D11_FILL_WIREFRAME,
 		D3D11_CULL_BACK
 	);
-	vector<wstring> path_arr = {
-		L"./textures/blocks/grass_top.png",
-		L"./textures/blocks/grass_bottom.png",
-		L"./textures/blocks/grass_side.png"
+	this->blend_state = make_shared<BlendState>(device);
+	vector<wstring> path_color = {
+		L"./textures/pbr/test_sample/grass_path_top.png",
+		L"./textures/pbr/test_sample/grass_path_side.png",
+		L"./textures/pbr/test_sample/packed_mud.png"
 	};
-	
-	this->tmp_tex = make_shared<Texture>(
+	this->texture_array_color = make_shared<TextureArray>(
 		device,
 		context,
-		"./textures/pbr/grass_top/grass_basecolor.png",
+		path_color,
 		0
 	);
-	this->tmp_tex_normal = make_shared<Texture>(
+	vector<wstring> path_normal = {
+		L"./textures/pbr/test_sample/grass_path_top_n.png",
+		L"./textures/pbr/test_sample/grass_path_side_n.png",
+		L"./textures/pbr/test_sample/packed_mud_n.png"
+	};
+	this->texture_array_normal = make_shared<TextureArray>(
 		device,
 		context,
-		"./textures/pbr/grass_top/grass_normal.png",
+		path_normal,
+		0
+	);
+	  
+	vector<wstring> path_s = {
+		L"./textures/pbr/test_sample/grass_path_top_s.png",
+		L"./textures/pbr/test_sample/grass_path_side_s.png",
+		L"./textures/pbr/test_sample/packed_mud_s.png"
+	};
+	this->texture_array_s = make_shared<TextureArray>(
+		device,
+		context,
+		path_s,
 		0
 	);
 
-	this->texture_array = make_shared<TextureArray>(
-		device,
-		context,
-		path_arr,
-		0
-	);
-	this->sampler_state = make_shared<SamplerState>(device);
+	this->linear_state = make_shared<SamplerState>(device);
 	this->vertex_shader = make_shared<VertexShader>(
 		device,
 		L"GeometryVS.hlsl",
@@ -93,6 +105,30 @@ GeoRender::GeoRender(
 		"main",
 		"ds_5_0"
 	);
+	MVP mvp;
+	this->mvp_cbuffer = make_shared<ConstantBuffer>(
+		device,
+		context,
+		mvp
+	);
+	CamPos cam;
+	this->cam_pos_cbuffer = make_shared<ConstantBuffer>(
+		device,
+		context,
+		cam
+	);
+	vec4 eye;
+	this->eye_pos_cbuffer = make_shared<ConstantBuffer>(
+		device,
+		context,
+		eye
+	);
+	Mat view;
+	this->view_cbuffer = make_shared<ConstantBuffer>(
+		device,
+		context,
+		view
+	);
 }
 
 GeoRender::~GeoRender()
@@ -109,30 +145,7 @@ void GeoRender::render(
 	ComPtr<ID3D11Device> device = this->d_graphic->getDevice();
 	this->d_graphic->renderBegin(this->d_buffer.get());
 	this->setPipe();
-	MVP mvp;
-	mvp.view = view.Transpose();
-	mvp.proj = proj.Transpose();
-	ConstantBuffer cbuffer(device, context, mvp);
-	context->VSSetConstantBuffers(0, 1,
-		cbuffer.getComPtr().GetAddressOf());
-	CamPos cam;
-	cam.pos = cam_pos;
-	cam.r = 0;
-	cam.view = view.Transpose();
-	ConstantBuffer cpbuffer(device, context, cam);
-	vec4 test_eye;
-	test_eye.x = cam_pos.x;
-	test_eye.y = cam_pos.y;
-	test_eye.z = cam_pos.z;
-	ConstantBuffer chbuffer(device, context, test_eye);
-	context->HSSetConstantBuffers(0, 1,
-		chbuffer.getComPtr().GetAddressOf());
-	context->DSSetConstantBuffers(0, 1,
-		cbuffer.getComPtr().GetAddressOf());
-	context->DSSetConstantBuffers(1, 1,
-		chbuffer.getComPtr().GetAddressOf());
-	context->PSSetConstantBuffers(0, 1, 
-		cpbuffer.getComPtr().GetAddressOf());
+	this->setConstantBuffer(view, proj, cam_pos);
 	for (int i = 0; i < this->m_info->size_h; i++) {
 		for (int j = 0; j < this->m_info->size_w; j++) {
 			if (this->m_info->chunks[i][j]->render_flag == false)
@@ -145,11 +158,13 @@ void GeoRender::render(
 	}
 	context->HSSetShader(nullptr, nullptr, 0);
 	context->DSSetShader(nullptr, nullptr, 0);
+	context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
 }
 
-ComPtr<ID3D11ShaderResourceView> GeoRender::getSRV(int idx)
+ComPtr<ID3D11ShaderResourceView> GeoRender::getSRV(RTVIndex idx)
 {
-	return this->d_buffer->getSRV(idx);
+	int index = static_cast<int>(idx);
+	return this->d_buffer->getSRV(index);
 }
 
 void GeoRender::setPipe()
@@ -173,17 +188,27 @@ void GeoRender::setPipe()
 	context->PSSetSamplers(
 		0,
 		1,
-		this->sampler_state->getComPtr().GetAddressOf()
+		this->linear_state->getComPtr().GetAddressOf()
 	);
 	context->PSSetShaderResources(
 		0,
 		1,
-		this->texture_array->getComPtr().GetAddressOf()
+		this->texture_array_color->getComPtr().GetAddressOf()
 	);
 	context->PSSetShaderResources(
 		1,
 		1,
-		this->tmp_tex->getComPtr().GetAddressOf()
+		this->texture_array_s->getComPtr().GetAddressOf()
+	);
+	context->PSSetShaderResources(
+		2,
+		1,
+		this->texture_array_normal->getComPtr().GetAddressOf()
+	);
+	context->OMSetBlendState(
+		this->blend_state->getComPtr().Get(),
+		this->blend_state->getBlendFactor(),
+		this->blend_state->getSampleMask()
 	);
 	context->HSSetShader(
 		this->hull_shader->getComPtr().Get(),
@@ -195,6 +220,39 @@ void GeoRender::setPipe()
 		nullptr,
 		0
 	);
-	context->DSSetShaderResources(0, 1,
-		this->tmp_tex_normal->getComPtr().GetAddressOf());
+}
+
+void GeoRender::setConstantBuffer(
+	Mat const& view, 
+	Mat const& proj, 
+	vec3 const& cam_pos
+)
+{
+	ComPtr<ID3D11DeviceContext> context = 
+		this->d_graphic->getContext();
+
+	// set hs constant
+	vec4 eye;
+	eye.x = cam_pos.x;
+	eye.y = cam_pos.y;
+	eye.z = cam_pos.z;
+	eye.w = 1;
+	this->eye_pos_cbuffer->update(eye);
+	context->HSSetConstantBuffers(0, 1,
+		this->eye_pos_cbuffer->getComPtr().GetAddressOf());
+	
+	// set ds constant
+	MVP mvp;
+	mvp.view = view.Transpose();
+	mvp.proj = proj.Transpose();
+	this->mvp_cbuffer->update(mvp);
+	context->DSSetConstantBuffers(0, 1,
+		this->mvp_cbuffer->getComPtr().GetAddressOf());
+	context->DSSetConstantBuffers(1, 1,
+		this->eye_pos_cbuffer->getComPtr().GetAddressOf());
+	
+	// set ps constant
+	this->view_cbuffer->update(mvp.view);
+	context->PSSetConstantBuffers(0, 1,
+		this->view_cbuffer->getComPtr().GetAddressOf());
 }

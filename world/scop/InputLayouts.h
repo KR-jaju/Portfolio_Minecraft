@@ -59,7 +59,7 @@ namespace InputLayouts {
 	};
 	static vector<D3D11_INPUT_ELEMENT_DESC> layout_Geo = {
 		{
-			"TYPE",
+			"INDEX",
 			0,
 			DXGI_FORMAT_R32_SINT,
 			0,

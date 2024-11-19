@@ -1,17 +1,17 @@
-SamplerState sampler0 : register(s0);
 Texture2DArray texture_arr : register(t0);
-Texture2D color_test : register(t1);
+Texture2DArray texture_arr_s : register(t1);
+Texture2DArray texture_arr_n : register(t2);
+
+SamplerState sampler_linear : register(s0);
 
 struct PS_INPUT
 {
-    int type : TYPE;
+    int tex_arr_idx : INDEX;
     float4 pos : SV_Position;
+    float3 w_pos : POSITION;
     float3 normal : NORMAL;
-    float3 pbr_normal : PBR_NORMAL;
-    float3 world_pos : POSITION;
+    float3 tangent : TANGENT;
     float2 uv : TEXCOORD;
-    int dir : DIRECTION;
-    int lod : LEVEL;
 };
 
 struct PS_OUTPUT
@@ -19,46 +19,41 @@ struct PS_OUTPUT
     float4 color : SV_Target0;
     float4 normal : SV_Target1;
     float4 position : SV_Target2;
-    float4 pbr_normal : SV_Target3;
+    float4 w_pos : SV_Target3;
+    float4 w_normal : SV_Target4;
+    float4 metallic : SV_Target5;
+    float4 roughness : SV_Target6;
 };
 
 cbuffer eyePos : register(b0)
 {
-    float3 pos;
-    float r;
     matrix view;
 };
 
 PS_OUTPUT main(PS_INPUT input)
 {
-    float4 color;
     float3 uvw;
-    float offset = (input.type - 1) * 3;
     PS_OUTPUT output;
     
-    output.normal = float4(mul(input.normal, (float3x3) view), 1);
-    output.pbr_normal = 
-        float4(mul(input.pbr_normal, (float3x3) view), 1);
-    output.position = float4(input.world_pos, 1);
+    output.position = float4(input.w_pos, 1);
+    output.w_pos = output.position;
     output.position = mul(output.position, view);
-    if (input.dir == 0 || input.dir == 1)
-        uvw = float3(input.uv, input.dir + offset);
-    else
-        uvw = float3(input.uv, 2 + offset);
-    
-    float2 dvec = float2(input.world_pos.x - pos.x,
-        input.world_pos.z - pos.z);
-    float d = sqrt(pow(dvec.x, 2) + pow(dvec.y, 2));
-    float dist = length(input.world_pos - pos);
-    float distMin = 0.5;
-    float distMax = 50.0;
-    float lod = 5 * saturate((dist - distMin) / (distMax - distMin)); // 나중에
-    //color = texture_arr.SampleLevel(sampler0, uvw, 0);
-    if (input.dir)
-        color = texture_arr.SampleLevel(sampler0, uvw, 0);
-    else
-        color = color_test.SampleLevel(sampler0, input.uv, input.lod);
-    output.color = color;
-    
+    uvw = float3(input.uv, input.tex_arr_idx);
+    float3 normal = texture_arr_n.Sample(sampler_linear, uvw).xyz;
+    normal = 2 * normal - 1.0;
+    float3 tangent = normalize(input.tangent -
+        dot(input.tangent, input.normal) * input.normal);
+    float3 bitangent = cross(input.normal, tangent);
+    bitangent = normalize(bitangent);
+    float3x3 tbn = float3x3(tangent, bitangent, input.normal);
+    normal = normalize(mul(normal, tbn));
+    output.w_normal = float4(normal, 1);
+    output.normal = float4(mul(input.normal, (float3x3) view), 1);
+    float r = texture_arr_s.Sample(sampler_linear, uvw).r;
+    float m = texture_arr_s.Sample(sampler_linear, uvw).g;
+    output.roughness = float4(r, r, r, 1);
+    output.metallic = float4(m, m, m, 1);
+    output.color = 
+        float4(texture_arr.Sample(sampler_linear, uvw).rgb, 1);
     return output;
 }

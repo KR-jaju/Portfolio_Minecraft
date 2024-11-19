@@ -12,7 +12,6 @@ struct PS_OUT
 PS_OUT main(PS_INPUT input)
 {
     PS_OUT  output;
-    float3 shadow = input.shadow_flag * float3(1, 1, 1);
-	output.shadow  = float4(shadow, 1);
+	output.shadow  = float4(input.shadow_flag, 1, 1, 1);
     return output;
 }

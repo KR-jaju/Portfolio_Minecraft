@@ -202,6 +202,15 @@
     <Filter Include="소스 파일\Engine\Pipeline\3_Shader\DomainShader">
       <UniqueIdentifier>{06808725-e567-49bd-a468-fa57e9452d13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\Geometry\GeoTess">
+      <UniqueIdentifier>{2811ede9-fd6a-4b5d-a558-d55469912f0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\PBR">
+      <UniqueIdentifier>{7564cc85-f26a-4313-ac7f-c685f103946c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\PBR">
+      <UniqueIdentifier>{7dc24004-77e5-41ac-8256-f80323200823}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -360,6 +369,9 @@
     <ClInclude Include="DomainShader.h">
       <Filter>소스 파일\Engine\Pipeline\3_Shader\DomainShader</Filter>
     </ClInclude>
+    <ClInclude Include="PBR.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\PBR</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -509,6 +521,9 @@
     <ClCompile Include="DomainShader.cpp">
       <Filter>소스 파일\Engine\Pipeline\3_Shader\DomainShader</Filter>
     </ClCompile>
+    <ClCompile Include="PBR.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\PBR</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="scop.rc">
@@ -553,12 +568,6 @@
     </FxCompile>
     <FxCompile Include="DepthPixelShader.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DepthShader</Filter>
-    </FxCompile>
-    <FxCompile Include="GeometryVS.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
-    </FxCompile>
-    <FxCompile Include="GeometryPS.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
     </FxCompile>
     <FxCompile Include="ShadowVS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow</Filter>
@@ -626,11 +635,23 @@
     <FxCompile Include="SemiCombineVS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\SkyBox\SunMoon\SemiCombine</Filter>
     </FxCompile>
-    <FxCompile Include="GeometryHS.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
-    </FxCompile>
     <FxCompile Include="GeometryDS.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry\GeoTess</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryHS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry\GeoTess</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry\GeoTess</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry\GeoTess</Filter>
+    </FxCompile>
+    <FxCompile Include="PBRVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\PBR</Filter>
+    </FxCompile>
+    <FxCompile Include="PBRPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\PBR</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

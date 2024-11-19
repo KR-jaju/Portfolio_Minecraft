@@ -10,7 +10,6 @@
 #include "InputLayouts.h"
 #include "ConstantBuffer.h"
 #include "Chunk.h"
-#include "BlendState.h"
 #include "DepthMap.h"
 
 ShadowRender::ShadowRender(
@@ -49,9 +48,6 @@ ShadowRender::ShadowRender(
 		InputLayouts::layout_shadow.size(),
 		this->vertex_shader->getBlob()
 	);
-	this->blend_state = make_shared<BlendState>(
-		this->d_graphic->getDevice()
-	);
 	this->depth_map = make_shared<DepthMap>(
 		this->d_graphic->getDevice()
 	);
@@ -78,11 +74,6 @@ void ShadowRender::setPipe()
 		this->pixel_shader->getComPtr().Get(),
 		nullptr,
 		0
-	);
-	context->OMSetBlendState(
-		this->blend_state->getComPtr().Get(),
-		this->blend_state->getBlendFactor(),
-		this->blend_state->getSampleMask()
 	);
 }
 

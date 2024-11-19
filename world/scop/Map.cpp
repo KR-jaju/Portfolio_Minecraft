@@ -92,10 +92,11 @@ void Map::vertexAndIndexGenerator(
 	Index2 const& adj_idx,
 	Index3 const& move,
 	int dir,
-	vector<VertexGeo>& vertices
+	vector<VertexGeo>& vertices,
+	vector<uint32>* indices,
+	uint32* index
 )
 {
-	uint32 index = this->m_info.chunks[c_idx.y][c_idx.x]->vertices_idx;
 	int16& max_h = this->m_info.chunks[c_idx.y][c_idx.x]->max_h;
 	for (int y = 0; y < max_h; y++) {
 		for (int z = 0; z < 16; z++) {
@@ -123,10 +124,13 @@ void Map::vertexAndIndexGenerator(
 					x, y, z, type,
 					vertices
 				);
+				if (index) { // test 용
+					Block::addBlocQuadIndices(*index, *indices);
+					*index += 4;
+				}
 			}
 		}
 	}
-	this->m_info.chunks[c_idx.y][c_idx.x]->vertices_idx = index;
 }
 
 void Map::vertexShadowGenerator(

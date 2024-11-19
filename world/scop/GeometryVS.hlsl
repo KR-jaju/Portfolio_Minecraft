@@ -1,6 +1,6 @@
 struct VS_INPUT
 {
-    int type : TYPE;
+    int tex_arr_idx : INDEX;
     float3 pos : POSITION;
     float3 normal : NORMAL;
     float3 tangent : TANGENT;
@@ -9,7 +9,7 @@ struct VS_INPUT
 
 struct HS_INPUT
 {
-    int type : TYPE;
+    int tex_arr_idx : INDEX;
     float4 pos : POSITION;
     float3 normal : NORMAL;
     float3 tangent : TANGENT;
@@ -26,6 +26,6 @@ HS_INPUT main(VS_INPUT input)
     output.normal = input.normal;
     output.uv = input.uv;
     output.tangent = input.tangent;
-    output.type = input.type;
+    output.tex_arr_idx = input.tex_arr_idx;
     return output;
 }

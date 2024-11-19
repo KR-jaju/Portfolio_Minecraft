@@ -7,7 +7,6 @@ class RasterizerState;
 class VertexShader;
 class PixelShader;
 class InputLayout;
-class BlendState;
 class DepthMap;
 
 class ShadowRender
@@ -37,6 +36,5 @@ private:
 	shared_ptr<VertexShader> vertex_shader;
 	shared_ptr<PixelShader> pixel_shader;
 	shared_ptr<InputLayout> input_layout;
-	shared_ptr<BlendState> blend_state;
 };
 

@@ -11,7 +11,18 @@
 #include "SamplerState.h"
 #include "Wallpaper.h"
 #include "Block.h"
+#include "ConstantBuffer.h"
 
+
+struct cbuffer_pbr
+{
+	vec4 view_pos;
+	vec4 light_pos;
+	int ao_flag;
+	int mettalic_flag;
+	int roughness_flag;
+	int dummy;
+};
 
 DeferredRendering::DeferredRendering(
 	MapUtils* minfo,
@@ -20,7 +31,8 @@ DeferredRendering::DeferredRendering(
 	: m_info(minfo), s_render(minfo, defer_graphic), 
 	g_render(minfo, defer_graphic), ssao_render(defer_graphic, 
 		minfo->width, minfo->height), 
-	ssao_blur(defer_graphic, minfo->width, minfo->height)
+	ssao_blur(defer_graphic, minfo->width, minfo->height),
+	pbr(defer_graphic, minfo->width, minfo->height)
 {
 	this->d_graphic = defer_graphic;
 	this->cube_map = make_shared<Wallpaper>(this->d_graphic,
@@ -85,18 +97,18 @@ void DeferredRendering::ssaoBlur(int cnt, Mat const& proj)
 	this->d_graphic->renderBegin(
 		this->ssao_blur.getWidthDBuffer().get());
 	context->PSSetShaderResources(0, 1,
-		this->g_render.getSRV(1).GetAddressOf());
+		this->g_render.getSRV(RTVIndex::vs_normal).GetAddressOf());
 	context->PSSetShaderResources(1, 1,
 		this->s_render.getDepthSRV().GetAddressOf());
 	context->PSSetShaderResources(2, 1,
 		this->ssao_render.getSRV().GetAddressOf());
-	this->ssao_blur.render(0, proj, 2.0f);
+	this->ssao_blur.render(0, proj, 1.0f);
 
 	//// ssao blur height start
 	this->d_graphic->renderBegin(
 		this->ssao_blur.getHeightDBuffer().get());
 	context->PSSetShaderResources(0, 1,
-		this->g_render.getSRV(1).GetAddressOf());
+		this->g_render.getSRV(RTVIndex::vs_normal).GetAddressOf());
 	context->PSSetShaderResources(1, 1,
 		this->s_render.getDepthSRV().GetAddressOf());
 	context->PSSetShaderResources(2, 1,
@@ -108,7 +120,7 @@ void DeferredRendering::ssaoBlur(int cnt, Mat const& proj)
 		this->d_graphic->renderBegin(
 			this->ssao_blur.getWidthDBuffer().get());
 		context->PSSetShaderResources(0, 1,
-			this->g_render.getSRV(1).GetAddressOf());
+			this->g_render.getSRV(RTVIndex::vs_normal).GetAddressOf());
 		context->PSSetShaderResources(1, 1,
 			this->s_render.getDepthSRV().GetAddressOf());
 		context->PSSetShaderResources(2, 1,
@@ -119,7 +131,7 @@ void DeferredRendering::ssaoBlur(int cnt, Mat const& proj)
 		this->d_graphic->renderBegin(
 			this->ssao_blur.getHeightDBuffer().get());
 		context->PSSetShaderResources(0, 1,
-			this->g_render.getSRV(1).GetAddressOf());
+			this->g_render.getSRV(RTVIndex::vs_normal).GetAddressOf());
 		context->PSSetShaderResources(1, 1,
 			this->s_render.getDepthSRV().GetAddressOf());
 		context->PSSetShaderResources(2, 1,
@@ -137,43 +149,58 @@ void DeferredRendering::Render(
 	Mat const& s_proj
 )
 {
+	// cube map start
+	this->cube_map->render(cam_pos, cam_view, cam_proj);
+	this->m_info->directional_light_pos = 
+		this->cube_map->getDirectionalLightPos();
+	// geo render
 	this->g_render.render(cam_view, cam_proj, cam_pos);
+	
+	// pbr render
+	this->pbr.setRTV();
+	this->setPBRShaderResources();
+	vec3 lp = this->m_info->directional_light_pos;
+	this->pbr.render(lp, cam_pos);
+
+	// shadow map render
 	this->s_render.render(s_view, s_proj);
+
 	ComPtr<ID3D11DeviceContext> context;
 	context = this->d_graphic->getContext();
 
 	// ssao start
-	this->d_graphic->renderBegin(this->ssao_render.getDBuffer().get());
-	for (int i = 1; i < 3; i++) {
-		context->PSSetShaderResources(
-			i - 1,
-			1,
-			this->g_render.getSRV(i).GetAddressOf()
-		);
-	}
+	this->d_graphic->renderBegin(
+		this->ssao_render.getDBuffer().get());
+	context->PSSetShaderResources(0, 1,
+		this->g_render.getSRV(RTVIndex::vs_normal).GetAddressOf()
+	);
+	context->PSSetShaderResources(1, 1,
+		this->g_render.getSRV(RTVIndex::vs_position).GetAddressOf()
+	);
 	context->PSSetShaderResources(
 		2,
 		1,
 		this->s_render.getDepthSRV().GetAddressOf()
-	);
+	);// 나중에 그림자를 바꾼다면 geo의 depth buffer를 등록할 것
 	this->ssao_render.render(cam_proj);
 	
 	// ssao blur start
-	this->ssaoBlur(4, cam_proj);
+	this->ssaoBlur(8, cam_proj);
 	
-	// cube map start
-	this->cube_map->render(cam_pos, cam_view, cam_proj);
-	
+
 	// result render start
 	this->d_graphic->renderBegin();
-	this->setPipe();
 	this->d_graphic->setViewPort(this->view_port);
+	this->setPipe();
 	context->PSSetShaderResources(0, 1,
-		this->g_render.getSRV(0).GetAddressOf());
+		this->pbr.getAmbientLight().GetAddressOf());
 	context->PSSetShaderResources(1, 1,
+		this->pbr.getDirectLight().GetAddressOf());
+	context->PSSetShaderResources(2, 1,
 		this->s_render.getSRV().GetAddressOf());
-	context->PSSetShaderResources(2, 1, this->ssao_blur.getHeightSRV().GetAddressOf());
 	context->PSSetShaderResources(3, 1,
+		this->ssao_blur.getHeightSRV().GetAddressOf());
+	context->PSSetShaderResources(4, 1,
 		this->cube_map->getSRV().GetAddressOf());
 	context->DrawIndexed(
 		this->ibuffer->getCount(),
@@ -184,9 +211,7 @@ void DeferredRendering::Render(
 void DeferredRendering::setPipe()
 {
 	ComPtr<ID3D11DeviceContext> context;
-	ComPtr<ID3D11Device> device;
 	context = this->d_graphic->getContext();
-	device = this->d_graphic->getDevice();
 	context->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	context->IASetInputLayout(this->input_layout->getComPtr().Get());
@@ -213,4 +238,19 @@ void DeferredRendering::setPipe()
 	);
 	context->PSSetSamplers(0, 1,
 		this->sampler_state->getComPtr().GetAddressOf());
+}
+
+void DeferredRendering::setPBRShaderResources()
+{
+	ComPtr<ID3D11DeviceContext> context = this->d_graphic->getContext();
+	context->PSSetShaderResources(0, 1,
+		this->g_render.getSRV(RTVIndex::color).GetAddressOf());
+	context->PSSetShaderResources(1, 1,
+		this->g_render.getSRV(RTVIndex::w_normal).GetAddressOf());
+	context->PSSetShaderResources(2, 1,
+		this->g_render.getSRV(RTVIndex::w_position).GetAddressOf());
+	context->PSSetShaderResources(3, 1,
+		this->g_render.getSRV(RTVIndex::metallic).GetAddressOf());
+	context->PSSetShaderResources(4, 1,
+		this->g_render.getSRV(RTVIndex::roughness).GetAddressOf());
 }

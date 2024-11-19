@@ -6,6 +6,7 @@
 #include "BlendState.h"
 #include "SsaoRender.h"
 #include "SsaoBlur.h"
+#include "PBR.h"
 
 class DeferredGraphics;
 class MapUtils;
@@ -30,6 +31,7 @@ public:
 	
 private:
 	void setPipe();
+	void setPBRShaderResources();
 	void ssaoBlur(int cnt, Mat const& proj);
 
 private:
@@ -43,10 +45,11 @@ private:
 	GeoRender g_render;
 	SsaoRender ssao_render;
 	SsaoBlur ssao_blur;
+	PBR pbr;
 	shared_ptr<Wallpaper> cube_map;
+	D3D11_VIEWPORT view_port;
 
 private:
-	D3D11_VIEWPORT view_port;
 	shared_ptr<VertexShader> vertex_shader;
 	shared_ptr<PixelShader> pixel_shader;
 	shared_ptr<SamplerState> sampler_state;

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Texture.h"
 #include "stb_image.h"
+#include <directxtk/DDSTextureLoader.h> // 큐브맵 읽을 때 필요
 
 Texture::Texture(
 	ComPtr<ID3D11Device> device, 
@@ -50,8 +51,16 @@ void readImage(
 				image[4 * i + 3] = img[i * channels + 3];
 		}
 	}
+	else if (channels == 1) {
+		for (size_t i = 0; i < width * height; i++) {
+			uint8_t g = img[i * channels + 0];
+			for (size_t c = 0; c < 4; c++) {
+				image[4 * i + c] = g;
+			}
+		}
+	}
 	else {
-		cout << "Read 3 or 4 channels images only." << endl;
+		cout << "Read 3 or 4 or 1 channels images only." << endl;
 		exit(-1);
 	}
 	delete img;
@@ -133,6 +142,25 @@ Texture::Texture(
 		this->sharder_resource_view.GetAddressOf());
 	CHECK(hr);
 	context->GenerateMips(this->sharder_resource_view.Get());
+}
+
+Texture::Texture(
+	ComPtr<ID3D11Device>& device, 
+	const wchar_t* filename, 
+	bool is_cube_map
+)
+{
+	ComPtr<ID3D11Texture2D> texture;
+	UINT misc_flags = 0;
+	if (is_cube_map)
+		misc_flags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
+	HRESULT hr = CreateDDSTextureFromFileEx(
+		device.Get(), filename, 0, D3D11_USAGE_DEFAULT,
+		D3D11_BIND_SHADER_RESOURCE, 0, misc_flags, 
+		DDS_LOADER_FLAGS(false),
+		(ID3D11Resource **)texture.GetAddressOf(),
+		this->sharder_resource_view.GetAddressOf(), NULL
+	);
 }
 
 Texture::~Texture()

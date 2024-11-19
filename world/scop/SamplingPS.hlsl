@@ -19,6 +19,6 @@ float4 main(PS_INPUT input) : SV_TARGET
 {
     float4 color = texture0.Sample(sampler0, input.uv);
     if (color.x + color.y + color.z >= threshold)
-        return float4(color.rgb, 1);
-    return float4(0.0f, 0.0f, 0.0f, 1);
+        return float4(color.rgb, 0);
+    return float4(0.0f, 0.0f, 0.0f, 0);
 }

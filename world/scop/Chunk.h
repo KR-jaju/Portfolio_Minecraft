@@ -36,6 +36,17 @@ public: // create
 	void reset();
 	void setPos(Index2 const& c_pos);
 
+public: // test
+	void createGeoIBuffer(
+		ComPtr<ID3D11Device> device,
+		vector<uint32> const& indices
+	);
+	void setGeoRender(
+		ComPtr<ID3D11DeviceContext> const& context,
+		shared_ptr<VertexShader> const& v_shader,
+		int test_flag
+	);
+
 public:
 	int16 max_h = -1;
 	vec3 start_pos;
@@ -48,5 +59,8 @@ private:
 	shared_ptr<Buffer<VertexGeo>> geo_vbuffer;
 	shared_ptr<Buffer<VertexShadow>> shadow_vbuffer;
 	shared_ptr<Buffer<uint32>> shadow_ibuffer;
+
+private: // test
+	shared_ptr<Buffer<uint32>> geo_ibuffer;
 };
 

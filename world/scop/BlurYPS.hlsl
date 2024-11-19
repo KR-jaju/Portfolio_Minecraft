@@ -24,5 +24,5 @@ float4 main(PS_INPUT input) : SV_TARGET
         color += weights[i] * texture0.Sample(sampler0, 
             input.uv + float2(0, dy) * float(i - 2)).rgb;
     }
-    return float4(color, 1.0f);
+    return float4(color, 0.0f);
 }

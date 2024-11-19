@@ -24,6 +24,7 @@ public:
 		Mat const& cam_proj
 	);
 	ComPtr<ID3D11ShaderResourceView> getSRV();
+	vec3 getDirectionalLightPos();
 
 private:
 	void setPipe();

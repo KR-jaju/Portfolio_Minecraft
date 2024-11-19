@@ -149,7 +149,7 @@ struct WorldIndex {
 };
 
 struct VertexGeo {
-	int type;
+	int tex_arr_idx;
 	vec3 pos;
 	vec3 normal;
 	vec3 tangent;
@@ -172,7 +172,7 @@ struct VertexColor {
 };
 
 struct CamPos {
-	vec3 pos;
-	float r;
+	vec4 view_pos;
+	vec4 light_pos;
 	Mat view;
 };

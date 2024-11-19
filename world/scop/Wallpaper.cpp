@@ -118,3 +118,9 @@ ComPtr<ID3D11ShaderResourceView> Wallpaper::getSRV()
 {
 	return this->d_buffer->getSRV(0);
 }
+
+vec3 Wallpaper::getDirectionalLightPos()
+{
+	return this->sun_moon->getDirectionalLightPos();
+}
+

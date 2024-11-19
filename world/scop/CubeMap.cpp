@@ -12,8 +12,7 @@
 #include "SamplerState.h"
 #include "ConstantBuffer.h"
 #include "SunMoon.h"
-
-#include <directxtk/DDSTextureLoader.h> // 큐브맵 읽을 때 필요
+#include "Texture.h"
 
 CubeMap::CubeMap(
 	DeferredGraphics* dgraphic,
@@ -51,7 +50,11 @@ CubeMap::CubeMap(
 		"ps_5_0"
 	);
 	this->sampler_state = make_shared<SamplerState>(device);
-	this->makeCubeSRV();
+	this->cube_tex = make_shared<Texture>(
+		device,
+		L"./textures/skybox/HDRI/MyCubesEnvHDR.dds",
+		true
+	);
 }
 
 void CubeMap::render(
@@ -131,28 +134,7 @@ void CubeMap::setPipe()
 		0
 	);
 	context->PSSetShaderResources(0, 1, 
-		this->cube_srv.GetAddressOf());
+		this->cube_tex->getComPtr().GetAddressOf());
 	context->PSSetSamplers(0, 1,
 		this->sampler_state->getComPtr().GetAddressOf());
-}
-
-void CubeMap::makeCubeSRV()
-{
-	ComPtr<ID3D11Device> device = this->d_graphic->getDevice();
-	ComPtr<ID3D11Texture2D> texture;
-	HRESULT hr = CreateDDSTextureFromFileEx(
-		device.Get(),
-		L"./textures/skybox/skybox_sample.dds",
-		0,
-		D3D11_USAGE_DEFAULT, 
-		D3D11_BIND_SHADER_RESOURCE,
-		0, 
-		D3D11_RESOURCE_MISC_TEXTURECUBE,
-		DDS_LOADER_FLAGS(false),
-		(ID3D11Resource**)texture.GetAddressOf(),
-		this->cube_srv.GetAddressOf(), 
-		nullptr
-	);
-
-	CHECK(hr);
 }

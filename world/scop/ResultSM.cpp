@@ -122,3 +122,8 @@ ComPtr<ID3D11ShaderResourceView> ResultSM::getSRV()
 {
 	return this->d_buffer->getSRV(0);
 }
+
+vec3 ResultSM::getDirectionalLightPos()
+{
+	return this->sun_moon->getLightPos();
+}
