@@ -50,7 +50,7 @@ float3 diffuseIBL(
     float3 kd = lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metallic);
     float3 irradiance = irradiance_tex.Sample(linear_sampler,
         normal_w).rgb;
-    return kd * albedo;
+    //return albedo * irradiance;
     return kd * albedo * irradiance;
 }
 
@@ -86,6 +86,7 @@ float3 ambientLighting(
         mettalic);
     float3 specular = specularIBL(albedo, normal_w, pixel_to_eye,
         mettalic, roughness);
+    
     return (diffuse + specular) * ao;
 }
 
