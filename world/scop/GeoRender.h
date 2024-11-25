@@ -18,12 +18,10 @@ class Texture;
 enum class RTVIndex
 {
 	color,
-	vs_normal, // vs = view space
-	vs_position,
 	w_position,
 	w_normal,
-	metallic,
-	roughness
+	rma, //r: roughness, g: metallic, b: ambient occlusion
+	ssao_normal,
 };
 
 class GeoRender
@@ -71,6 +69,5 @@ private:
 	shared_ptr<ConstantBuffer> mvp_cbuffer;
 	shared_ptr<ConstantBuffer> cam_pos_cbuffer;
 	shared_ptr<ConstantBuffer> eye_pos_cbuffer;
-	shared_ptr<ConstantBuffer> view_cbuffer;
 };
 

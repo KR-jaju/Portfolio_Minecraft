@@ -13,13 +13,14 @@ class InputLayout;
 class DepthMap;
 class SamplerState;
 template <typename T> class Buffer;
+class ConstantBuffer;
 
 class SsaoRender
 {
 public:
 	SsaoRender(DeferredGraphics* d_graphic, 
 		UINT width, UINT height);
-	void render(Mat const& cam_proj);
+	void render(Mat const& cam_view, Mat const& cam_proj);
 	ComPtr<ID3D11ShaderResourceView> getSRV();
 	shared_ptr<DeferredBuffer> getDBuffer();
 
@@ -31,6 +32,7 @@ private:
 private:
 	shared_ptr<Buffer<VertexDefer>> vbuffer;
 	shared_ptr<Buffer<uint32>> ibuffer;
+	shared_ptr<ConstantBuffer> cbuffer;
 
 private:
 	DeferredGraphics* d_graphic;

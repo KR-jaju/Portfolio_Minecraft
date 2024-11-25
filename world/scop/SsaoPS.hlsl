@@ -28,6 +28,8 @@ struct PS_INPUT
 
 cbuffer Index : register(b0)
 {
+    matrix world;
+    matrix view;
     matrix proj; // projection matrix
 };
 
@@ -69,7 +71,9 @@ float2 ndcToTextureUV(float2 ndc)
 float4 main(PS_INPUT input) : SV_TARGET
 {   
     float3 n = normal_map.Sample(normal_depth_sampler, input.uv).xyz;
+    n = mul(n, (float3x3)view);
     float3 p = position_map.Sample(sampler0, input.uv).xyz;
+    p = mul(float4(p, 1), view).xyz;
     float3 rand_vec = random_map.Sample(random_vector_sampler, input.uv).xyz;
     rand_vec = 2.0f * rand_vec - 1.0f;
     float total_occlusion = 0.0f;

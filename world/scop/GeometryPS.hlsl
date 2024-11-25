@@ -17,43 +17,90 @@ struct PS_INPUT
 struct PS_OUTPUT
 {
     float4 color : SV_Target0;
-    float4 normal : SV_Target1;
-    float4 position : SV_Target2;
-    float4 w_pos : SV_Target3;
-    float4 w_normal : SV_Target4;
-    float4 metallic : SV_Target5;
-    float4 roughness : SV_Target6;
+    float4 w_pos : SV_Target1;
+    float4 w_normal : SV_Target2;
+    float4 rma : SV_Target3;
+    float4 ssao_normal : SV_Target4;
 };
 
-cbuffer eyePos : register(b0)
+static float height_scale = 0.1;
+
+cbuffer c : register(b0)
 {
-    matrix view;
-};
+    float4 cam_pos;
+}
+
+float3 parallaxOcclusionMapping(float3 uvw, float3 view_dir)
+{
+    float2 uv = uvw.xy;
+    const float min_layer = 4;
+    const float max_layer = 32;
+    float num_layer = lerp(max_layer, min_layer,
+        dot(float3(0, 0, 1), view_dir));
+    float layer_depth = 1.0 / num_layer;
+    float2 delta_uv = view_dir.xy / view_dir.z * height_scale;
+    delta_uv /= num_layer;
+    
+    float2 current_uv = uv;
+    float current_depth_val =
+        1.0 - texture_arr_n.Sample(sampler_linear, uvw).w;
+    float current_layer_depth = 0.0f;
+    
+    [loop]
+    while (current_layer_depth < current_depth_val)
+    {
+        current_uv -= delta_uv;
+        current_layer_depth += layer_depth;
+        current_depth_val =
+            1.0 - texture_arr_n.Sample(sampler_linear, 
+            float3(current_uv, uvw.z)).w;
+    }
+    float2 prev_uv = current_uv + delta_uv;
+    float after_depth = current_layer_depth - current_depth_val;
+    float before_depth = 1.0 -
+        texture_arr_n.Sample(sampler_linear, float3(prev_uv, uvw.z)).w;
+    before_depth -= (current_layer_depth - layer_depth);
+    float weight = after_depth / (after_depth + before_depth);
+    float2 adj_uv = lerp(current_uv, prev_uv, weight);
+    return float3(adj_uv, uvw.z);
+}
+
+float3 calcViewDir(float3 pos, float3x3 tbn)
+{
+    float3x3 inv_tbn = transpose(tbn);
+    float3 tan_pos = mul(pos, inv_tbn);
+    float3 tan_eye = mul(cam_pos.xyz, inv_tbn);
+    float3 view_dir = normalize(tan_eye - tan_pos);
+    return view_dir;
+}
 
 PS_OUTPUT main(PS_INPUT input)
 {
     float3 uvw;
     PS_OUTPUT output;
     
-    output.position = float4(input.w_pos, 1);
-    output.w_pos = output.position;
-    output.position = mul(output.position, view);
+    output.w_pos = float4(input.w_pos, 1);
     uvw = float3(input.uv, input.tex_arr_idx);
-    float3 normal = texture_arr_n.Sample(sampler_linear, uvw).xyz;
-    normal = 2 * normal - 1.0;
     float3 tangent = normalize(input.tangent -
         dot(input.tangent, input.normal) * input.normal);
     float3 bitangent = cross(input.normal, tangent);
     bitangent = normalize(bitangent);
     float3x3 tbn = float3x3(tangent, bitangent, input.normal);
+    
+    // parallaxmapping 안할거면 끄기
+    uvw = parallaxOcclusionMapping(uvw, calcViewDir(input.w_pos, tbn));
+    
+    float3 normal = texture_arr_n.Sample(sampler_linear, uvw).xyz;
+    normal = 2 * normal - 1.0;
     normal = normalize(mul(normal, tbn));
     output.w_normal = float4(normal, 1);
-    output.normal = float4(mul(input.normal, (float3x3) view), 1);
-    float r = texture_arr_s.Sample(sampler_linear, uvw).r;
+    float r = 1.0 - texture_arr_s.Sample(sampler_linear, uvw).r;
     float m = texture_arr_s.Sample(sampler_linear, uvw).g;
-    output.roughness = float4(r, r, r, 1);
-    output.metallic = float4(m, m, m, 1);
+    float ao = texture_arr_s.Sample(sampler_linear, uvw).w;
+    output.rma = float4(r, m, ao, 1);
     output.color = 
         float4(texture_arr.Sample(sampler_linear, uvw).rgb, 1);
+    float h = texture_arr_n.Sample(sampler_linear, uvw).w;
+    output.ssao_normal = float4(input.normal, 1);
     return output;
 }

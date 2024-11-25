@@ -32,7 +32,10 @@ public:
 private:
 	void setPipe();
 	void setPBRShaderResources();
-	void ssaoBlur(int cnt, Mat const& proj);
+	void ssaoBlur(int cnt, 
+		Mat const& proj,
+		Mat const& view
+	);
 
 private:
 	shared_ptr<Buffer<VertexDefer>> vbuffer;

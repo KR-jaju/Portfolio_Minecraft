@@ -31,12 +31,10 @@ struct PatchConstOutput
 
 #define NUM_CONTROL_POINTS 4
 
-PatchConstOutput CalcHSPatchConstants(
-	InputPatch<HS_INPUT, NUM_CONTROL_POINTS> ip,
-	uint PatchID : SV_PrimitiveID)
+float calculateTess(
+    InputPatch<HS_INPUT, NUM_CONTROL_POINTS> ip
+)
 {
-	
-    PatchConstOutput output;
     float3 center = float3(0, 0, 0);
     for (int i = 0; i < 4; i++)
         center += ip[i].pos.xyz;
@@ -44,9 +42,20 @@ PatchConstOutput CalcHSPatchConstants(
     float dist = length(center - eye_pos);
     float dist_min = 0.5;
     float dist_max = 20;
-    float tess = 64 * 
+    float tess = 64 *
         saturate((dist_max - dist) / (dist_max - dist_min)) + 1;
-    //tess = 64;
+    return tess;
+}
+
+PatchConstOutput CalcHSPatchConstants(
+	InputPatch<HS_INPUT, NUM_CONTROL_POINTS> ip,
+	uint PatchID : SV_PrimitiveID)
+{
+	
+    PatchConstOutput output;
+    float tess;
+    //tess = calculateTess(ip); // 동적으로 정점 수 조절
+    tess = 1;
     output.edges[0] = tess;
     output.edges[1] = tess;
     output.edges[2] = tess;

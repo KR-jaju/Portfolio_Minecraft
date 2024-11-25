@@ -96,20 +96,26 @@ SsaoRender::SsaoRender(DeferredGraphics* d_graphic,
 	this->view_port.Height = height / 2;
 	this->view_port.MinDepth = 0.f;
 	this->view_port.MaxDepth = 1.f;
+	MVP mvp;
+	this->cbuffer = make_shared<ConstantBuffer>(
+		device,
+		this->d_graphic->getContext(),
+		mvp
+	);
 }
 
-void SsaoRender::render(Mat const& cam_proj)
+void SsaoRender::render(Mat const& cam_view, Mat const& cam_proj)
 {
 	this->setPipe();
 	this->d_graphic->setViewPort(this->view_port);
 	ComPtr<ID3D11DeviceContext> context = 
 		this->d_graphic->getContext();
-	ConstantBuffer cbuffer(
-		this->d_graphic->getDevice(),
-		this->d_graphic->getContext(),
-		cam_proj.Transpose()
-	);
-	context->PSSetConstantBuffers(0, 1, cbuffer.getComPtr().GetAddressOf());
+	MVP mvp;
+	mvp.view = cam_view.Transpose();
+	mvp.proj = cam_proj.Transpose();
+	this->cbuffer->update(mvp);
+	context->PSSetConstantBuffers(0, 1, 
+		this->cbuffer->getComPtr().GetAddressOf());
 	context->PSSetShaderResources(
 		3,
 		1,

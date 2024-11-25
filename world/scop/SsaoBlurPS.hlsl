@@ -1,4 +1,4 @@
-Texture2D normal_map : register(t0); // view space
+Texture2D normal_map : register(t0); // world_space
 Texture2D depth_map : register(t1); // ndc space
 Texture2D ssao_map : register(t2);
 
@@ -11,6 +11,7 @@ cbuffer cbPerFrame : register(b0)
     int wh_flag; // 0 가로, 1이 세로
     float3 dummy;
     matrix proj; // 투영행렬
+    matrix view;
 };
 
 cbuffer cbSettings : register(b1)
@@ -71,6 +72,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     float total_weight = gWeights[5];
     float3 center_normal = normal_map.Sample(sample_normal_depth,
         input.uv).xyz;
+    center_normal = mul(center_normal, (float3x3) view);
     float center_depth = depth_map.Sample(sample_normal_depth,
         input.uv).r;
     center_depth = NdcDepthToViewDepth(center_depth);
@@ -85,6 +87,7 @@ float4 main(PS_INPUT input) : SV_TARGET
         float2 nd_tex = input.uv + i * offset;
         float3 neighbor_normal =
             normal_map.Sample(sample_normal_depth, nd_tex).xyz;
+        neighbor_normal = mul(neighbor_normal, (float3x3) view);
         float neighbor_depth =
             depth_map.Sample(sample_normal_depth, nd_tex).r;
         neighbor_depth = NdcDepthToViewDepth(neighbor_depth);

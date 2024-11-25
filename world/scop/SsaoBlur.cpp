@@ -19,6 +19,7 @@ struct SsaoBlurBuffer
 	int wh_flag;
 	vec3 dummy;
 	Mat proj;
+	Mat view;
 };
 
 SsaoBlur::SsaoBlur(
@@ -110,9 +111,20 @@ SsaoBlur::SsaoBlur(
 	this->view_port.Height = height;
 	this->view_port.MinDepth = 0.f;
 	this->view_port.MaxDepth = 1.f;
+	SsaoBlurBuffer sb;
+	this->cbuffer = make_shared<ConstantBuffer>(
+		device,
+		this->d_graphic->getContext(),
+		sb
+	);
 }
 
-void SsaoBlur::render(int wh_flag, Mat const& proj, float num)
+void SsaoBlur::render(
+	int wh_flag, 
+	Mat const& proj,
+	Mat const& view,
+	float num
+)
 {
 	this->setPipe();
 	this->d_graphic->setViewPort(this->view_port);
@@ -125,9 +137,10 @@ void SsaoBlur::render(int wh_flag, Mat const& proj, float num)
 	sb.height = this->height;
 	sb.wh_flag = wh_flag;
 	sb.proj = proj.Transpose();
-	ConstantBuffer cbuffer(device, context, sb);
+	sb.view = view.Transpose();
+	this->cbuffer->update(sb);
 	context->PSSetConstantBuffers(0, 1,
-		cbuffer.getComPtr().GetAddressOf());
+		this->cbuffer->getComPtr().GetAddressOf());
 	context->DrawIndexed(
 		this->ibuffer->getCount(),
 		0,

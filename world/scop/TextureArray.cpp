@@ -145,7 +145,8 @@ TextureArray::TextureArray(
 	ComPtr<ID3D11Device> device, 
 	ComPtr<ID3D11DeviceContext> context, 
 	vector<wstring> const& filenames, 
-	int mip_level
+	int mip_level,
+	bool srgb_flag
 )
 {
 	 int width = 0, height = 0;
@@ -169,7 +170,10 @@ TextureArray::TextureArray(
         txtDesc.Height = UINT(height);
         txtDesc.MipLevels = mip_level; // 밉맵 내가 만들수 있는 만큼 = 0
         txtDesc.ArraySize = size;
-        txtDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		if (srgb_flag == false)
+			txtDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		else
+			txtDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
         txtDesc.SampleDesc.Count = 1;
         txtDesc.SampleDesc.Quality = 0;
         txtDesc.Usage = D3D11_USAGE_DEFAULT; // 스테이징 텍스춰로부터 복사 가능
@@ -178,7 +182,8 @@ TextureArray::TextureArray(
         txtDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS; // 밉맵 사용
 
         // 초기 데이터 없이 텍스춰를 만듭니다.
-        device->CreateTexture2D(&txtDesc, nullptr, this->texture_arr.GetAddressOf());
+        device->CreateTexture2D(&txtDesc, nullptr, 
+			this->texture_arr.GetAddressOf());
 
         // 실제로 만들어진 MipLevels를 확인
         this->texture_arr->GetDesc(&txtDesc);

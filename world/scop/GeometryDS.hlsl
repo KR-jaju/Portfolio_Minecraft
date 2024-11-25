@@ -36,7 +36,25 @@ struct PatchConstOutput
     float inside[2] : SV_InsideTessFactor;
 };
 
+Texture2DArray tex_arr_n : register(t0);
+
+SamplerState linear_sampler
+{
+    Filter = MIN_MAG_LINEAR_MIP_LINEAR;
+    AddressU = WRAP;
+    AddressV = WRAP;
+    AddressW = WRAP;
+};
+
 #define NUM_CONTROL_POINTS 4
+
+float4 movePos(float4 pos, float3 uvw, float d, float3 dir)
+{
+    float4 res = pos;
+    float h = tex_arr_n.SampleLevel(linear_sampler, uvw, 0);
+    res += float4(h * d * dir, 0) - float4(1, 1, 1, 0);
+    return res;
+}
 
 [domain("quad")]
 PS_INPUT main(
@@ -71,6 +89,9 @@ PS_INPUT main(
     
     output.normal = patch[0].normal;
     output.tangent = patch[0].tangent;
+    float3 uvw = float3(output.uv, output.tex_arr_idx);
+    
+    //output.pos = movePos(output.pos, uvw, 1, output.normal);
     output.pos = mul(output.pos, view);
     output.pos = mul(output.pos, proj);
     return output;

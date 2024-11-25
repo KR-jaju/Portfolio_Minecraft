@@ -138,7 +138,7 @@ namespace Block {
 			{1, 0, 0}, // front
 			{-1, 0, 0}, // back
 			{0, 0, -1}, // left
-			{0, 0, -1} // right
+			{0, 0, 1} // right
 		};
 		VertexGeo vertex;
 		x = start_pos.x + x;

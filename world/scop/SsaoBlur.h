@@ -10,12 +10,18 @@ class VertexShader;
 class PixelShader;
 class InputLayout;
 class DeferredBuffer;
+class ConstantBuffer;
 
 class SsaoBlur
 {
 public:
 	SsaoBlur(DeferredGraphics* d_graphic, UINT width, UINT height);
-	void render(int wh_flag, Mat const& proj, float num);
+	void render(
+		int wh_flag, 
+		Mat const& proj,
+		Mat const& view,
+		float num
+	);
 	ComPtr<ID3D11ShaderResourceView> getWidthSRV();
 	ComPtr<ID3D11ShaderResourceView> getHeightSRV();
 	shared_ptr<DeferredBuffer> const& getWidthDBuffer();
@@ -27,6 +33,7 @@ private:
 private:
 	shared_ptr<Buffer<VertexDefer>> vbuffer;
 	shared_ptr<Buffer<uint32>> ibuffer;
+	shared_ptr<ConstantBuffer> cbuffer;
 
 private:
 	DeferredGraphics* d_graphic;

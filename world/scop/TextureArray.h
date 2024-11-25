@@ -11,7 +11,8 @@ public:
 		ComPtr<ID3D11Device> device,
 		ComPtr<ID3D11DeviceContext> context,
 		vector<wstring> const& path_arr,
-		int mip_level
+		int mip_level,
+		bool srgb_flag = false
 	);
 	ComPtr<ID3D11ShaderResourceView> getComPtr();
 private:
