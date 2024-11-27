@@ -23,7 +23,7 @@ struct PS_OUTPUT
     float4 ssao_normal : SV_Target4;
 };
 
-static float height_scale = 0.1;
+static float height_scale = 0.42;
 
 cbuffer c : register(b0)
 {
@@ -33,7 +33,7 @@ cbuffer c : register(b0)
 float3 parallaxOcclusionMapping(float3 uvw, float3 view_dir)
 {
     float2 uv = uvw.xy;
-    const float min_layer = 4;
+    const float min_layer = 8;
     const float max_layer = 32;
     float num_layer = lerp(max_layer, min_layer,
         dot(float3(0, 0, 1), view_dir));
@@ -56,12 +56,12 @@ float3 parallaxOcclusionMapping(float3 uvw, float3 view_dir)
             float3(current_uv, uvw.z)).w;
     }
     float2 prev_uv = current_uv + delta_uv;
-    float after_depth = current_layer_depth - current_depth_val;
+    float after_depth = current_depth_val - current_layer_depth;
     float before_depth = 1.0 -
         texture_arr_n.Sample(sampler_linear, float3(prev_uv, uvw.z)).w;
     before_depth -= (current_layer_depth - layer_depth);
-    float weight = after_depth / (after_depth + before_depth);
-    float2 adj_uv = lerp(current_uv, prev_uv, weight);
+    float weight = after_depth / (after_depth - before_depth);
+    float2 adj_uv = prev_uv * weight + current_uv * (1.0 - weight);
     return float3(adj_uv, uvw.z);
 }
 
@@ -87,8 +87,17 @@ PS_OUTPUT main(PS_INPUT input)
     bitangent = normalize(bitangent);
     float3x3 tbn = float3x3(tangent, bitangent, input.normal);
     
-    // parallaxmapping 안할거면 끄기
-    uvw = parallaxOcclusionMapping(uvw, calcViewDir(input.w_pos, tbn));
+    // parallax occlusion mapping 안할거면 끄기
+    bool parallax_flag = true;
+    if (parallax_flag)
+    {
+        float2 origin_uv = uvw.xy;
+        uvw = parallaxOcclusionMapping(uvw, 
+            calcViewDir(input.w_pos, tbn));
+        float2 delta_uv = uvw.xy - origin_uv;
+        float2 offset_xy = mul(delta_uv, float2x3(tangent, bitangent));
+        output.w_pos += float4(offset_xy, 0, 0);
+    }
     
     float3 normal = texture_arr_n.Sample(sampler_linear, uvw).xyz;
     normal = 2 * normal - 1.0;

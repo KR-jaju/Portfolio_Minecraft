@@ -223,36 +223,38 @@ namespace Block {
 			{+0.5f, +0.5f, -0.5f},
 			{+0.5f, +0.5f, +0.5f}
 		};
+		static const float s = 0.1f;
+		static const float e = 0.9f;
 		static vector<vec2> sample_uv = {
-			{0.f, 1.f},
-			{0.f, 0.f},
-			{1.f, 0.f},
-			{1.f, 1.f},
+			{s, e},
+			{s, s},
+			{e, s},
+			{e, e},
 
-			{0.f, 0.f},
-			{1.f, 0.f},
-			{1.f, 1.f},
-			{0.f, 1.f},
+			{s, s},
+			{e, s},
+			{e, e},
+			{s, e},
 
-			{0.f, 1.f},
-			{0.f, 0.f},
-			{1.f, 0.f},
-			{1.f, 1.f},
+			{s, e},
+			{s, s},
+			{e, s},
+			{e, e},
 
-			{1.f, 1.f},
-			{0.f, 1.f},
-			{0.f, 0.f},
-			{1.f, 0.f},
+			{e, e},
+			{s, e},
+			{s, s},
+			{e, s},
 
-			{0.f, 1.f},
-			{0.f, 0.f},
-			{1.f, 0.f},
-			{1.f, 1.f},
+			{s, e},
+			{s, s},
+			{e, s},
+			{e, e},
 
-			{1.f, 1.f},
-			{0.f, 1.f},
-			{0.f, 0.f},
-			{1.f, 0.f}
+			{e, e},
+			{s, e},
+			{s, s},
+			{e, s}
 		};
 		static vector<vec3> normals = {
 			{0, 1, 0},

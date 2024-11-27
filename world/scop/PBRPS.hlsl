@@ -132,6 +132,8 @@ PS_OUTPUT main(PS_INPUT input)
     float metallic = rma_tex.Sample(linear_sampler, input.uv).g;
     float roughness = rma_tex.Sample(linear_sampler, input.uv).r;
     
+    //roughness = 1.0 - roughness;
+    
     float3 ambient_light = ambientLighting(albedo, normal,
         pixel_to_eye, ao, metallic, roughness);
     
