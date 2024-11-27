@@ -211,6 +211,15 @@
     <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\PBR">
       <UniqueIdentifier>{7dc24004-77e5-41ac-8256-f80323200823}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\Map\System\TerrainSystem\Trees">
+      <UniqueIdentifier>{563c4ee2-7e39-4144-92d0-ee22cfdf05f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\Geometry\ParallaxMapping">
+      <UniqueIdentifier>{d459ee3d-ead2-432d-92d2-0f0d51be6491}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\GeoRender\ParallaxMapping">
+      <UniqueIdentifier>{8a2f8a74-16ea-4455-bc1f-780decb89bd9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -372,6 +381,9 @@
     <ClInclude Include="PBR.h">
       <Filter>소스 파일\World\Map\System\RenderSystem\PBR</Filter>
     </ClInclude>
+    <ClInclude Include="ParallaxMapping.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\GeoRender\ParallaxMapping</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -524,6 +536,9 @@
     <ClCompile Include="PBR.cpp">
       <Filter>소스 파일\World\Map\System\RenderSystem\PBR</Filter>
     </ClCompile>
+    <ClCompile Include="ParallaxMapping.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\GeoRender\ParallaxMapping</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="scop.rc">
@@ -652,6 +667,12 @@
     </FxCompile>
     <FxCompile Include="PBRPS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\PBR</Filter>
+    </FxCompile>
+    <FxCompile Include="ParallaxVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry\ParallaxMapping</Filter>
+    </FxCompile>
+    <FxCompile Include="ParallaxPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry\ParallaxMapping</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

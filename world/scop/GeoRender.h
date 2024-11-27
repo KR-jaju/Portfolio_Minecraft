@@ -1,28 +1,11 @@
 #pragma once
 
+#include "ParallaxMapping.h"
+
 class MapUtils;
-class DeferredGraphics;
 class BlendState; // 바뀔 수 있음 나중에(ex OIT)
-class TextureArray;
-class SamplerState;
-class VertexShader;
-class PixelShader;
-class InputLayout;
-class RasterizerState;
-class DeferredBuffer;
 class HullShader;
 class DomainShader;
-class ConstantBuffer;
-class Texture;
-
-enum class RTVIndex
-{
-	color,
-	w_position,
-	w_normal,
-	rma, //r: roughness, g: metallic, b: ambient occlusion
-	ssao_normal,
-};
 
 class GeoRender
 {
@@ -46,10 +29,12 @@ private:
 		Mat const& proj,
 		vec3 const& cam_pos
 	);
+	void parallaxRender(vec3 const& cam_pos);
 
 private:
 	MapUtils* m_info;
 	DeferredGraphics* d_graphic;
+	shared_ptr<ParallaxMapping> parallax_mapping;
 	shared_ptr<DeferredBuffer> d_buffer;
 	shared_ptr<RasterizerState> rasterizer_state;
 	shared_ptr<SamplerState> linear_state;
@@ -61,13 +46,12 @@ private:
 	shared_ptr<DomainShader> domain_shader;
 
 private:
-	shared_ptr<TextureArray> texture_array_color;
-	shared_ptr<TextureArray> texture_array_normal;
-	shared_ptr<TextureArray> texture_array_s;
-
-private:
+	bool parallax_flag = true;
 	shared_ptr<ConstantBuffer> mvp_cbuffer;
 	shared_ptr<ConstantBuffer> cam_pos_cbuffer;
 	shared_ptr<ConstantBuffer> eye_pos_cbuffer;
+	shared_ptr<TextureArray> texture_array_color;
+	shared_ptr<TextureArray> texture_array_normal;
+	shared_ptr<TextureArray> texture_array_s;
 };
 

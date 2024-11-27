@@ -5,7 +5,6 @@
 #include "MapUtils.h"
 #include "RasterizerState.h"
 #include "TextureArray.h"
-#include "Texture.h"
 #include "SamplerState.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
@@ -24,7 +23,7 @@ GeoRender::GeoRender(
 {
 	this->m_info = minfo;
 	this->d_graphic = dgraphic;
-	this->d_buffer = make_shared<DeferredBuffer>(5);
+	this->d_buffer = make_shared<DeferredBuffer>(8);
 	this->d_buffer->setRTVsAndSRVs(
 		this->d_graphic->getDevice(),
 		this->m_info->width,
@@ -49,12 +48,13 @@ GeoRender::GeoRender(
 		L"./textures/pbr/test_sample/packed_mud.png",
 		L"./textures/pbr/test_sample/packed_mud.png"
 	};
-	this->texture_array_color = make_shared<TextureArray>(
-		device,
-		context,
-		path_color,
-		0, true // temp
-	);
+	this->texture_array_color = 
+		make_shared<TextureArray>(
+			device,
+			context,
+			path_color,
+			0, true // temp
+		);
 	vector<wstring> path_normal = {
 		L"./textures/pbr/test_sample/grass_path_top_n.png",
 		L"./textures/pbr/test_sample/grass_path_side_n.png",
@@ -65,12 +65,13 @@ GeoRender::GeoRender(
 		L"./textures/pbr/test_sample/packed_mud_n.png",
 		L"./textures/pbr/test_sample/packed_mud_n.png"
 	};
-	this->texture_array_normal = make_shared<TextureArray>(
-		device,
-		context,
-		path_normal,
-		0
-	);
+	this->texture_array_normal = 
+		make_shared<TextureArray>(
+			device,
+			context,
+			path_normal,
+			0
+		);
 	  
 	vector<wstring> path_s = {
 		L"./textures/pbr/test_sample/grass_path_top_s.png",
@@ -82,12 +83,14 @@ GeoRender::GeoRender(
 		L"./textures/pbr/test_sample/packed_mud_s.png",
 		L"./textures/pbr/test_sample/packed_mud_s.png"
 	};
-	this->texture_array_s = make_shared<TextureArray>(
-		device,
-		context,
-		path_s,
-		0
-	);
+	this->texture_array_s = 
+		make_shared<TextureArray>(
+			device,
+			context,
+			path_s,
+			0
+		);
+	// texture manager: texture array setting
 
 	this->linear_state = make_shared<SamplerState>(device);
 	this->vertex_shader = make_shared<VertexShader>(
@@ -138,6 +141,13 @@ GeoRender::GeoRender(
 		context,
 		eye
 	);
+	if (this->parallax_flag) {
+		this->parallax_mapping = make_shared<ParallaxMapping>(
+			this->d_graphic,
+			this->m_info->width,
+			this->m_info->height
+		);
+	}
 }
 
 GeoRender::~GeoRender()
@@ -168,11 +178,15 @@ void GeoRender::render(
 	context->HSSetShader(nullptr, nullptr, 0);
 	context->DSSetShader(nullptr, nullptr, 0);
 	context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
+	if (this->parallax_flag)
+		this->parallaxRender(cam_pos);
 }
 
 ComPtr<ID3D11ShaderResourceView> GeoRender::getSRV(RTVIndex idx)
 {
 	int index = static_cast<int>(idx);
+	if (this->parallax_flag)
+		return this->parallax_mapping->getSRV(idx);
 	return this->d_buffer->getSRV(index);
 }
 
@@ -264,7 +278,25 @@ void GeoRender::setConstantBuffer(
 	context->DSSetConstantBuffers(1, 1,
 		this->eye_pos_cbuffer->getComPtr().GetAddressOf());
 
-	// set ps constant
-	context->PSSetConstantBuffers(0, 1,
-		this->eye_pos_cbuffer->getComPtr().GetAddressOf());
+}
+
+void GeoRender::parallaxRender(vec3 const& cam_pos)
+{
+	this->parallax_mapping->setRTV();
+	ComPtr<ID3D11DeviceContext> context = this->d_graphic->getContext();
+	context->PSSetShaderResources(0, 1,
+		this->texture_array_color->getComPtr().GetAddressOf());
+	context->PSSetShaderResources(1, 1,
+		this->texture_array_normal->getComPtr().GetAddressOf());
+	context->PSSetShaderResources(2, 1,
+		this->texture_array_s->getComPtr().GetAddressOf());
+	context->PSSetShaderResources(3, 1,
+		this->d_buffer->getSRV(5).GetAddressOf());
+	context->PSSetShaderResources(4, 1,
+		this->d_buffer->getSRV(1).GetAddressOf());
+	context->PSSetShaderResources(5, 1,
+		this->d_buffer->getSRV(6).GetAddressOf());
+	context->PSSetShaderResources(6, 1,
+		this->d_buffer->getSRV(7).GetAddressOf());
+	this->parallax_mapping->render(cam_pos);
 }
