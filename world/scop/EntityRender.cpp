@@ -123,9 +123,9 @@ void EntityRender::setPipe()
 		1,
 		this->sampler_state->getComPtr().GetAddressOf()
 	);
-	context->PSSetShaderResources(
+	/*context->PSSetShaderResources(
 		0,
 		1,
 		this->texture_array->getComPtr().GetAddressOf()
-	);
+	);*/
 }

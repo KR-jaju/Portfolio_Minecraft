@@ -47,7 +47,7 @@ PS_OUTPUT main(PS_INPUT input)
     float distMin = 10.0;
     float distMax = 50.0;
     float lod = 5 * saturate((dist - distMin) / (distMax - distMin)); // 나중에
-    color = texture_arr.SampleLevel(sampler0, uvw, 0);
+    color = texture_arr.SampleLevel(sampler0, uvw, lod);
     output.color = color;
     
     return output;

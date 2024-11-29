@@ -1,5 +1,4 @@
 SamplerState sampler0 : register(s0);
-//Texture2DArray texture_arr : register(t0);
 Texture2D main_texture : register(t0);
 
 struct PS_INPUT
@@ -41,8 +40,9 @@ PS_OUTPUT main(PS_INPUT input)
     float distMin = 10.0;
     float distMax = 50.0;
     float lod = 5 * saturate((dist - distMin) / (distMax - distMin)); // ³ªÁß¿¡
-    //color = main_texture.SampleLevel(sampler0, input.uv, lod);
-    color = main_texture.Sample(sampler0, input.uv);
+    input.uv.y = 1.0 - input.uv.y;
+    color = main_texture.SampleLevel(sampler0, input.uv, lod);
+    //color = main_texture.Sample(sampler0, input.uv);
     output.color = color;
     //output.color = main_texture.Sample(sampler0, input.uv);
     //int2 uv = int2(frac(input.uv) * 16);

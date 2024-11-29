@@ -150,12 +150,15 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="AnimationUtil.h" />
     <ClInclude Include="BlendState.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="DeferredGraphics.h" />
     <ClInclude Include="DeferredRendering.h" />
     <ClInclude Include="DeferredBuffer.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="FSM.h" />
     <ClInclude Include="EntityGeometry.h" />
     <ClInclude Include="EntityRender.h" />
     <ClInclude Include="EntityUtils.h" />
@@ -165,7 +168,7 @@
     <ClInclude Include="LightSystem.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="EntityDataAsset.h" />
-    <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelResource.h" />
     <ClInclude Include="MyQueue.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Buffer.h" />
@@ -178,13 +181,17 @@
     <ClInclude Include="MapUtils.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PerlinNoise.h" />
+    <ClInclude Include="Pig.h" />
+    <ClInclude Include="AnimationResource.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="RasterizerState.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="scop.h" />
     <ClInclude Include="ShadowRender.h" />
+    <ClInclude Include="SkinnedMesh.h" />
     <ClInclude Include="SsaoRender.h" />
     <ClInclude Include="SsaoBlur.h" />
     <ClInclude Include="Terrain.h" />
@@ -195,23 +202,23 @@
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextureArray.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="WICTextureLoader11.h" />
     <ClInclude Include="WorldUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationUtil.cpp" />
     <ClCompile Include="BlendState.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="DeferredGraphics.cpp" />
     <ClCompile Include="DeferredRendering.cpp" />
     <ClCompile Include="DeferredBuffer.cpp" />
-    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityGeometry.cpp" />
     <ClCompile Include="EntityDataAsset.cpp" />
     <ClCompile Include="EntityRender.cpp" />
     <ClCompile Include="EntityUtils.cpp" />
     <ClCompile Include="GeoRender.cpp" />
-    <ClCompile Include="Humanoid.cpp" />
     <ClCompile Include="InputLayouts.cpp" />
     <ClCompile Include="LightSystem.cpp" />
     <ClCompile Include="MathHelper.cpp" />
@@ -229,12 +236,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PerlinNoise.cpp" />
+    <ClCompile Include="Pig.cpp" />
+    <ClCompile Include="PigAnimation.cpp" />
+    <ClCompile Include="PigModel.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="RasterizerState.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ShadowRender.cpp" />
+    <ClCompile Include="SkinnedMesh.cpp" />
     <ClCompile Include="SsaoRender.cpp" />
     <ClCompile Include="SsaoBlur.cpp" />
     <ClCompile Include="Terrain.cpp" />
@@ -258,6 +269,7 @@
     <Image Include="scop.ico" />
     <Image Include="Skeleton.png" />
     <Image Include="small.ico" />
+    <Image Include="steve.png" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DeferredPS.hlsl">

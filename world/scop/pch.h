@@ -24,6 +24,8 @@ using vec3 = DirectX::SimpleMath::Vector3;
 using vec4 = DirectX::SimpleMath::Vector4;
 using color = DirectX::XMFLOAT4;
 
+using Quaternion = DirectX::XMVECTOR;
+
 using ivec2 = DirectX::XMINT2;
 using ivec3 = DirectX::XMINT3;
 using ivec4 = DirectX::XMINT4;
@@ -49,6 +51,7 @@ struct MVP {
 
 struct BoneData {
 	Mat matrix[32];
+	Mat	bindpose[32];
 };
 
 #include <map>

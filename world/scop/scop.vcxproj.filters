@@ -315,7 +315,31 @@
     <ClInclude Include="EntityVertex.h">
       <Filter>소스 파일\World\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
+    <ClInclude Include="ModelResource.h">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="FSM.h">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Pig.h">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationResource.h">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationUtil.h">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinnedMesh.h">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
       <Filter>소스 파일\World\Entity</Filter>
     </ClInclude>
   </ItemGroup>
@@ -437,9 +461,6 @@
     <ClCompile Include="EntityUtils.cpp">
       <Filter>소스 파일\World\Map\EntityUtils</Filter>
     </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>소스 파일\World\Entity</Filter>
-    </ClCompile>
     <ClCompile Include="EntityRender.cpp">
       <Filter>소스 파일\World\Map\System\RenderSystem\EntityRender</Filter>
     </ClCompile>
@@ -449,7 +470,19 @@
     <ClCompile Include="EntityGeometry.cpp">
       <Filter>소스 파일\World\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="Humanoid.cpp">
+    <ClCompile Include="Pig.cpp">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="PigAnimation.cpp">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="PigModel.cpp">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationUtil.cpp">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedMesh.cpp">
       <Filter>소스 파일\World\Entity</Filter>
     </ClCompile>
   </ItemGroup>
@@ -475,6 +508,9 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="grass_top.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="steve.png">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

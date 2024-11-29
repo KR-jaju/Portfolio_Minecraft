@@ -16,11 +16,11 @@ void	EntityDataAsset::registerGeometry(std::string const& key, Model const& mode
 	if (this->table.count(key))
 		throw std::runtime_error("Duplicate key in EntityDataAsset");
 
-	this->table.emplace(key, make_shared<EntityGeometry>(this->device, model.vertices, model.indices));
+	this->table.emplace(key, make_shared<SkinnedMesh>(this->device, model));
 }
 
 
-shared_ptr<EntityGeometry>	EntityDataAsset::getGeometry(std::string const& key)
+shared_ptr<SkinnedMesh>	EntityDataAsset::getGeometry(std::string const& key)
 {
 	if (!this->table.count(key))
 		throw std::runtime_error("Target geometry does not exist");
