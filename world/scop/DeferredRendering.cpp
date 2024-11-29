@@ -209,6 +209,7 @@ void DeferredRendering::Render(
 	context->DrawIndexed(
 		this->ibuffer->getCount(),
 		0, 0);
+
 	this->d_graphic->renderEnd();
 }
 
