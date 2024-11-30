@@ -28,7 +28,7 @@ struct PS_OUTPUT
     float4 ssao_normal : SV_Target4;
 };
 
-static const float height_scale = 0.42;
+static const float height_scale = 0.2;
 
 float3 parallaxOcclusionMapping(float3 uvw, float3 view_dir)
 {
@@ -52,8 +52,7 @@ float3 parallaxOcclusionMapping(float3 uvw, float3 view_dir)
         current_uv -= delta_uv;
         current_layer_depth += layer_depth;
         current_depth_val =
-            1.0 - texture_arr_n.Sample(linear_sampler,
-            float3(current_uv, uvw.z)).w;
+            1.0 - texture_arr_n.Sample(linear_sampler, float3(current_uv, uvw.z)).w;
     }
     float2 prev_uv = current_uv + delta_uv;
     float after_depth = current_depth_val - current_layer_depth;
@@ -72,6 +71,17 @@ float3 calcViewDir(float3 pos, float3x3 tbn)
     float3 tan_eye = mul(cam_pos.xyz, inv_tbn);
     float3 view_dir = normalize(tan_eye - tan_pos);
     return view_dir;
+}
+
+float calcLOD(float3 pos, float3 t_normal)
+{
+    float distance = length(pos - cam_pos.xyz);
+    float3 dir_view = normalize(cam_pos.xyz - pos);
+    float dist_min = 5.0;
+    float dist_max = 100.0 * abs(dot(t_normal, dir_view));
+    float lod = (distance - dist_min) / (dist_max - dist_min);
+    lod = saturate(lod) * 9.0;
+    return lod;
 }
 
 PS_OUTPUT main(PS_INPUT input)
@@ -94,15 +104,17 @@ PS_OUTPUT main(PS_INPUT input)
     float2 offset_xy = mul(delta_uv, float2x3(tangent, bitangent));
     pos += float3(offset_xy, 0);
     
-    output.color = texture_arr_c.Sample(linear_sampler, uvw);
+    
+    float lod = calcLOD(pos, t_normal);
+    output.color = texture_arr_c.SampleLevel(linear_sampler, uvw, lod);
     output.w_pos = float4(pos, 1);
-    float3 normal = texture_arr_n.Sample(linear_sampler, uvw).xyz;
+    float3 normal = texture_arr_n.SampleLevel(linear_sampler, uvw, lod).xyz;
     normal = 2 * normal - 1.0f;
     normal = normalize(mul(normal, tbn));
     output.w_normal = float4(normal, 1);
-    float r = 1.0 - texture_arr_s.Sample(linear_sampler, uvw).r;
-    float m = texture_arr_s.Sample(linear_sampler, uvw).g;
-    float ao = texture_arr_s.Sample(linear_sampler, uvw).w;
+    float r = 1.0 - texture_arr_s.SampleLevel(linear_sampler, uvw, lod).r;
+    float m = texture_arr_s.SampleLevel(linear_sampler, uvw, lod).g;
+    float ao = texture_arr_s.SampleLevel(linear_sampler, uvw, lod).w;
     output.rma = float4(r, m, ao, 1);
     output.ssao_normal = float4(t_normal, 1);
 	return output;

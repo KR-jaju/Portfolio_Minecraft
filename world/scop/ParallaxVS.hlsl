@@ -10,6 +10,7 @@ struct PS_INPUT
     float2 uv : TEXCOORD;
 };
 
+
 PS_INPUT main( VS_INPUT input )
 {
     PS_INPUT output;

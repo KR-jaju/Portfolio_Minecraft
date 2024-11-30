@@ -114,6 +114,7 @@ void ParallaxMapping::setPipe()
 	);
 	context->PSSetSamplers(0, 1, 
 		this->sampler_state->getComPtr().GetAddressOf());
+
 	context->PSSetConstantBuffers(0, 1,
 		this->eye_poe_cbuffer->getComPtr().GetAddressOf());
 }

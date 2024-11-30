@@ -223,8 +223,8 @@ namespace Block {
 			{+0.5f, +0.5f, -0.5f},
 			{+0.5f, +0.5f, +0.5f}
 		};
-		static const float s = 0.1f;
-		static const float e = 0.9f;
+		static const float s = 0.0f;
+		static const float e = 1.0f;
 		static vector<vec2> sample_uv = {
 			{s, e},
 			{s, s},

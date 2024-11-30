@@ -4,6 +4,7 @@ Texture2DArray texture_arr_n : register(t2);
 
 SamplerState sampler_linear : register(s0);
 
+
 struct PS_INPUT
 {
     int tex_arr_idx : INDEX;
@@ -33,12 +34,13 @@ PS_OUTPUT main(PS_INPUT input)
     
     output.w_pos = float4(input.w_pos, 1);
     uvw = float3(input.uv, input.tex_arr_idx);
+    output.uvw = float4(uvw, 1);
     float3 tangent = normalize(input.tangent -
         dot(input.tangent, input.normal) * input.normal);
     output.tan = float4(tangent, 1);
     output.tan_n = float4(input.normal, 1);
     float3 bitangent = cross(input.normal, tangent);
-    //bitangent = normalize(bitangent);
+    bitangent = normalize(bitangent);
     float3x3 tbn = float3x3(tangent, bitangent, input.normal);
     
     float3 normal = texture_arr_n.Sample(sampler_linear, uvw).xyz;
@@ -53,6 +55,5 @@ PS_OUTPUT main(PS_INPUT input)
         float4(texture_arr.Sample(sampler_linear, uvw).rgb, 1);
     float h = texture_arr_n.Sample(sampler_linear, uvw).w;
     output.ssao_normal = float4(input.normal, 1);
-    output.uvw = float4(uvw, 1);
     return output;
 }
