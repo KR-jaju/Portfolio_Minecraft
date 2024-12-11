@@ -145,9 +145,6 @@
     <Filter Include="소스 파일\World\Map\System\RenderSystem\SsaoBlur">
       <UniqueIdentifier>{239ac719-1e45-4ea0-a247-86c099614391}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\Shadow\ShadowBlur">
-      <UniqueIdentifier>{5d1cc827-1078-4a06-a4bf-66f8df3d8c96}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\Ssao">
       <UniqueIdentifier>{0f92ee97-4ff7-4cb8-ac0b-18297c59ae61}</UniqueIdentifier>
     </Filter>
@@ -220,13 +217,31 @@
     <Filter Include="소스 파일\World\Map\System\RenderSystem\GeoRender\ParallaxMapping">
       <UniqueIdentifier>{8a2f8a74-16ea-4455-bc1f-780decb89bd9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\ShadowRender\CSM">
+      <UniqueIdentifier>{3e41ab42-dd83-4e85-8ccc-0554d3429f92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Engine\Pipeline\0_Buffer\StructuredBuffer">
+      <UniqueIdentifier>{8c408968-2bc7-42c6-811d-90b59bdd5d12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Engine\Pipeline\0_Buffer\ConstantBuffer">
+      <UniqueIdentifier>{b4494f66-dfb8-403f-b3b5-a713f28ab02b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Engine\Pipeline\0_Buffer\BasicBuffer">
+      <UniqueIdentifier>{c702dd58-f6cc-48d7-a5a4-77409ba8bde9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Engine\Pipeline\0_Buffer\DepthBuffer">
+      <UniqueIdentifier>{cdbc62f7-487a-48c0-99c6-605a26b8d5fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\Shadow\CSM">
+      <UniqueIdentifier>{43dc920d-8ef8-4d8e-8b4e-315753faa866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Engine\Pipeline\3_Shader\GeometryShader">
+      <UniqueIdentifier>{6841dc83-faba-4430-b944-b7f3aebd5d6f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="ConstantBuffer.h">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
     </ClInclude>
     <ClInclude Include="InputLayout.h">
       <Filter>소스 파일\Engine\Pipeline\1_InputAssembler</Filter>
@@ -254,9 +269,6 @@
     </ClInclude>
     <ClInclude Include="RasterizerState.h">
       <Filter>소스 파일\Engine\Pipeline\2_Rasterizer</Filter>
-    </ClInclude>
-    <ClInclude Include="Buffer.h">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
     </ClInclude>
     <ClInclude Include="Chunk.h">
       <Filter>소스 파일\World\Chunk</Filter>
@@ -296,9 +308,6 @@
     </ClInclude>
     <ClInclude Include="Block.h">
       <Filter>소스 파일\World\Block</Filter>
-    </ClInclude>
-    <ClInclude Include="DepthMap.h">
-      <Filter>소스 파일\World</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
       <Filter>소스 파일\World\Map</Filter>
@@ -384,6 +393,24 @@
     <ClInclude Include="ParallaxMapping.h">
       <Filter>소스 파일\World\Map\System\RenderSystem\GeoRender\ParallaxMapping</Filter>
     </ClInclude>
+    <ClInclude Include="CascadeShadow.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\ShadowRender\CSM</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>소스 파일\Engine\Pipeline\0_Buffer\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>소스 파일\Engine\Pipeline\0_Buffer\BasicBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="StructuredBuffer.h">
+      <Filter>소스 파일\Engine\Pipeline\0_Buffer\StructuredBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthMap.h">
+      <Filter>소스 파일\Engine\Pipeline\0_Buffer\DepthBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryShader.h">
+      <Filter>소스 파일\Engine\Pipeline\3_Shader\GeometryShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -391,9 +418,6 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ConstantBuffer.cpp">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
     </ClCompile>
     <ClCompile Include="InputLayout.cpp">
       <Filter>소스 파일\Engine\Pipeline\1_InputAssembler</Filter>
@@ -422,9 +446,6 @@
     <ClCompile Include="RasterizerState.cpp">
       <Filter>소스 파일\Engine\Pipeline\2_Rasterizer</Filter>
     </ClCompile>
-    <ClCompile Include="Buffer.cpp">
-      <Filter>소스 파일\Engine\Pipeline\0_Buffer</Filter>
-    </ClCompile>
     <ClCompile Include="Chunk.cpp">
       <Filter>소스 파일\World\Chunk</Filter>
     </ClCompile>
@@ -451,9 +472,6 @@
     </ClCompile>
     <ClCompile Include="WICTextureLoader11.cpp">
       <Filter>헤더 파일\Utils\WICTextureLoader</Filter>
-    </ClCompile>
-    <ClCompile Include="DepthMap.cpp">
-      <Filter>소스 파일\World</Filter>
     </ClCompile>
     <ClCompile Include="Map.cpp">
       <Filter>소스 파일\World\Map</Filter>
@@ -539,6 +557,24 @@
     <ClCompile Include="ParallaxMapping.cpp">
       <Filter>소스 파일\World\Map\System\RenderSystem\GeoRender\ParallaxMapping</Filter>
     </ClCompile>
+    <ClCompile Include="CascadeShadow.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\ShadowRender\CSM</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp">
+      <Filter>소스 파일\Engine\Pipeline\0_Buffer\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffer.cpp">
+      <Filter>소스 파일\Engine\Pipeline\0_Buffer\BasicBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="StructuredBuffer.cpp">
+      <Filter>소스 파일\Engine\Pipeline\0_Buffer\StructuredBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthMap.cpp">
+      <Filter>소스 파일\Engine\Pipeline\0_Buffer\DepthBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryShader.cpp">
+      <Filter>소스 파일\Engine\Pipeline\3_Shader\GeometryShader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="scop.rc">
@@ -584,23 +620,11 @@
     <FxCompile Include="DepthPixelShader.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DepthShader</Filter>
     </FxCompile>
-    <FxCompile Include="ShadowVS.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow</Filter>
-    </FxCompile>
-    <FxCompile Include="ShadowPS.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow</Filter>
-    </FxCompile>
     <FxCompile Include="SsaoBlurPS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Ssao\SsaoBlur</Filter>
     </FxCompile>
     <FxCompile Include="SsaoBlurVS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Ssao\SsaoBlur</Filter>
-    </FxCompile>
-    <FxCompile Include="ShadowBlurVS.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow\ShadowBlur</Filter>
-    </FxCompile>
-    <FxCompile Include="ShadowBlurPS.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow\ShadowBlur</Filter>
     </FxCompile>
     <FxCompile Include="ResultVS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader</Filter>
@@ -673,6 +697,18 @@
     </FxCompile>
     <FxCompile Include="ParallaxPS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry\ParallaxMapping</Filter>
+    </FxCompile>
+    <FxCompile Include="CombineShadowVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="CombineShadowPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow\CSM</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow\CSM</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

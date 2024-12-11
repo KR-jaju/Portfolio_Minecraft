@@ -158,6 +158,7 @@ struct VertexGeo {
 
 struct VertexShadow {
 	vec3 pos;
+	vec3 normal;
 	int shadow_flag = 0;
 };
 

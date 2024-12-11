@@ -1,11 +1,14 @@
 #include "pch.h"
 #include "DepthMap.h"
 
-DepthMap::DepthMap(ComPtr<ID3D11Device> const& device)
+DepthMap::DepthMap(
+	ComPtr<ID3D11Device> const& device, 
+	UINT width, 
+	UINT height
+)
 {
-	int times = 10;
-	this->width = 800;
-	this->height = 650;
+	this->width = width;
+	this->height = height;
 
 	D3D11_TEXTURE2D_DESC desc;
 	ZeroMemory(&desc, sizeof(desc));
@@ -54,17 +57,22 @@ ComPtr<ID3D11ShaderResourceView> DepthMap::getShaderResourceView()
 	return this->depth_SRV;
 }
 
+ComPtr<ID3D11Texture2D> DepthMap::getTexture2D()
+{
+	return this->depth_texture;
+}
+
 D3D11_VIEWPORT DepthMap::getViewPort()
 {
 	return this->view_port;
 }
 
-void DepthMap::setViewPort()
+void DepthMap::setViewPort(float width, float height)
 {
 	this->view_port.TopLeftX = 0.0f;
 	this->view_port.TopLeftY = 0.0f;
-	this->view_port.Width = static_cast<float>(this->width);
-	this->view_port.Height = static_cast<float>(this->height);
+	this->view_port.Width = width;
+	this->view_port.Height = height;
 	this->view_port.MinDepth = 0.0f;
 	this->view_port.MaxDepth = 1.0f;
 }

@@ -2,12 +2,17 @@
 class DepthMap
 {
 public:
-	DepthMap(ComPtr<ID3D11Device> const& device);
+	DepthMap(
+		ComPtr<ID3D11Device> const& device,
+		UINT widht,
+		UINT height
+	);
 	ComPtr<ID3D11DepthStencilView> getDepthStencilView();
 	ComPtr<ID3D11ShaderResourceView> getShaderResourceView();
+	ComPtr<ID3D11Texture2D> getTexture2D();
 	D3D11_VIEWPORT getViewPort();
-private:// test
-	void setViewPort();
+	void setViewPort(float width, float height);
+
 private:
 	UINT width;
 	UINT height;

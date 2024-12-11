@@ -94,7 +94,7 @@ void Filter::render()
 	this->setPipe();
 	this->d_graphic->setViewPort(this->view_port);
 	this->d_graphic->getContext()->PSSetShaderResources(0, 1,
-		&(this->in_srv));
+		this->in_srv.GetAddressOf());
 	this->d_graphic->getContext()->DrawIndexed(
 		ibuffer->getCount(), 0, 0);
 }
@@ -106,7 +106,7 @@ ComPtr<ID3D11ShaderResourceView> Filter::getSRV()
 
 void Filter::setStartSRV(ComPtr<ID3D11ShaderResourceView> srv)
 {
-	this->in_srv = srv.Get();
+	this->in_srv = srv;
 }
 
 struct cdata

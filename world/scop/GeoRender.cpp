@@ -15,6 +15,7 @@
 #include "HullShader.h"
 #include "DomainShader.h"
 #include "Chunk.h"
+#include "DepthMap.h"
 
 GeoRender::GeoRender(
 	MapUtils* minfo,
@@ -148,6 +149,10 @@ GeoRender::GeoRender(
 			this->m_info->height
 		);
 	}
+	this->depth_map = make_shared<DepthMap>(
+		this->d_graphic->getDevice(),
+		this->m_info->width, this->m_info->height
+	);
 }
 
 GeoRender::~GeoRender()
@@ -162,7 +167,8 @@ void GeoRender::render(
 {
 	ComPtr<ID3D11DeviceContext> context = this->d_graphic->getContext();
 	ComPtr<ID3D11Device> device = this->d_graphic->getDevice();
-	this->d_graphic->renderBegin(this->d_buffer.get());
+	this->d_graphic->renderBegin(this->d_buffer.get(), 
+		this->depth_map->getDepthStencilView());
 	this->setPipe();
 	this->setConstantBuffer(view, proj, cam_pos);
 	for (int i = 0; i < this->m_info->size_h; i++) {
@@ -188,6 +194,11 @@ ComPtr<ID3D11ShaderResourceView> GeoRender::getSRV(RTVIndex idx)
 	if (this->parallax_flag)
 		return this->parallax_mapping->getSRV(idx);
 	return this->d_buffer->getSRV(index);
+}
+
+ComPtr<ID3D11ShaderResourceView> GeoRender::getDepthSRV()
+{
+	return this->depth_map->getShaderResourceView();
 }
 
 void GeoRender::setPipe()

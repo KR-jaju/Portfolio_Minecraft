@@ -150,6 +150,7 @@
     <ClInclude Include="BlendState.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Blur.h" />
+    <ClInclude Include="CascadeShadow.h" />
     <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="CubeMap.h" />
     <ClInclude Include="DeferredGraphics.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="DeferredBuffer.h" />
     <ClInclude Include="DomainShader.h" />
     <ClInclude Include="Filter.h" />
+    <ClInclude Include="GeometryShader.h" />
     <ClInclude Include="GeoRender.h" />
     <ClInclude Include="HullShader.h" />
     <ClInclude Include="InputLayouts.h" />
@@ -187,6 +189,7 @@
     <ClInclude Include="ShadowRender.h" />
     <ClInclude Include="SsaoRender.h" />
     <ClInclude Include="SsaoBlur.h" />
+    <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="Sun.h" />
     <ClInclude Include="SunMoon.h" />
     <ClInclude Include="Terrain.h" />
@@ -206,6 +209,7 @@
     <ClCompile Include="BlendState.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Blur.cpp" />
+    <ClCompile Include="CascadeShadow.cpp" />
     <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="CubeMap.cpp" />
     <ClCompile Include="DeferredGraphics.cpp" />
@@ -213,6 +217,7 @@
     <ClCompile Include="DeferredBuffer.cpp" />
     <ClCompile Include="DomainShader.cpp" />
     <ClCompile Include="Filter.cpp" />
+    <ClCompile Include="GeometryShader.cpp" />
     <ClCompile Include="GeoRender.cpp" />
     <ClCompile Include="HullShader.cpp" />
     <ClCompile Include="InputLayouts.cpp" />
@@ -244,6 +249,7 @@
     <ClCompile Include="ShadowRender.cpp" />
     <ClCompile Include="SsaoRender.cpp" />
     <ClCompile Include="SsaoBlur.cpp" />
+    <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="Sun.cpp" />
     <ClCompile Include="SunMoon.cpp" />
     <ClCompile Include="Terrain.cpp" />
@@ -291,6 +297,22 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="CombineShadowPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="CombineShadowVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
@@ -411,22 +433,6 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="SamplingVS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="ShadowBlurPS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="ShadowBlurVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

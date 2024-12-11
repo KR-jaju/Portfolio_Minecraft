@@ -24,8 +24,7 @@ ResultSM::ResultSM(
 	this->d_buffer = make_shared<DeferredBuffer>(1);
 	this->d_buffer->setRTVsAndSRVs(device, width, height);
 	this->sun_moon = make_shared<SunMoon>(graphic, width, height);
-	this->blur = make_shared<Blur>(graphic, width, height, 
-		this->sun_moon->getSRV());
+	this->blur = make_shared<Blur>(graphic, width, height);
 	vector<VertexDefer> vertices;
 	vector<uint32> indices;
 	Block::makeBox(1, vertices, indices);
@@ -74,8 +73,9 @@ void ResultSM::render(
 )
 {
 	ComPtr<ID3D11DeviceContext> context = 
-		this->d_graphic->getContext();
+		this->d_graphic->getContext();	
 	this->sun_moon->render(cam_pos, cam_view, cam_proj);
+	this->blur->setStartSRV(this->sun_moon->getSRV());
 	this->blur->render();
 	this->setPipe();
 	this->d_graphic->renderBegin(this->d_buffer.get());

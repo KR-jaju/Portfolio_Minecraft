@@ -1,14 +1,14 @@
 #include "pch.h"
-#include "HullShader.h"
+#include "GeometryShader.h"
 
-HullShader::HullShader(
+GeometryShader::GeometryShader(
 	ComPtr<ID3D11Device> device, 
 	wstring const& path, 
 	string const& entry_point, 
 	string const& version
 )
 {
-	const uint32 compileFlag = D3DCOMPILE_DEBUG |
+	const uint32 compile_flag = D3DCOMPILE_DEBUG |
 		D3DCOMPILE_SKIP_OPTIMIZATION;
 
 	HRESULT hr = D3DCompileFromFile(
@@ -17,31 +17,31 @@ HullShader::HullShader(
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		entry_point.c_str(),
 		version.c_str(),
-		compileFlag,
+		compile_flag,
 		0,
 		this->blob.GetAddressOf(),
 		nullptr
 	);
 	CHECK(hr);
-	hr = device->CreateHullShader(
+	hr = device->CreateGeometryShader(
 		this->blob->GetBufferPointer(),
 		this->blob->GetBufferSize(),
 		nullptr,
-		this->hull_shader.GetAddressOf()
+		this->geo_shader.GetAddressOf()
 	);
 	CHECK(hr);
 }
 
-HullShader::~HullShader()
+GeometryShader::~GeometryShader()
 {
 }
 
-ComPtr<ID3D11HullShader> HullShader::getComPtr() const
+ComPtr<ID3D11GeometryShader> GeometryShader::getComPtr() const
 {
-	return this->hull_shader;
+	return this->geo_shader;
 }
 
-ComPtr<ID3DBlob> HullShader::getBlob() const
+ComPtr<ID3DBlob> GeometryShader::getBlob() const
 {
 	return this->blob;
 }

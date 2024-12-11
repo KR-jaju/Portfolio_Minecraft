@@ -212,6 +212,110 @@ TextureArray::TextureArray(
         context->GenerateMips(this->shader_resource_view.Get());
 }
 
+TextureArray::TextureArray(
+	ComPtr<ID3D11Device> device,
+	ComPtr<ID3D11DeviceContext> context,
+	vector<ComPtr<ID3D11ShaderResourceView>> const& srvs,
+	DXGI_FORMAT dxgi_format
+)
+{
+	vector<ComPtr<ID3D11Resource>> resources;
+	ComPtr<ID3D11Resource> resource;
+	for (int i = 0; i < srvs.size(); i++) {
+		srvs[i]->GetResource(resource.GetAddressOf());
+		resources.push_back(resource);
+	}
+	vector<ComPtr<ID3D11Texture2D>> textures;
+	ComPtr<ID3D11Texture2D> texture;
+	D3D11_TEXTURE2D_DESC tex_desc;
+	for (int i = 0; i < srvs.size(); i++) {
+		HRESULT h = resources[i]->QueryInterface(__uuidof(ID3D11Texture2D),
+			(void**)texture.GetAddressOf());
+		CHECK(h);
+		D3D11_TEXTURE2D_DESC current_desc;
+		texture->GetDesc(&current_desc);
+
+		if (i == 0)
+			tex_desc = current_desc;
+		else {
+			if (current_desc.Width != tex_desc.Width ||
+				current_desc.Height != tex_desc.Height ||
+				current_desc.Format != tex_desc.Format ||
+				current_desc.MipLevels != tex_desc.MipLevels) {
+				throw std::runtime_error("모든 텍스처의 크기 및 포맷이 동일하지 않습니다.");
+			}
+		}
+		textures.push_back(texture);
+	}
+	tex_desc.ArraySize = static_cast<UINT>(srvs.size());
+	tex_desc.Usage = D3D11_USAGE_DEFAULT;
+	tex_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	tex_desc.CPUAccessFlags = 0;
+	tex_desc.MiscFlags = 0;
+
+	HRESULT hr = device->CreateTexture2D(
+		&tex_desc,
+		nullptr,
+		this->texture_arr.GetAddressOf()
+	);
+	CHECK(hr);
+
+	for (int i = 0; i < textures.size(); i++) {
+		context->CopySubresourceRegion(
+			this->texture_arr.Get(),
+			D3D11CalcSubresource(
+				0,
+				static_cast<UINT>(i),
+				tex_desc.MipLevels
+			),
+			0,
+			0,
+			0,
+			textures[i].Get(),
+			0,
+			nullptr
+		);
+	}
+	D3D11_SHADER_RESOURCE_VIEW_DESC view_desc;
+	ZeroMemory(&view_desc, sizeof(view_desc));
+	view_desc.Format = dxgi_format;
+	view_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+	view_desc.Texture2DArray.MostDetailedMip = 0;
+	view_desc.Texture2DArray.MipLevels = tex_desc.MipLevels;
+	view_desc.Texture2DArray.FirstArraySlice = 0;
+	view_desc.Texture2DArray.ArraySize = tex_desc.ArraySize;
+
+	hr = device->CreateShaderResourceView(
+		this->texture_arr.Get(),
+		&view_desc,
+		this->shader_resource_view.GetAddressOf()
+	);
+	CHECK(hr); // TODO 오류 해결
+}
+
+void TextureArray::updateTextureArray(
+	ComPtr<ID3D11DeviceContext> context, 
+	ComPtr<ID3D11ShaderResourceView> target_srv, 
+	UINT arr_idx
+)
+{
+	ComPtr<ID3D11Resource> resource;
+	target_srv->GetResource(resource.GetAddressOf());
+
+	ComPtr<ID3D11Texture2D> texture;
+	HRESULT hr = resource->QueryInterface(__uuidof(ID3D11Texture2D),
+		(void**)texture.GetAddressOf());
+	CHECK(hr);
+
+	UINT subresource_idx = D3D11CalcSubresource(0, arr_idx, 1);
+
+	context->CopySubresourceRegion(
+		this->texture_arr.Get(),
+		subresource_idx,
+		0, 0, 0, texture.Get(), 0, nullptr
+	);
+}
+
 ComPtr<ID3D11ShaderResourceView> TextureArray::getComPtr()
 {
 	return this->shader_resource_view;

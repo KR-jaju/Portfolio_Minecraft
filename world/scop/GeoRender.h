@@ -6,6 +6,7 @@ class MapUtils;
 class BlendState; // 바뀔 수 있음 나중에(ex OIT)
 class HullShader;
 class DomainShader;
+class DepthMap;
 
 class GeoRender
 {
@@ -21,6 +22,7 @@ public:
 		vec3 const& cam_pos
 	);
 	ComPtr<ID3D11ShaderResourceView> getSRV(RTVIndex idx);
+	ComPtr<ID3D11ShaderResourceView> getDepthSRV();
 
 private:
 	void setPipe();
@@ -53,5 +55,6 @@ private:
 	shared_ptr<TextureArray> texture_array_color;
 	shared_ptr<TextureArray> texture_array_normal;
 	shared_ptr<TextureArray> texture_array_s;
+	shared_ptr<DepthMap> depth_map;
 };
 

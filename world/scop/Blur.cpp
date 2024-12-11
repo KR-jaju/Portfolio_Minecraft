@@ -7,17 +7,20 @@
 Blur::Blur(
 	DeferredGraphics* graphic, 
 	UINT width, 
-	UINT height,
-	ComPtr<ID3D11ShaderResourceView> start_srv
+	UINT height
 )
 {
 	this->d_graphic = graphic;
 	this->width = width;
 	this->height = height;
-	this->start_srv = start_srv.Get();
 	ComPtr<ID3D11Device> device = graphic->getDevice();
-	//this->makeFilter();
-	this->makeFilterMultiLevel();
+	this->makeFilter();
+	//this->makeFilterMultiLevel();
+}
+
+void Blur::setStartSRV(ComPtr<ID3D11ShaderResourceView> start_srv)
+{
+	this->start_srv = start_srv;
 }
 
 ComPtr<ID3D11ShaderResourceView> Blur::getSRV()
@@ -27,13 +30,13 @@ ComPtr<ID3D11ShaderResourceView> Blur::getSRV()
 
 void Blur::render()
 {
+	this->makeFilterSetSRV();
+	//this->makeFilterSetMultiLevelSRV();
 	for (int i = 0; i < this->down_filter.size(); i++)
 		this->down_filter[i]->render();
 	for (int i = 0; i < this->up_blur_x_filter.size(); i++) {
-		for (int j = 0; j < 2; j++) {
-			this->up_blur_x_filter[i]->render();
-			this->up_blur_y_filter[i]->render();
-		}
+		this->up_blur_x_filter[i]->render();
+		this->up_blur_y_filter[i]->render();
 		if (i)
 			this->tmp_up_filter[i - 1]->render();
 	}
@@ -52,7 +55,6 @@ void Blur::makeFilter()
 			L"SamplingPS.hlsl"
 		)
 	);
-	this->down_filter.back()->setStartSRV(this->start_srv);
 	this->up_blur_x_filter.push_back(
 		make_shared<Filter>(
 			this->d_graphic,
@@ -61,8 +63,6 @@ void Blur::makeFilter()
 			L"BlurXPS.hlsl"
 		)
 	);
-	this->up_blur_x_filter.back()->setStartSRV(
-		this->down_filter.back()->getSRV());
 	this->up_blur_y_filter.push_back(
 		make_shared<Filter>(
 			this->d_graphic,
@@ -71,8 +71,6 @@ void Blur::makeFilter()
 			L"BlurYPS.hlsl"
 		)
 	);
-	this->up_blur_y_filter.back()->setStartSRV(
-		this->up_blur_x_filter.back()->getSRV());
 	this->final_filter = make_shared<Filter>(
 		this->d_graphic,
 		this->width,
@@ -80,14 +78,23 @@ void Blur::makeFilter()
 		L"SamplingVS.hlsl",
 		L"SamplingPS.hlsl"
 	);
+}
+
+void Blur::makeFilterSetSRV()
+{
+	this->down_filter.back()->setStartSRV(this->start_srv);
+	this->up_blur_x_filter.back()->setStartSRV(
+		this->down_filter.back()->getSRV());
+	this->up_blur_y_filter.back()->setStartSRV(
+		this->up_blur_x_filter.back()->getSRV());
 	this->final_filter->setStartSRV(
 		this->up_blur_y_filter.back()->getSRV());
 }
 
 void Blur::makeFilterMultiLevel()
 {
-	int target = 32;
-	for (int i = 2; i <= target; i *= 2) {
+	this->multi_level_target = 16;
+	for (int i = 2; i <= this->multi_level_target; i *= 2) {
 		auto last = make_shared<Filter>(
 			this->d_graphic,
 			this->width / i,
@@ -95,13 +102,9 @@ void Blur::makeFilterMultiLevel()
 			L"SamplingVS.hlsl",
 			L"SamplingPS.hlsl"
 		);
-		if (i == 2)
-			last->setStartSRV(this->start_srv);
-		else
-			last->setStartSRV(this->down_filter.back()->getSRV());
 		this->down_filter.push_back(last);
 	}
-	for (int i = target; i >= 1; i /= 2) {
+	for (int i = this->multi_level_target; i >= 1; i /= 2) {
 		this->up_blur_x_filter.push_back(
 			make_shared<Filter>(
 				this->d_graphic,
@@ -111,14 +114,6 @@ void Blur::makeFilterMultiLevel()
 				L"BlurXPS.hlsl"
 			)
 		);
-		if (i == target)
-			this->up_blur_x_filter.back()->setStartSRV(
-				this->down_filter.back()->getSRV());
-		else {
-			this->up_blur_x_filter.back()->setStartSRV(
-				this->tmp_up_filter.back()->getSRV()
-			);
-		}
 		this->up_blur_y_filter.push_back(
 			make_shared<Filter>(
 				this->d_graphic,
@@ -127,9 +122,6 @@ void Blur::makeFilterMultiLevel()
 				L"SamplingVS.hlsl",
 				L"BlurYPS.hlsl"
 			)
-		);
-		this->up_blur_y_filter.back()->setStartSRV(
-			this->up_blur_x_filter.back()->getSRV()
 		);
 		if (i > 1) {
 			this->tmp_up_filter.push_back(
@@ -141,9 +133,6 @@ void Blur::makeFilterMultiLevel()
 					L"SamplingPS.hlsl"
 				)
 			);
-			this->tmp_up_filter.back()->setStartSRV(
-				this->up_blur_y_filter.back()->getSRV()
-			);
 		}
 	}
 	this->final_filter = make_shared<Filter>(
@@ -153,6 +142,40 @@ void Blur::makeFilterMultiLevel()
 		L"SamplingVS.hlsl",
 		L"SamplingPS.hlsl"
 	);
+}
+
+void Blur::makeFilterSetMultiLevelSRV()
+{
+	int idx = 0;
+	for (int i = 2; i <= this->multi_level_target; i *= 2) {
+		if (i == 2)
+			this->down_filter[idx]->setStartSRV(this->start_srv);
+		else
+			this->down_filter[idx]->
+				setStartSRV(this->down_filter[idx - 1]->getSRV());
+		idx++;
+	}
+
+	idx = 0;
+	for (int i = this->multi_level_target; i >= 1; i /= 2) {
+		if (i == this->multi_level_target)
+			this->up_blur_x_filter[idx]->setStartSRV(
+				this->down_filter.back()->getSRV());
+		else {
+			this->up_blur_x_filter[idx]->setStartSRV(
+				this->tmp_up_filter[idx - 1]->getSRV()
+			);
+		}
+		this->up_blur_y_filter[idx]->setStartSRV(
+			this->up_blur_x_filter[idx]->getSRV()
+		);
+		if (i > 1) {
+			this->tmp_up_filter[idx]->setStartSRV(
+				this->up_blur_y_filter[idx]->getSRV()
+			);
+		}
+		idx++;
+	}
 	this->final_filter->setStartSRV(
 		this->up_blur_y_filter.back()->getSRV());
 }

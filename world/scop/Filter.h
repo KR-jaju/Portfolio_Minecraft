@@ -42,6 +42,6 @@ private:
 	shared_ptr<SamplerState> sampler_state;
 
 private:
-	ID3D11ShaderResourceView* in_srv;
+	ComPtr<ID3D11ShaderResourceView> in_srv;
 };
 

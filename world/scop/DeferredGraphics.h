@@ -12,7 +12,7 @@ public:
 		UINT height
 	);
 	~DeferredGraphics();
-	void setViewPort(D3D11_VIEWPORT& view_port);
+	void setViewPort(D3D11_VIEWPORT const& view_port);
 	void renderBegin(
 		DeferredBuffer* d_buffer = nullptr,
 		ComPtr<ID3D11DepthStencilView> dsv = nullptr

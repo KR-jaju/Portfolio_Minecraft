@@ -28,6 +28,11 @@ float4 main(PS_INPUT input) : SV_TARGET
     a_color = LinearToneMapping(a_color);
     float3 d_color = 
         directional_color.Sample(sampler0, input.uv).rgb;
+    
+    //float4 t = shadow_map.Sample(sampler0, input.uv);
+    //t = pow(t, 3);
+    //return float4(t.rgb, 1);
+    
     d_color = LinearToneMapping(d_color);
     float4 color = float4(a_color + d_color, 1);
     if (color.r == 0 && color.g == 0 && color.b == 0)
@@ -35,16 +40,9 @@ float4 main(PS_INPUT input) : SV_TARGET
             cube_map.Sample(sampler0, input.uv).rgb), 1);
     
     float sp = shadow_map.Sample(sampler0, input.uv).r;
-    sp /= 15.f;
-    sp = max(sp, 0.1);
+    
     float4 ssao = ssao_map.Sample(sampler0, input.uv);
-    ssao = 1; // test
-    float4 res = float4(sp, sp, sp, 1) * ssao;
-    if (sp >= 0.9f)
-        color = float4(a_color.xyz * ssao.xyz + d_color.xyz, 1);
-    else
-        color = float4(a_color.xyz, 1) * ssao;
     color = clamp(color, 0.0, 1000.0);
-    //color = float4(LinearToneMapping(color.rgb), 1);
-    return color * sp;
+    color = float4(a_color.xyz * ssao.r + d_color.xyz * sp, 1);
+    return color;
 }

@@ -28,7 +28,7 @@ struct PS_OUTPUT
     float4 ssao_normal : SV_Target4;
 };
 
-static const float height_scale = 0.2;
+static const float height_scale = 0.42;
 
 float3 parallaxOcclusionMapping(float3 uvw, float3 view_dir)
 {

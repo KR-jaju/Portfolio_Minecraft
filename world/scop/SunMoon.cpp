@@ -59,7 +59,9 @@ void SunMoon::render(
 	device = this->d_graphic->getDevice();
 	ComPtr<ID3D11DeviceContext> context;
 	context = this->d_graphic->getContext();
-	float dt = XMConvertToRadians(15);
+	static float d = 15;
+	float dt = XMConvertToRadians(d);
+	//d += 0.1;
 	MVP mvp;
 	vec3 move_pos = vec3(cam_pos.x + 299, 0, cam_pos.z);
 	mvp.model = SimpleMath::Matrix::CreateTranslation(move_pos) * 

@@ -1,5 +1,5 @@
-Texture2D normal_map : register(t0); // view space
-Texture2D position_map : register(t1); // view space
+Texture2D normal_map : register(t0); // world space
+Texture2D position_map : register(t1); // world space
 Texture2D depth_map : register(t2); // ndc
 Texture2D random_map : register(t3);
 
@@ -87,7 +87,7 @@ float4 main(PS_INPUT input) : SV_TARGET
         float2 uv = ndcToTextureUV(ndc_q.xy);
         float rz = depth_map.Sample(normal_depth_sampler, uv).r;
         rz = ndcDepthToViewDepth(rz);
-        float3 r = (rz / q.z) * q;
+        float3 r = (rz / q.z) * q; // r = t * q -> t = rz / q.z
         
         float dist_z = p.z - r.z;
         float dp = max(dot(n, normalize(r - p)), 0.0f);

@@ -11,10 +11,8 @@ SamplerState::SamplerState(ComPtr<ID3D11Device> device)
 	desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	desc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	//desc.ComparisonFunc = D3D11_COMPARISON_EQUAL;
 	desc.MinLOD = 0;
 	desc.MaxLOD = D3D11_FLOAT32_MAX;
-	//desc.MaxLOD = 0;
 	HRESULT hr = this->device->CreateSamplerState(
 		&desc,
 		this->sampler_state.GetAddressOf()

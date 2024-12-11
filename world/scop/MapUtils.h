@@ -52,6 +52,8 @@ public:
 	UINT width; // 창 가로 크기
 	UINT height; // 창 세로 크기
 	vec3 directional_light_pos;
+	vec3 light_dir;
+	vec3 cam_pos; // test
 
 private:
 	int* blocks;

@@ -18,7 +18,7 @@ DeferredGraphics::~DeferredGraphics()
 {
 }
 
-void DeferredGraphics::setViewPort(D3D11_VIEWPORT& view_port)
+void DeferredGraphics::setViewPort(D3D11_VIEWPORT const& view_port)
 {
 	this->context->RSSetViewports(1, &(view_port));
 }
@@ -59,6 +59,7 @@ void DeferredGraphics::renderBegin(
 		views.data(),
 		depth_stencil_view.Get()
 	);
+	
 	this->context->ClearDepthStencilView(
 		depth_stencil_view.Get(),
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
