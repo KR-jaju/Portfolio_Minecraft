@@ -64,5 +64,6 @@ private:
 	shared_ptr<PixelShader> s_pixel_shader;
 	shared_ptr<VertexShader> s_vertex_shader;
 	shared_ptr<InputLayout> s_input_layout;
+	shared_ptr<RasterizerState> s_rasterizer_state;
 };
 

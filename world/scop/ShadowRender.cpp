@@ -104,6 +104,11 @@ ShadowRender::ShadowRender(
 		this->d_graphic->getContext(),
 		this->frustum_split
 	);
+	this->s_rasterizer_state = make_shared<RasterizerState>(
+		this->d_graphic->getDevice(),
+		D3D11_FILL_SOLID,
+		D3D11_CULL_NONE
+	);
 	this->devideFrustum();
 }
 
@@ -122,6 +127,7 @@ void ShadowRender::setShader()
 		nullptr,
 		0
 	);
+	context->RSSetState(this->rasterizer_state->getComPtr().Get());
 	context->PSSetShader(
 		this->pixel_shader->getComPtr().Get(),
 		nullptr,
@@ -141,6 +147,7 @@ void ShadowRender::setShadowShader()
 		nullptr,
 		0
 	);
+	context->RSSetState(this->s_rasterizer_state->getComPtr().Get());
 	context->PSSetShader(
 		this->s_pixel_shader->getComPtr().Get(),
 		nullptr,
@@ -154,7 +161,6 @@ void ShadowRender::setPipe()
 		this->d_graphic->getContext();
 	context->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->RSSetState(this->rasterizer_state->getComPtr().Get());
 }
 
 void ShadowRender::devideFrustum() // view space
@@ -167,7 +173,7 @@ void ShadowRender::devideFrustum() // view space
 
 	vector<tuple<float, float, float>> tmp;
 	tmp.resize(this->split_cnt + 1);
-	float t = 0.6;
+	float t = 0.99;
 	int csm_idx = 0;
 	for (int i = 0; i < this->split_cnt + 1; i++) {
 		float ss = this->split_cnt;
