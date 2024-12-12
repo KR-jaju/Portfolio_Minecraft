@@ -24,9 +24,7 @@ public:
 	void Render(
 		Mat const& cam_view,
 		Mat const& cam_proj,
-		vec3 const& cam_pos,
-		Mat const& s_view,
-		Mat const& s_proj
+		vec3 const& cam_pos
 	);
 	
 private:

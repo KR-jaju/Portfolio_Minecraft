@@ -14,6 +14,8 @@
 #include "TextureArray.h"
 #include "StructuredBuffer.h"
 #include "CascadeShadow.h"
+#include "Block.h"
+#include "Buffer.h"
 
 ShadowRender::ShadowRender(
 	MapUtils* minfo,
@@ -63,13 +65,28 @@ ShadowRender::ShadowRender(
 		"main",
 		"ps_5_0"
 	);
+	
+	vector<VertexDefer> vertices;
+	vector<uint32> indices;
+	Block::makeBox(1, vertices, indices);
+	this->vbuffer = make_shared<Buffer<VertexDefer>>(
+		this->d_graphic->getDevice(),
+		vertices.data(),
+		vertices.size(),
+		D3D11_BIND_VERTEX_BUFFER
+	);
+	this->ibuffer = make_shared<Buffer<uint32>>(
+		this->d_graphic->getDevice(),
+		indices.data(),
+		indices.size(),
+		D3D11_BIND_INDEX_BUFFER
+	);
 	this->input_layout = make_shared<InputLayout>(
 		this->d_graphic->getDevice(),
-		InputLayouts::layout_shadow.data(),
-		InputLayouts::layout_shadow.size(),
+		InputLayouts::layout_deferred.data(),
+		InputLayouts::layout_deferred.size(),
 		this->vertex_shader->getBlob()
 	);
-
 	this->split_cnt = 3;
 	vector<ComPtr<ID3D11ShaderResourceView>> srvs_vec;
 	for (int i = 0; i < this->split_cnt; i++) {
@@ -85,12 +102,6 @@ ShadowRender::ShadowRender(
 		DXGI_FORMAT_R32_FLOAT
 	);
 
-	MVP mvp;
-	this->cbuffer = make_shared<ConstantBuffer>(
-		this->d_graphic->getDevice(),
-		this->d_graphic->getContext(),
-		mvp
-	);
 	this->mvps.resize(this->split_cnt);
 	this->structured_buffer = make_shared<StructuredBuffer>(
 		this->d_graphic->getDevice().Get(),
@@ -116,11 +127,66 @@ ShadowRender::~ShadowRender()
 {
 }
 
-
-void ShadowRender::setShader()
+void ShadowRender::renderCSM(Mat const& cam_view, Mat const& cam_proj)
 {
 	ComPtr<ID3D11DeviceContext> context =
 		this->d_graphic->getContext();
+
+	// shadow csm
+	vec3 lp = this->m_info->directional_light_pos;
+	this->frustum_split.light_pos = vec4(lp.x, lp.y, lp.z, this->split_cnt);
+	
+	// update structured buffer
+	for (int i = 0; i < split_cnt; i++) {
+		this->csms[i]->updateCBuffer(cam_view, cam_proj);
+		this->mvps[i] = this->csms[i]->getMVP();
+	}
+	this->structured_buffer->CopyToInput(
+		static_cast<void*>(this->mvps.data()));
+
+	// render chunk (light 시점)
+	this->setCSMPipe();
+	for (int k = 0; k < split_cnt; k++) {
+		context->VSSetConstantBuffers(0, 1,
+			this->csms[k]->getCBuffer()->getComPtr().GetAddressOf());
+		this->d_graphic->renderBegin(this->csms[k]->getDBuffer().get(),
+			this->csms[k]->getDSV());
+		this->d_graphic->setViewPort(this->csms[k]->getViewPort());
+		for (int i = 0; i < this->m_info->size_h; i++) {
+			for (int j = 0; j < this->m_info->size_w; j++) {
+				if (this->m_info->chunks[i][j]->render_flag == false)
+					continue;
+				this->m_info->chunks[i][j]->setShadowRender(
+					this->d_graphic->getContext(),
+					this->vertex_shader
+				);
+			}
+		}
+	}
+
+	// shadow combine
+	for (int i = 0; i < this->split_cnt; i++)
+		this->tex2d_arr->updateTextureArray(context,
+			this->csms[i]->getSRV(), i); // update tex2d arr;
+}
+
+
+void ShadowRender::setPipe()
+{
+	ComPtr<ID3D11DeviceContext> context =
+		this->d_graphic->getContext();
+	context->IASetPrimitiveTopology(
+		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	uint32 stride = this->vbuffer->getStride();
+	uint32 offset = this->vbuffer->getOffset();
+	context->IASetVertexBuffers(
+		0, 1, this->vbuffer->getComPtr().GetAddressOf(), &stride, &offset
+	);
+	context->IASetIndexBuffer(
+		this->ibuffer->getComPtr().Get(),
+		DXGI_FORMAT_R32_UINT,
+		0
+	);
 	context->IASetInputLayout(this->input_layout->getComPtr().Get());
 	context->VSSetShader(
 		this->vertex_shader->getComPtr().Get(),
@@ -137,10 +203,12 @@ void ShadowRender::setShader()
 		this->ps_cbuffer->getComPtr().GetAddressOf());
 }
 
-void ShadowRender::setShadowShader()
+void ShadowRender::setCSMPipe()
 {
 	ComPtr<ID3D11DeviceContext> context =
 		this->d_graphic->getContext();
+	context->IASetPrimitiveTopology(
+		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	context->IASetInputLayout(this->s_input_layout->getComPtr().Get());
 	context->VSSetShader(
 		this->s_vertex_shader->getComPtr().Get(),
@@ -153,14 +221,6 @@ void ShadowRender::setShadowShader()
 		nullptr,
 		0
 	);
-}
-
-void ShadowRender::setPipe()
-{
-	ComPtr<ID3D11DeviceContext> context = 
-		this->d_graphic->getContext();
-	context->IASetPrimitiveTopology(
-		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void ShadowRender::devideFrustum() // view space
@@ -219,26 +279,11 @@ void ShadowRender::render(
 {
 	ComPtr<ID3D11DeviceContext> context =
 		this->d_graphic->getContext();
-	this->setPipe();
 
-	// shadow csm
-	vec3 lp = this->m_info->directional_light_pos;
-	this->frustum_split.light_pos = vec4(lp.x, lp.y, lp.z, this->split_cnt);
-	this->renderShadow(cam_view, cam_proj);
-
-	// shadow combine
-	for (int i = 0; i < this->split_cnt; i++)
-		this->tex2d_arr->updateTextureArray(context,
-			this->csms[i]->getSRV(), i); // update tex2d arr;
 	this->d_graphic->renderBegin(this->d_buffer.get());
-	MVP mvp;
-	mvp.view = cam_view.Transpose();
-	mvp.proj = cam_proj.Transpose();
-	this->cbuffer->update(mvp);
+	this->frustum_split.view = cam_view.Transpose();
 	this->ps_cbuffer->update(this->frustum_split);
-	this->setShader();
-	context->VSSetConstantBuffers(
-		0, 1, this->cbuffer->getComPtr().GetAddressOf());
+	this->setPipe();
 	context->PSSetShaderResources(
 		0,
 		1,
@@ -248,49 +293,9 @@ void ShadowRender::render(
 		1, 1,
 		this->structured_buffer->GetSRV().GetAddressOf()
 	);
-	for (int i = 0; i < this->m_info->size_h; i++) {
-		for (int j = 0; j < this->m_info->size_w; j++) {
-			if (this->m_info->chunks[i][j]->render_flag == false)
-				continue;
-			this->m_info->chunks[i][j]->setShadowRender(
-				this->d_graphic->getContext(),
-				this->vertex_shader
-			);
-		}
-	}
-}
-
-void ShadowRender::renderShadow(
-	Mat const& cam_view,
-	Mat const& cam_proj
-)
-{
-	this->setShadowShader();
-	ComPtr<ID3D11DeviceContext> context = this->d_graphic->getContext();
-	for (int i = 0; i < split_cnt; i++) {
-		this->csms[i]->updateCBuffer(cam_view, cam_proj);
-		this->mvps[i] = this->csms[i]->getMVP();
-	}
-	this->structured_buffer->CopyToInput(
-		static_cast<void*>(this->mvps.data()));
-
-	for (int k = 0; k < split_cnt; k++) {
-		context->VSSetConstantBuffers(0, 1,
-			this->csms[k]->getCBuffer()->getComPtr().GetAddressOf());
-		this->d_graphic->renderBegin(this->csms[k]->getDBuffer().get(),
-			this->csms[k]->getDSV());
-		this->d_graphic->setViewPort(this->csms[k]->getViewPort());
-		for (int i = 0; i < this->m_info->size_h; i++) {
-			for (int j = 0; j < this->m_info->size_w; j++) {
-				if (this->m_info->chunks[i][j]->render_flag == false)
-					continue;
-				this->m_info->chunks[i][j]->setShadowRender(
-					this->d_graphic->getContext(),
-					this->vertex_shader
-				);
-			}
-		}
-	}
+	context->DrawIndexed(
+		this->ibuffer->getCount(),
+		0, 0);
 }
 
 ComPtr<ID3D11ShaderResourceView> ShadowRender::getSRV()
@@ -298,7 +303,7 @@ ComPtr<ID3D11ShaderResourceView> ShadowRender::getSRV()
 	return this->d_buffer->getSRV(0);
 }
 
-ComPtr<ID3D11ShaderResourceView> ShadowRender::getCSMSRV(int idx)
+ComPtr<ID3D11ShaderResourceView> ShadowRender::getCSMSRV(int idx) // test
 {
 	//return this->d_buffer->getSRV(0);
 	return this->csms[idx]->getDBuffer()->getSRV(0);

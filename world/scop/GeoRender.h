@@ -22,6 +22,7 @@ public:
 		vec3 const& cam_pos
 	);
 	ComPtr<ID3D11ShaderResourceView> getSRV(RTVIndex idx);
+	ComPtr<ID3D11ShaderResourceView> getNPSRV(RTVIndex idx);
 	ComPtr<ID3D11ShaderResourceView> getDepthSRV();
 
 private:

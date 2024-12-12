@@ -21,10 +21,8 @@ void RenderSystem::setDeffGraphics(DeferredGraphics* defer_graphic)
 void RenderSystem::Render(
 	Mat const& cam_view, 
 	Mat const& cam_proj,
-	vec3 const& cam_pos,
-	Mat const& shadow_view,
-	Mat const& shadow_proj
+	vec3 const& cam_pos
 )
 {
-	this->r_deff->Render(cam_view, cam_proj, cam_pos, shadow_view, shadow_proj);
+	this->r_deff->Render(cam_view, cam_proj, cam_pos);
 }

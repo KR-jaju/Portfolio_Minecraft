@@ -82,44 +82,31 @@ void CascadeShadow::updateCBuffer(
 	mid /= 8; // 절두체의 중점(world space)
 
 	float len = (mid - coord[4]).Length();
-	vec3 f_center = vec3(mid.x, mid.y, mid.z);
-	Mat light_view_mat = XMMatrixLookAtLH(f_center - this->m_info->light_dir * len,
-		f_center, vec3(0, 1, 0));
+	float texel_per_unit = this->width / (len * 2.0f);
 
-	vec3 max_orth = f_center + vec3(len);
-	vec4 tt = XMVector4Transform(vec4(max_orth.x, max_orth.y, max_orth.z, 1),
-		light_view_mat);
-	max_orth = vec3(tt.x, tt.y, tt.z);
-	vec3 min_orth = f_center - vec3(len);
-	tt = XMVector4Transform(vec4(min_orth.x, min_orth.y, min_orth.z, 1),
-		light_view_mat);
-	min_orth = vec3(tt.x, tt.y, tt.z);
+	Mat scalar =
+		XMMatrixScaling(texel_per_unit, texel_per_unit, texel_per_unit);
+	vec3 zero(0, 0, 0);
+	vec3 up_dir(0, 1, 0);
+	vec3 base_look_at = -this->m_info->light_dir;
+	Mat look_at = XMMatrixLookAtLH(zero, base_look_at, up_dir);
+	look_at = scalar * look_at;
+	Mat inv_look = look_at.Invert();
 
-	float length_tmp = (max_orth - min_orth).Length();
-	Mat light_orth_mat = XMMatrixOrthographicOffCenterLH(min_orth.x,
-		max_orth.x, min_orth.y, max_orth.y, 0.1, 1000);
-	Mat shadow_mat = light_view_mat * light_orth_mat;
-	vec4 shadow_ori = vec4(0, 0, 0, 1);
-	shadow_ori = XMVector4Transform(shadow_ori, shadow_mat);
-	float s_w = shadow_ori.w;
-	shadow_ori = shadow_ori * this->width * 0.5f;
+	mid.w = 1;
+	mid = XMVector4Transform(mid, look_at);
+	mid.x = floor(mid.x);
+	mid.y = floor(mid.y);
+	mid = XMVector4Transform(mid, inv_look);
+	vec3 center = vec3(mid.x, mid.y, mid.z);
+	vec3 eye = center - this->m_info->light_dir * 2.0f * len;
+	Mat light_look = XMMatrixLookAtLH(eye, center, up_dir);
+	this->mvp.view = light_look.Transpose();
 
-	vec4 round_ori = vec4(round(shadow_ori.x), round(shadow_ori.y),
-		round(shadow_ori.z), round(shadow_ori.w));
-	vec4 round_offset = round_ori - shadow_ori;
-	round_offset = round_offset * 2.0f / this->width;
-	round_offset.z = 0.0f;
-	round_offset.w = 0.0f;
-
-	XMMATRIX shadowProj = light_orth_mat;
-	XMVECTOR translation = shadowProj.r[3];
-	translation = XMVectorAdd(translation, round_offset);
-	shadowProj.r[3] = translation;
-	light_orth_mat = shadowProj;
-
-	this->mvp.view = light_view_mat.Transpose();
-	this->mvp.proj = light_orth_mat.Transpose();
-	this->cbuffer->update(this->mvp); // light shimmering이 발생하지 않는 이유
+	this->mvp.proj = XMMatrixOrthographicOffCenterLH(
+		-len, len, -len, len, 0.1, 1000);
+	this->mvp.proj = this->mvp.proj.Transpose();
+	this->cbuffer->update(this->mvp);
 }
 
 shared_ptr<ConstantBuffer> CascadeShadow::getCBuffer()

@@ -196,6 +196,12 @@ ComPtr<ID3D11ShaderResourceView> GeoRender::getSRV(RTVIndex idx)
 	return this->d_buffer->getSRV(index);
 }
 
+ComPtr<ID3D11ShaderResourceView> GeoRender::getNPSRV(RTVIndex idx)
+{
+	int index = static_cast<int>(idx);
+	return this->d_buffer->getSRV(index);
+}
+
 ComPtr<ID3D11ShaderResourceView> GeoRender::getDepthSRV()
 {
 	return this->depth_map->getShaderResourceView();

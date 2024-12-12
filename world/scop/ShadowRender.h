@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CascadeShadow.h"
+#include "WorldUtils.h"
 
 class MapUtils;
 class DeferredBuffer;
@@ -10,11 +11,13 @@ class PixelShader;
 class InputLayout;
 class TextureArray;
 class StructuredBuffer;
+template<typename T> class Buffer;
 
 
 struct FrusumSplit {
 	vec4 light_pos; // world space
 	float vz_arr[8]; // view space
+	Mat view;
 };
 
 class ShadowRender
@@ -25,6 +28,10 @@ public:
 		DeferredGraphics* dgraphic
 	);
 	~ShadowRender();
+	void renderCSM(
+		Mat const& cam_view,
+		Mat const& cam_proj
+	);
 	void render(
 		Mat const& cam_view,
 		Mat const& cam_proj
@@ -35,10 +42,8 @@ public:
 	ComPtr<ID3D11ShaderResourceView> getCSMSRV(int idx);
 
 private:
-	void renderShadow(Mat const& cam_view, Mat const& cam_proj);
-	void setShader();
-	void setShadowShader();
 	void setPipe();
+	void setCSMPipe();
 	void devideFrustum();
 
 private:
@@ -49,12 +54,13 @@ private:
 	shared_ptr<VertexShader> vertex_shader;
 	shared_ptr<PixelShader> pixel_shader;
 	shared_ptr<InputLayout> input_layout;
-	shared_ptr<ConstantBuffer> cbuffer;
 	shared_ptr<ConstantBuffer> ps_cbuffer;
 
 private:
 	int split_cnt;
 	FrusumSplit frustum_split;
+	shared_ptr<Buffer<VertexDefer>> vbuffer;
+	shared_ptr<Buffer<uint32>> ibuffer;
 
 private:
 	vector<MVP> mvps;

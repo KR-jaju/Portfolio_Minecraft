@@ -101,9 +101,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             terrain.Render(
                 cam.getViewProj().view,
                 cam.getViewProj().proj,
-                cam.getPos(),
-                cam.getViewProj().view,
-                cam.getViewProj().proj
+                cam.getPos()
             );
         }
     }

@@ -36,13 +36,11 @@ void Terrain::Render
 (
 	Mat const& cam_view,
 	Mat const& cam_proj,
-	vec3 const& cam_pos,
-	Mat const& shadow_view,
-	Mat const& shadow_proj
+	vec3 const& cam_pos
 )
 {
 	this->m_manager->r_system.Render(cam_view, 
-		cam_proj, cam_pos, shadow_view, shadow_proj);
+		cam_proj, cam_pos);
 }
 
 void Terrain::putBlock(

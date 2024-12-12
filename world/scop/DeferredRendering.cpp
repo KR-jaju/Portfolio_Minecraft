@@ -148,11 +148,12 @@ void DeferredRendering::ssaoBlur(
 void DeferredRendering::Render(
 	Mat const& cam_view, 
 	Mat const& cam_proj, 
-	vec3 const& cam_pos,
-	Mat const& s_view, 
-	Mat const& s_proj
+	vec3 const& cam_pos
 )
 {
+	ComPtr<ID3D11DeviceContext> context;
+	context = this->d_graphic->getContext();
+
 	// cube map start
 	this->cube_map->render(cam_pos, cam_view, cam_proj);
 	this->m_info->directional_light_pos = 
@@ -170,10 +171,12 @@ void DeferredRendering::Render(
 	this->pbr.render(lp, cam_pos);
 
 	// shadow map render
-	this->s_render.render(s_view, s_proj);
-
-	ComPtr<ID3D11DeviceContext> context;
-	context = this->d_graphic->getContext();
+	this->s_render.renderCSM(cam_view, cam_proj);
+	context->PSSetShaderResources(2, 1,
+		this->g_render.getSRV(RTVIndex::w_position).GetAddressOf());
+	context->PSSetShaderResources(3, 1,
+		this->g_render.getSRV(RTVIndex::ssao_normal).GetAddressOf());
+	this->s_render.render(cam_view, cam_proj);
 
 	// ssao start
 	this->d_graphic->renderBegin(
