@@ -81,7 +81,7 @@ void CascadeShadow::updateCBuffer(
 	}
 	mid /= 8; // 절두체의 중점(world space)
 
-	float len = (mid - coord[4]).Length();
+	float len = (mid - coord[4]).Length(); // 절두체 반지름
 	float texel_per_unit = this->width / (len * 2.0f);
 
 	Mat scalar =
@@ -99,7 +99,7 @@ void CascadeShadow::updateCBuffer(
 	mid.y = floor(mid.y);
 	mid = XMVector4Transform(mid, inv_look);
 	vec3 center = vec3(mid.x, mid.y, mid.z);
-	vec3 eye = center - this->m_info->light_dir * 2.0f * len;
+	vec3 eye = center - this->m_info->light_dir * len;
 	Mat light_look = XMMatrixLookAtLH(eye, center, up_dir);
 	this->mvp.view = light_look.Transpose();
 

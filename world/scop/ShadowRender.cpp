@@ -233,11 +233,11 @@ void ShadowRender::devideFrustum() // view space
 
 	vector<tuple<float, float, float>> tmp;
 	tmp.resize(this->split_cnt + 1);
-	float t = 0.99;
+	float t = 0.982;
 	int csm_idx = 0;
 	for (int i = 0; i < this->split_cnt + 1; i++) {
 		float ss = this->split_cnt;
-		float c_log = p_near * pow(p_far / p_near, i / ss);
+		float c_log = log(p_near * pow(p_far / p_near, i / ss));
 		float c_uni = p_near + (p_far - p_near) * (i / ss);
 		float c = t * c_log + (1.0 - t) * c_uni;
 		float h = c * tan(theta);
