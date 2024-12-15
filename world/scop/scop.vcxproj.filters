@@ -710,6 +710,9 @@
     <FxCompile Include="ShadowVS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow\CSM</Filter>
     </FxCompile>
+    <FxCompile Include="ShadowGS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow\CSM</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

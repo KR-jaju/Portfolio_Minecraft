@@ -35,24 +35,6 @@ ShadowRender::ShadowRender(
 		D3D11_FILL_SOLID,
 		D3D11_CULL_BACK
 	);
-	this->s_vertex_shader = make_shared<VertexShader>(
-		this->d_graphic->getDevice(),
-		L"ShadowVS.hlsl",
-		"main",
-		"vs_5_0"
-	);
-	this->s_pixel_shader = make_shared<PixelShader>(
-		this->d_graphic->getDevice(),
-		L"ShadowPS.hlsl",
-		"main",
-		"ps_5_0"
-	);
-	this->s_input_layout = make_shared<InputLayout>(
-		this->d_graphic->getDevice(),
-		InputLayouts::layout_shadow.data(),
-		InputLayouts::layout_shadow.size(),
-		this->s_vertex_shader->getBlob()
-	);
 	this->vertex_shader = make_shared<VertexShader>(
 		this->d_graphic->getDevice(),
 		L"CombineShadowVS.hlsl",
@@ -87,22 +69,11 @@ ShadowRender::ShadowRender(
 		InputLayouts::layout_deferred.size(),
 		this->vertex_shader->getBlob()
 	);
-	this->split_cnt = 3;
-	vector<ComPtr<ID3D11ShaderResourceView>> srvs_vec;
-	for (int i = 0; i < this->split_cnt; i++) {
-		this->csms.push_back(
-			make_shared<CascadeShadow>(
-				this->d_graphic, 4096, 4096, this->m_info));
-		srvs_vec.push_back(this->csms.back()->getSRV());
-	}
-	this->tex2d_arr = make_shared<TextureArray>(
-		this->d_graphic->getDevice(),
-		this->d_graphic->getContext(),
-		srvs_vec,
-		DXGI_FORMAT_R32_FLOAT
-	);
+	this->csm = make_shared<CascadeShadow>(
+		this->d_graphic, 2048, 2048, this->m_info);
 
 	this->mvps.resize(this->split_cnt);
+	this->f_vertices.resize(this->split_cnt);
 	this->structured_buffer = make_shared<StructuredBuffer>(
 		this->d_graphic->getDevice().Get(),
 		this->d_graphic->getContext().Get(),
@@ -114,11 +85,6 @@ ShadowRender::ShadowRender(
 		this->d_graphic->getDevice(),
 		this->d_graphic->getContext(),
 		this->frustum_split
-	);
-	this->s_rasterizer_state = make_shared<RasterizerState>(
-		this->d_graphic->getDevice(),
-		D3D11_FILL_SOLID,
-		D3D11_CULL_NONE
 	);
 	this->devideFrustum();
 }
@@ -132,42 +98,16 @@ void ShadowRender::renderCSM(Mat const& cam_view, Mat const& cam_proj)
 	ComPtr<ID3D11DeviceContext> context =
 		this->d_graphic->getContext();
 
-	// shadow csm
-	vec3 lp = this->m_info->directional_light_pos;
-	this->frustum_split.light_pos = vec4(lp.x, lp.y, lp.z, this->split_cnt);
 	
 	// update structured buffer
 	for (int i = 0; i < split_cnt; i++) {
-		this->csms[i]->updateCBuffer(cam_view, cam_proj);
-		this->mvps[i] = this->csms[i]->getMVP();
+		this->mvps[i] = this->csm->getMVP(cam_view, cam_proj, 
+			this->f_vertices[i]);
 	}
 	this->structured_buffer->CopyToInput(
 		static_cast<void*>(this->mvps.data()));
-
-	// render chunk (light 시점)
-	this->setCSMPipe();
-	for (int k = 0; k < split_cnt; k++) {
-		context->VSSetConstantBuffers(0, 1,
-			this->csms[k]->getCBuffer()->getComPtr().GetAddressOf());
-		this->d_graphic->renderBegin(this->csms[k]->getDBuffer().get(),
-			this->csms[k]->getDSV());
-		this->d_graphic->setViewPort(this->csms[k]->getViewPort());
-		for (int i = 0; i < this->m_info->size_h; i++) {
-			for (int j = 0; j < this->m_info->size_w; j++) {
-				if (this->m_info->chunks[i][j]->render_flag == false)
-					continue;
-				this->m_info->chunks[i][j]->setShadowRender(
-					this->d_graphic->getContext(),
-					this->vertex_shader
-				);
-			}
-		}
-	}
-
-	// shadow combine
-	for (int i = 0; i < this->split_cnt; i++)
-		this->tex2d_arr->updateTextureArray(context,
-			this->csms[i]->getSRV(), i); // update tex2d arr;
+	this->csm->setPipe(this->structured_buffer);
+	this->csm->render();
 }
 
 
@@ -203,26 +143,6 @@ void ShadowRender::setPipe()
 		this->ps_cbuffer->getComPtr().GetAddressOf());
 }
 
-void ShadowRender::setCSMPipe()
-{
-	ComPtr<ID3D11DeviceContext> context =
-		this->d_graphic->getContext();
-	context->IASetPrimitiveTopology(
-		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->IASetInputLayout(this->s_input_layout->getComPtr().Get());
-	context->VSSetShader(
-		this->s_vertex_shader->getComPtr().Get(),
-		nullptr,
-		0
-	);
-	context->RSSetState(this->s_rasterizer_state->getComPtr().Get());
-	context->PSSetShader(
-		this->s_pixel_shader->getComPtr().Get(),
-		nullptr,
-		0
-	);
-}
-
 void ShadowRender::devideFrustum() // view space
 {
 	float p_near = 0.1;
@@ -231,8 +151,6 @@ void ShadowRender::devideFrustum() // view space
 	float fov = 60;
 	float theta = XMConvertToRadians(fov / 2);
 
-	vector<tuple<float, float, float>> tmp;
-	tmp.resize(this->split_cnt + 1);
 	float t = 0.982;
 	int csm_idx = 0;
 	for (int i = 0; i < this->split_cnt + 1; i++) {
@@ -245,27 +163,27 @@ void ShadowRender::devideFrustum() // view space
 		if (i)
 			this->frustum_split.vz_arr[i] = c;
 		if (i == 0) {
-			this->csms[csm_idx]->setFrustumVertices(vec3(-w, h, c), 0, 0);
-			this->csms[csm_idx]->setFrustumVertices(vec3(w, h, c), 1, 0);
-			this->csms[csm_idx]->setFrustumVertices(vec3(w, -h, c), 2, 0);
-			this->csms[csm_idx]->setFrustumVertices(vec3(-w, -h, c), 3, 0);
+			this->f_vertices[csm_idx].front[0] = vec4(-w, h, c, 1);
+			this->f_vertices[csm_idx].front[1] = vec4(w, h, c, 1);
+			this->f_vertices[csm_idx].front[2] = vec4(w, -h, c, 1);
+			this->f_vertices[csm_idx].front[3] = vec4(-w, -h, c, 1);
 		}
 		else if (i == this->split_cnt) {
-			this->csms[csm_idx]->setFrustumVertices(vec3(-w, h, c), 0, 1);
-			this->csms[csm_idx]->setFrustumVertices(vec3(w, h, c), 1, 1);
-			this->csms[csm_idx]->setFrustumVertices(vec3(w, -h, c), 2, 1);
-			this->csms[csm_idx]->setFrustumVertices(vec3(-w, -h, c), 3, 1);
+			this->f_vertices[csm_idx].back[0] = vec4(-w, h, c, 1);
+			this->f_vertices[csm_idx].back[1] = vec4(w, h, c, 1);
+			this->f_vertices[csm_idx].back[2] = vec4(w, -h, c, 1);
+			this->f_vertices[csm_idx].back[3] = vec4(-w, -h, c, 1);
 		}
 		else {
-			this->csms[csm_idx]->setFrustumVertices(vec3(-w, h, c), 0, 1);
-			this->csms[csm_idx]->setFrustumVertices(vec3(w, h, c), 1, 1);
-			this->csms[csm_idx]->setFrustumVertices(vec3(w, -h, c), 2, 1);
-			this->csms[csm_idx]->setFrustumVertices(vec3(-w, -h, c), 3, 1);
+			this->f_vertices[csm_idx].back[0] = vec4(-w, h, c, 1);
+			this->f_vertices[csm_idx].back[1] = vec4(w, h, c, 1);
+			this->f_vertices[csm_idx].back[2] = vec4(w, -h, c, 1);
+			this->f_vertices[csm_idx].back[3] = vec4(-w, -h, c, 1);
 			csm_idx++;
-			this->csms[csm_idx]->setFrustumVertices(vec3(-w, h, c), 0, 0);
-			this->csms[csm_idx]->setFrustumVertices(vec3(w, h, c), 1, 0);
-			this->csms[csm_idx]->setFrustumVertices(vec3(w, -h, c), 2, 0);
-			this->csms[csm_idx]->setFrustumVertices(vec3(-w, -h, c), 3, 0);
+			this->f_vertices[csm_idx].front[0] = vec4(-w, h, c, 1);
+			this->f_vertices[csm_idx].front[1] = vec4(w, h, c, 1);
+			this->f_vertices[csm_idx].front[2] = vec4(w, -h, c, 1);
+			this->f_vertices[csm_idx].front[3] = vec4(-w, -h, c, 1);
 		}
 	}
 	for (int i = this->split_cnt + 1; i < 8; i++)
@@ -277,6 +195,8 @@ void ShadowRender::render(
 	Mat const& cam_proj
 )
 {
+	vec3 lp = this->m_info->directional_light_pos;
+	this->frustum_split.light_pos = vec4(lp.x, lp.y, lp.z, this->split_cnt);
 	ComPtr<ID3D11DeviceContext> context =
 		this->d_graphic->getContext();
 
@@ -287,7 +207,7 @@ void ShadowRender::render(
 	context->PSSetShaderResources(
 		0,
 		1,
-		this->tex2d_arr->getComPtr().GetAddressOf()
+		this->csm->getSRV().GetAddressOf()
 	);
 	context->PSSetShaderResources(
 		1, 1,
@@ -301,11 +221,4 @@ void ShadowRender::render(
 ComPtr<ID3D11ShaderResourceView> ShadowRender::getSRV()
 {
 	return this->d_buffer->getSRV(0);
-}
-
-ComPtr<ID3D11ShaderResourceView> ShadowRender::getCSMSRV(int idx) // test
-{
-	//return this->d_buffer->getSRV(0);
-	return this->csms[idx]->getDBuffer()->getSRV(0);
-	return this->csms[idx]->getSRV();
 }

@@ -5,6 +5,18 @@ class DepthMap;
 class ConstantBuffer;
 class MapUtils;
 class DeferredBuffer;
+class RasterizerState;
+class VertexShader;
+class GeometryShader;
+class PixelShader;
+class InputLayout;
+class TextureArray;
+class StructuredBuffer;
+
+struct FrustumVertex {
+	vec4 front[4];
+	vec4 back[4];
+};
 
 class CascadeShadow
 {
@@ -13,34 +25,36 @@ public:
 		DeferredGraphics* d_graphic, 
 		UINT width, UINT height, MapUtils* m_info);
 	ComPtr<ID3D11ShaderResourceView> getSRV();
-	ComPtr<ID3D11DepthStencilView> getDSV();
-	void setFrustumVertices(
-		vec3 const& coord,
-		int vertex_idx,
-		int frustum_idx
+	MVP const& getMVP(
+		Mat const& cam_view,
+		Mat const& cam_proj,
+		FrustumVertex const& frustum_vertices
 	);
-	void updateCBuffer(
-		Mat const& cam_view, 
-		Mat const& cam_proj
-	);
-	shared_ptr<ConstantBuffer> getCBuffer();
-	MVP const& getMVP();
-	D3D11_VIEWPORT getViewPort();
+	void setPipe(shared_ptr<StructuredBuffer>& structured_buffer);
+	void render();
 
-public: // test
-	shared_ptr<DeferredBuffer> getDBuffer();
+private:
+	void setDSVAndSRV(UINT width, UINT height);
 
 private:
 	DeferredGraphics* d_graphic;
 	MapUtils* m_info;
-	shared_ptr<DepthMap> depth_buffer;
-	float frustum_vertices[2][4][3];
-	shared_ptr<ConstantBuffer> cbuffer;
 	MVP mvp;
 	float width;
 	float height;
+	D3D11_VIEWPORT view_port;
+	int split_cnt = 3;
 
-private: // test
-	shared_ptr<DeferredBuffer> d_buffer;
+private:
+	ComPtr<ID3D11DepthStencilView> depth_view;
+	ComPtr<ID3D11ShaderResourceView> t_arr_srv;
+	shared_ptr<StructuredBuffer> structured_buffer;
+
+private:
+	shared_ptr<InputLayout> input_layout;
+	shared_ptr<VertexShader> vertex_shader;
+	shared_ptr<GeometryShader> geometry_shader;
+	shared_ptr<RasterizerState> rasterizer_state;
+	shared_ptr<PixelShader> pixel_shader;
 };
 
