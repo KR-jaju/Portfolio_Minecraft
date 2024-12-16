@@ -1,11 +1,10 @@
 struct PS_INPUT
 {
-    float4 pos : SV_POSITION;
-    uint idx : SV_RenderTargetArrayIndex;
+    float4 pos : SV_Position;
 };
 
 
-void main(PS_INPUT input)
+float4 main(PS_INPUT input) : SV_Target
 {
-    return;
+    return float4(1, 1, 0, 1);
 }

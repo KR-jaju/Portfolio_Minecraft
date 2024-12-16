@@ -172,9 +172,9 @@ void DeferredRendering::Render(
 
 	// shadow map render
 	this->s_render.renderCSM(cam_view, cam_proj);
-	context->PSSetShaderResources(2, 1,
+	context->PSSetShaderResources(9, 1,
 		this->g_render.getSRV(RTVIndex::w_position).GetAddressOf());
-	context->PSSetShaderResources(3, 1,
+	context->PSSetShaderResources(10, 1,
 		this->g_render.getSRV(RTVIndex::ssao_normal).GetAddressOf());
 	this->s_render.render(cam_view, cam_proj);
 

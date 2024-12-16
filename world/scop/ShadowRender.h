@@ -4,12 +4,19 @@
 #include "WorldUtils.h"
 
 class MapUtils;
+class DeferredBuffer;
+class RasterizerState;
+class VertexShader;
+class PixelShader;
+class InputLayout;
+class TextureArray;
+class StructuredBuffer;
 template<typename T> class Buffer;
 
 
 struct FrusumSplit {
 	vec4 light_pos; // world space
-	float vz_arr[8]; // view space
+	vec4 vz_arr[8]; // view space
 	Mat view;
 };
 
@@ -31,8 +38,12 @@ public:
 	);
 	ComPtr<ID3D11ShaderResourceView> getSRV();
 
+public:
+	ComPtr<ID3D11ShaderResourceView> getCSMSRV(int idx);
+
 private:
 	void setPipe();
+	void setCSMPipe();
 	void devideFrustum();
 
 private:
@@ -46,15 +57,19 @@ private:
 	shared_ptr<ConstantBuffer> ps_cbuffer;
 
 private:
-	int split_cnt = 3;
+	int split_cnt = 5;
 	FrusumSplit frustum_split;
 	shared_ptr<Buffer<VertexDefer>> vbuffer;
 	shared_ptr<Buffer<uint32>> ibuffer;
 
 private:
 	vector<MVP> mvps;
-	vector<FrustumVertex> f_vertices;
-	shared_ptr<CascadeShadow> csm;
+	vector<shared_ptr<CascadeShadow>> csms;
 	shared_ptr<StructuredBuffer> structured_buffer;
+	shared_ptr<TextureArray> tex2d_arr;
+	shared_ptr<PixelShader> s_pixel_shader;
+	shared_ptr<VertexShader> s_vertex_shader;
+	shared_ptr<InputLayout> s_input_layout;
+	shared_ptr<RasterizerState> s_rasterizer_state;
 };
 

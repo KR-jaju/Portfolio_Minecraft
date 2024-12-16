@@ -30,6 +30,7 @@ float4 main(PS_INPUT input) : SV_TARGET
         directional_color.Sample(sampler0, input.uv).rgb;
     
     //float4 t = shadow_map.Sample(sampler0, input.uv);
+    //return t;
     //t = pow(t, 3);
     //return float4(t.rgb, 1);
     
