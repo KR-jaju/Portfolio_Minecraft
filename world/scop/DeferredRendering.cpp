@@ -32,7 +32,8 @@ DeferredRendering::DeferredRendering(
 	g_render(minfo, defer_graphic), ssao_render(defer_graphic, 
 		minfo->width, minfo->height), 
 	ssao_blur(defer_graphic, minfo->width, minfo->height),
-	pbr(defer_graphic, minfo->width, minfo->height)
+	pbr(defer_graphic, minfo->width, minfo->height),
+	cave_shadow(defer_graphic, m_info)
 {
 	this->d_graphic = defer_graphic;
 	this->cube_map = make_shared<Wallpaper>(this->d_graphic,
@@ -177,6 +178,7 @@ void DeferredRendering::Render(
 	context->PSSetShaderResources(10, 1,
 		this->g_render.getSRV(RTVIndex::ssao_normal).GetAddressOf());
 	this->s_render.render(cam_view, cam_proj);
+	this->cave_shadow.render(cam_view, cam_proj);
 
 	// ssao start
 	this->d_graphic->renderBegin(
@@ -208,12 +210,12 @@ void DeferredRendering::Render(
 		this->pbr.getDirectLight().GetAddressOf());
 	context->PSSetShaderResources(2, 1,
 		this->s_render.getSRV().GetAddressOf());
-	/*context->PSSetShaderResources(2, 1,
-		this->s_render.getCSMSRV(0).GetAddressOf());*/
 	context->PSSetShaderResources(3, 1,
 		this->ssao_blur.getHeightSRV().GetAddressOf());
 	context->PSSetShaderResources(4, 1,
 		this->cube_map->getSRV().GetAddressOf());
+	context->PSSetShaderResources(5, 1,
+		this->cave_shadow.getSRV().GetAddressOf());
 	context->DrawIndexed(
 		this->ibuffer->getCount(),
 		0, 0);

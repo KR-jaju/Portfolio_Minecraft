@@ -1,7 +1,6 @@
 #pragma once
 
 #include "WorldUtils.h"
-#include "BlendState.h"
 
 class MapUtils;
 class DeferredGraphics;

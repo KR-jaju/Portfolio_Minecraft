@@ -5,7 +5,6 @@ struct MVP
     matrix proj;
 };
 StructuredBuffer<MVP> mvp_arr : register(t0);
-//Texture2DArray shadow_arr : register(t1);
 Texture2D shadow_0 : register(t1);
 Texture2D shadow_1 : register(t2);
 Texture2D shadow_2 : register(t3);
@@ -102,7 +101,7 @@ float shadowCheck(float4 w_pos, int shadow_idx, float3 normal, float p_dis)
     //float bias = max(0.05 * (1.0 + dot(normal, light_dir)), 0.005);
     bias *= 1.0 / (p_dis * 0.5f);
     bias = 0.0;
-    if (z < w_pos.z)
+    if (z < w_pos.z) // bias 가 0 이여도 shadow acne 가 안일어남
         ans = 0;
     return ans;
 };

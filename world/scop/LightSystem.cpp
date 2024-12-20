@@ -13,7 +13,7 @@ LightSystem::LightSystem(MapUtils* minfo, int thread_cnt)
 		this->thread_cnt = 8;
 }
 
-void LightSystem::lightBFS(int idx)
+void LightSystem::lightBFS(int idx) // 청크 하나에 대해 bfs
 {
 	static const Index3 move_arr[6] = {
 		Index3(0, 1, 0),
@@ -43,14 +43,18 @@ void LightSystem::lightBFS(int idx)
 			if (light - 1 <= this->m_info->findLight(here.first, next))
 				continue;
 			this->m_info->setLight(here.first, next, light - 1);
+			/*if (i < 2)
+				this->m_info->setLight(here.first, next, light);
+			else
+				this->m_info->setLight(here.first, next, light - 1);*/
 			this->que[idx].push(here.first, next);
 		}
 	}
 }
 
 void LightSystem::fillLightThread(
-	vector<Index2> const& vec, 
-	int st, 
+	vector<Index2> const& vec,
+	int st,
 	int ed,
 	int idx
 )
@@ -185,13 +189,11 @@ void LightSystem::checkBoundary(
 		cidxs->push_back(apz_idx);
 	thread t1;
 	thread t2;
-	t1 = thread(&LightSystem::lightBFS, this, 0);
-	t2 = thread(&LightSystem::lightBFS, this, 1);
+	t1 = thread(&LightSystem::lightBFS, this, 0); // 자기 자신 bfs
+	t2 = thread(&LightSystem::lightBFS, this, 1); // 인접 청크 bfs
 	t1.join();
 	t2.join();
 }
-
-
 
 void LightSystem::createLightMap()
 {
@@ -301,4 +303,20 @@ void LightSystem::resetLight(Index2 const& c_idx)
 			}
 		}
 	}
+}
+
+// chunk의 light을 다시 계산
+void LightSystem::chunkSetLight(Index2 const& chunk_idx)
+{
+	this->que[0].clear();
+	this->resetLight(chunk_idx);
+	int max_h = this->m_info->chunks[chunk_idx.y][chunk_idx.x]->max_h;
+	for (int z = 0; z < 15; z++) {
+		for (int y = 0; y < max_h; y++) {
+			for (int x = 0; x < 15; x++)
+				if (this->m_info->findLight(chunk_idx, x, y, z) == 15)
+					this->que[0].push({chunk_idx, Index3(x, y, z)});
+		}
+	}
+	this->lightBFS(0);
 }

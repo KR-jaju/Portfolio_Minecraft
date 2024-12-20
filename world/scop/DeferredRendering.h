@@ -7,6 +7,7 @@
 #include "SsaoRender.h"
 #include "SsaoBlur.h"
 #include "PBR.h"
+#include "CaveShadow.h"
 
 class DeferredGraphics;
 class MapUtils;
@@ -47,6 +48,7 @@ private:
 	SsaoRender ssao_render;
 	SsaoBlur ssao_blur;
 	PBR pbr;
+	CaveShadow cave_shadow;
 	shared_ptr<Wallpaper> cube_map;
 	D3D11_VIEWPORT view_port;
 

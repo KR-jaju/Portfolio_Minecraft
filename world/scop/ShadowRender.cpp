@@ -216,7 +216,7 @@ void ShadowRender::setCSMPipe()
 
 void ShadowRender::devideFrustum() // view space
 {
-	float p_near = 3.f;
+	float p_near = 5.f;
 	float p_far = 250;
 	float r = 800.f / 650.f;
 	float fov = 60;
@@ -288,7 +288,7 @@ void ShadowRender::render(
 		0, 1,
 		this->structured_buffer->GetSRV().GetAddressOf()
 	);
-	for (int i = 1; i < this->split_cnt; i++) {
+	for (int i = 1; i <= this->split_cnt; i++) {
 		context->PSSetShaderResources(i, 1,
 			this->csms[i - 1]->getSRV().GetAddressOf());
 	}

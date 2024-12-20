@@ -70,9 +70,6 @@
     <Filter Include="소스 파일\World\WorldShaderFIle">
       <UniqueIdentifier>{e9ceb38c-5083-4ca9-ac73-2de4bff11fe8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\World\WorldShaderFIle\TestShader">
-      <UniqueIdentifier>{9e24a969-5ed7-4adb-88c6-cad6af249f2b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\World\Noise">
       <UniqueIdentifier>{6f0ac322-30ef-458f-a540-cff2819a55ba}</UniqueIdentifier>
     </Filter>
@@ -90,9 +87,6 @@
     </Filter>
     <Filter Include="헤더 파일\Utils\SimpleMath">
       <UniqueIdentifier>{60c06e56-3714-4101-aae9-cf3e3f0320dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\World\WorldShaderFIle\DepthShader">
-      <UniqueIdentifier>{12a409e7-645d-4842-a937-fc04465ab5bd}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\World\Map">
       <UniqueIdentifier>{7e7a0dc6-b5f2-44b0-b090-c9bcf401b95d}</UniqueIdentifier>
@@ -237,6 +231,12 @@
     </Filter>
     <Filter Include="소스 파일\Engine\Pipeline\3_Shader\GeometryShader">
       <UniqueIdentifier>{6841dc83-faba-4430-b944-b7f3aebd5d6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\ShadowRender\CaveShadow">
+      <UniqueIdentifier>{ec7fefaf-83dd-4718-916c-0d82c8e1c447}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\CaveShadow">
+      <UniqueIdentifier>{89ffe001-d9ed-404a-a274-c265bf648884}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -411,6 +411,9 @@
     <ClInclude Include="GeometryShader.h">
       <Filter>소스 파일\Engine\Pipeline\3_Shader\GeometryShader</Filter>
     </ClInclude>
+    <ClInclude Include="CaveShadow.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\ShadowRender\CaveShadow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -575,6 +578,9 @@
     <ClCompile Include="GeometryShader.cpp">
       <Filter>소스 파일\Engine\Pipeline\3_Shader\GeometryShader</Filter>
     </ClCompile>
+    <ClCompile Include="CaveShadow.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\ShadowRender\CaveShadow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="scop.rc">
@@ -602,24 +608,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="TestVertexShader.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\TestShader</Filter>
-    </FxCompile>
-    <FxCompile Include="TestPixelShader.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\TestShader</Filter>
-    </FxCompile>
-    <FxCompile Include="TestPixelShader2.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\TestShader</Filter>
-    </FxCompile>
-    <FxCompile Include="TestVertexShader2.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\TestShader</Filter>
-    </FxCompile>
-    <FxCompile Include="DepthVertexShader.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\DepthShader</Filter>
-    </FxCompile>
-    <FxCompile Include="DepthPixelShader.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\DepthShader</Filter>
-    </FxCompile>
     <FxCompile Include="SsaoBlurPS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Ssao\SsaoBlur</Filter>
     </FxCompile>
@@ -709,6 +697,12 @@
     </FxCompile>
     <FxCompile Include="ShadowVS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Shadow\CSM</Filter>
+    </FxCompile>
+    <FxCompile Include="CaveShadowVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\CaveShadow</Filter>
+    </FxCompile>
+    <FxCompile Include="CaveShadowPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\CaveShadow</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 #pragma once
 #include "WorldUtils.h"
 #include "MyQueue.h"
+#include <queue>
 
 class MapUtils;
 
@@ -16,6 +17,7 @@ public:
 		int dir // 방향
 	);
 	void resetLight(Index2 const& c_idx);
+	void chunkSetLight(Index2 const& chunk_idx); // 청크 1개 light map 계산
 
 private:
 	void lightBFS(int idx); // 빛 퍼짐 알고리즘
