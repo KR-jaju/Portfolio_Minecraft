@@ -137,6 +137,7 @@ PS_OUTPUT main(PS_INPUT input)
     
     float3 direct_light = float3(0, 0, 0);
     float3 l_pos = light_pos.xyz;
+    l_pos.z = pos.z; // directional light
     
     float3 light_vec = normalize(l_pos - pos);
     float3 halfway = normalize(pixel_to_eye + light_vec);

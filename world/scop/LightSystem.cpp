@@ -43,10 +43,6 @@ void LightSystem::lightBFS(int idx) // 청크 하나에 대해 bfs
 			if (light - 1 <= this->m_info->findLight(here.first, next))
 				continue;
 			this->m_info->setLight(here.first, next, light - 1);
-			/*if (i < 2)
-				this->m_info->setLight(here.first, next, light);
-			else
-				this->m_info->setLight(here.first, next, light - 1);*/
 			this->que[idx].push(here.first, next);
 		}
 	}

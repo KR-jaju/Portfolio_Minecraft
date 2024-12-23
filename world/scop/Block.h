@@ -107,10 +107,10 @@ namespace Block {
 			{1.f, 1.f},
 
 			//back
-			{0.f, 0.f},
-			{0.f, 1.f},
 			{1.f, 0.f},
 			{1.f, 1.f},
+			{0.f, 0.f},
+			{0.f, 1.f},
 
 			//left
 			{0.f, 0.f},
@@ -222,39 +222,6 @@ namespace Block {
 			{+0.5f, -0.5f, -0.5f},
 			{+0.5f, +0.5f, -0.5f},
 			{+0.5f, +0.5f, +0.5f}
-		};
-		static const float s = 0.0f;
-		static const float e = 1.0f;
-		static vector<vec2> sample_uv = {
-			{s, e},
-			{s, s},
-			{e, s},
-			{e, e},
-
-			{s, s},
-			{e, s},
-			{e, e},
-			{s, e},
-
-			{s, e},
-			{s, s},
-			{e, s},
-			{e, e},
-
-			{e, e},
-			{s, e},
-			{s, s},
-			{e, s},
-
-			{s, e},
-			{s, s},
-			{e, s},
-			{e, e},
-
-			{e, e},
-			{s, e},
-			{s, s},
-			{e, s}
 		};
 		static vector<vec3> normals = {
 			{0, 1, 0},
