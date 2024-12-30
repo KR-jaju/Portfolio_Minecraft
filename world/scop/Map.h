@@ -56,6 +56,7 @@ public:
 private:
 	void resetChunk(Index2 const& c_idx);
 	int checkTerrainBoundary(float x, float z) const;
+	bool checkLeaves(Index2 const& c_idx, Index3 const& b_idx, int type);
 	void threadFunc(vector<Index2>& vec, int dir);
 
 public:

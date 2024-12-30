@@ -3,7 +3,6 @@
 #include "ParallaxMapping.h"
 
 class MapUtils;
-class BlendState; // 바뀔 수 있음 나중에(ex OIT)
 class HullShader;
 class DomainShader;
 class DepthMap;
@@ -44,7 +43,6 @@ private:
 	shared_ptr<VertexShader> vertex_shader;
 	shared_ptr<PixelShader> pixel_shader;
 	shared_ptr<InputLayout> input_layout;
-	shared_ptr<BlendState> blend_state;
 	shared_ptr<HullShader> hull_shader;
 	shared_ptr<DomainShader> domain_shader;
 

@@ -146,7 +146,7 @@ namespace Block {
 		z = start_pos.z - z;
 		
 		int idx;
-		type -= 1;
+		type = type - 1 + 2 * (type - 1);
 		if (dir == 0)
 			idx = type;
 		else if (dir == 1)

@@ -85,10 +85,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
         {
             if (lb_flag) {
-                /*terrain.testClickLightBlock(cam.getPos(),
-                    cam.getDir());*/
-                terrain.putBlock(cam.getPos(), 
-                    cam.getDir(), 1);
+                terrain.testClickLightBlock(cam.getPos(),
+                    cam.getDir());
+                /*terrain.putBlock(cam.getPos(), 
+                    cam.getDir(), 1);*/
                 lb_flag = false;
             }
             if (rb_flag) {

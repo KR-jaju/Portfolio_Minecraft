@@ -10,7 +10,6 @@
 #include "PixelShader.h"
 #include "InputLayout.h"
 #include "InputLayouts.h"
-#include "BlendState.h"
 #include "ConstantBuffer.h"
 #include "HullShader.h"
 #include "DomainShader.h"
@@ -38,16 +37,27 @@ GeoRender::GeoRender(
 		//D3D11_FILL_WIREFRAME,
 		D3D11_CULL_BACK
 	);
-	this->blend_state = make_shared<BlendState>(device);
 	vector<wstring> path_color = {
 		L"./textures/pbr/test_sample/grass_path_top.png",
 		L"./textures/pbr/test_sample/grass_path_side.png",
-		L"./textures/pbr/test_sample/packed_mud.png"
+		L"./textures/pbr/test_sample/packed_mud.png",
+		L"./textures/pbr/oak_tree/oak_log_top.png",
+		L"./textures/pbr/oak_tree/oak_log.png",
+		L"./textures/pbr/oak_tree/oak_log_top.png",
+		L"./textures/pbr/oak_tree/oak_leaves.png",
+		L"./textures/pbr/oak_tree/oak_leaves.png",
+		L"./textures/pbr/oak_tree/oak_leaves.png"
 	};
 	path_color = {
 		L"./textures/pbr/test_sample/packed_mud.png",
 		L"./textures/pbr/test_sample/packed_mud.png",
-		L"./textures/pbr/test_sample/packed_mud.png"
+		L"./textures/pbr/test_sample/packed_mud.png",
+		L"./textures/pbr/oak_tree/oak_log_top.png",
+		L"./textures/pbr/oak_tree/oak_log.png",
+		L"./textures/pbr/oak_tree/oak_log_top.png",
+		L"./textures/pbr/oak_tree/oak_leaves.png",
+		L"./textures/pbr/oak_tree/oak_leaves.png",
+		L"./textures/pbr/oak_tree/oak_leaves.png"
 	};
 	this->texture_array_color = 
 		make_shared<TextureArray>(
@@ -59,12 +69,24 @@ GeoRender::GeoRender(
 	vector<wstring> path_normal = {
 		L"./textures/pbr/test_sample/grass_path_top_n.png",
 		L"./textures/pbr/test_sample/grass_path_side_n.png",
-		L"./textures/pbr/test_sample/packed_mud_n.png"
+		L"./textures/pbr/test_sample/packed_mud_n.png",
+		L"./textures/pbr/oak_tree/oak_log_top_n.png",
+		L"./textures/pbr/oak_tree/oak_log_n.png",
+		L"./textures/pbr/oak_tree/oak_log_top_n.png",
+		L"./textures/pbr/oak_tree/oak_leaves_n.png",
+		L"./textures/pbr/oak_tree/oak_leaves_n.png",
+		L"./textures/pbr/oak_tree/oak_leaves_n.png"
 	};
 	path_normal = {
 		L"./textures/pbr/test_sample/packed_mud_n.png",
 		L"./textures/pbr/test_sample/packed_mud_n.png",
-		L"./textures/pbr/test_sample/packed_mud_n.png"
+		L"./textures/pbr/test_sample/packed_mud_n.png",
+		L"./textures/pbr/oak_tree/oak_log_top_n.png",
+		L"./textures/pbr/oak_tree/oak_log_n.png",
+		L"./textures/pbr/oak_tree/oak_log_top_n.png",
+		L"./textures/pbr/oak_tree/oak_leaves_n.png",
+		L"./textures/pbr/oak_tree/oak_leaves_n.png",
+		L"./textures/pbr/oak_tree/oak_leaves_n.png"
 	};
 	this->texture_array_normal = 
 		make_shared<TextureArray>(
@@ -77,12 +99,24 @@ GeoRender::GeoRender(
 	vector<wstring> path_s = {
 		L"./textures/pbr/test_sample/grass_path_top_s.png",
 		L"./textures/pbr/test_sample/grass_path_side_s.png",
-		L"./textures/pbr/test_sample/packed_mud_s.png"
+		L"./textures/pbr/test_sample/packed_mud_s.png",
+		L"./textures/pbr/oak_tree/oak_log_top_s.png",
+		L"./textures/pbr/oak_tree/oak_log_s.png",
+		L"./textures/pbr/oak_tree/oak_log_top_s.png",
+		L"./textures/pbr/oak_tree/oak_leaves_s.png",
+		L"./textures/pbr/oak_tree/oak_leaves_s.png",
+		L"./textures/pbr/oak_tree/oak_leaves_s.png"
 	};
 	path_s = {
 		L"./textures/pbr/test_sample/packed_mud_s.png",
 		L"./textures/pbr/test_sample/packed_mud_s.png",
-		L"./textures/pbr/test_sample/packed_mud_s.png"
+		L"./textures/pbr/test_sample/packed_mud_s.png",
+		L"./textures/pbr/oak_tree/oak_log_top_s.png",
+		L"./textures/pbr/oak_tree/oak_log_s.png",
+		L"./textures/pbr/oak_tree/oak_log_top_s.png",
+		L"./textures/pbr/oak_tree/oak_leaves_s.png",
+		L"./textures/pbr/oak_tree/oak_leaves_s.png",
+		L"./textures/pbr/oak_tree/oak_leaves_s.png"
 	};
 	this->texture_array_s = 
 		make_shared<TextureArray>(
@@ -183,7 +217,6 @@ void GeoRender::render(
 	}
 	context->HSSetShader(nullptr, nullptr, 0);
 	context->DSSetShader(nullptr, nullptr, 0);
-	context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
 	if (this->parallax_flag)
 		this->parallaxRender(cam_pos);
 }
@@ -244,11 +277,6 @@ void GeoRender::setPipe()
 		2,
 		1,
 		this->texture_array_normal->getComPtr().GetAddressOf()
-	);
-	context->OMSetBlendState(
-		this->blend_state->getComPtr().Get(),
-		this->blend_state->getBlendFactor(),
-		this->blend_state->getSampleMask()
 	);
 	context->HSSetShader(
 		this->hull_shader->getComPtr().Get(),

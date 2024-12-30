@@ -49,8 +49,8 @@ public: // test
 
 public:
 	int16 max_h = -1;
-	vec3 start_pos;
-	Index2 chunk_pos;
+	vec3 start_pos; // 0 0 0 번째 블록의 가운데 위치
+	Index2 chunk_pos; // 청크의 시작위치
 	uint32 vertices_idx;
 	uint32 shadow_idx;
 	bool render_flag;

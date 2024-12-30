@@ -3,7 +3,6 @@
 #include "ShadowRender.h"
 #include "GeoRender.h"
 #include "WorldUtils.h"
-#include "BlendState.h"
 #include "SsaoRender.h"
 #include "SsaoBlur.h"
 #include "PBR.h"

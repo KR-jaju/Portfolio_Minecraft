@@ -36,10 +36,13 @@ void Map::setDeffGraphic(shared_ptr<DeferredGraphics> defer_graphic)
 	this->l_system.createLightMap();
 	finish = clock();
 	cout << "set light(ms): " << static_cast<double>(finish - start) << endl;
+	this->t_system.createTrees();
 	start = clock();
 	this->terrainSetVerticesAndIndices();
 	finish = clock();
 	cout << "set vi(ms): " << static_cast<double>(finish - start) << endl;
+	Index2 tcidx = this->m_info.findChunkIndex(0, 16);
+	cout << "chunk idx: " << tcidx.x << ' ' << tcidx.y << endl;
 }
 
 
@@ -50,6 +53,7 @@ void Map::resetChunk(Index2 const& c_idx)
 			for (int x = 0; x < 16; x++) {
 				m_info.addBlock(c_idx, x, y, z, 0);
 				m_info.setLight(c_idx, x, y, z, 0);
+				m_info.setWater(c_idx, x, y, z, 0);
 			}
 		}
 	}
@@ -98,6 +102,7 @@ void Map::vertexAndIndexGenerator(
 )
 {
 	int16& max_h = this->m_info.chunks[c_idx.y][c_idx.x]->max_h;
+	int next_type;
 	for (int y = 0; y < max_h; y++) {
 		for (int z = 0; z < 16; z++) {
 			for (int x = 0; x < 16; x++) {
@@ -105,18 +110,37 @@ void Map::vertexAndIndexGenerator(
 				if (type == 0)
 					continue;
 				Index3 next(x + move.x, y + move.y, z - move.z); // index
-				if (this->m_info.inChunkBoundary(next.x, next.y, next.z) 
-					&& this->m_info.findBlock(c_idx, next))
-					continue;
+				if (this->m_info.inChunkBoundary(next.x, next.y, next.z)) {
+					next_type = this->m_info.findBlock(c_idx, next);
+					if (next_type && 
+						this->checkLeaves(c_idx, next, next_type) == false)
+						continue;
+				}
 				if (adj_idx.flag) {
-					if (next.x == -1 && this->m_info.findBlock(adj_idx, 15, next.y, next.z))
-						continue;
-					if (next.x == 16 && this->m_info.findBlock(adj_idx, 0, next.y, next.z))
-						continue;
-					if (next.z == -1 && this->m_info.findBlock(adj_idx, next.x, next.y, 15))
-						continue;
-					if (next.z == 16 && this->m_info.findBlock(adj_idx, next.x, next.y, 0))
-						continue;
+					if (next.x == -1) {
+						next.x = 15;
+						next_type = this->m_info.findBlock(adj_idx, next);
+						if (next_type && this->checkLeaves(adj_idx, next, next_type) == false)
+							continue;
+					}
+					if (next.x == 16) {
+						next.x = 0;
+						next_type = this->m_info.findBlock(adj_idx, next);
+						if (next_type && this->checkLeaves(adj_idx, next, next_type) == false)
+							continue;
+					}
+					if (next.z == -1) {
+						next.z = 15;
+						next_type = this->m_info.findBlock(adj_idx, next);
+						if (next_type && this->checkLeaves(adj_idx, next, next_type) == false)
+							continue;
+					}
+					if (next.z == 16) {
+						next.z = 0;
+						next_type = this->m_info.findBlock(adj_idx, next);
+						if (next_type && this->checkLeaves(adj_idx, next, next_type) == false)
+							continue;
+					}
 				}
 				Block::addFaceQuadPosAndTex(
 					this->m_info.chunks[c_idx.y][c_idx.x]->start_pos,
@@ -319,12 +343,19 @@ int Map::checkTerrainBoundary(float x, float z) const
 	return mask;
 }
 
+bool Map::checkLeaves(Index2 const& c_idx, Index3 const& b_idx, int type)
+{
+	if (type == static_cast<int>(BlockType::OAK_LEAVES))
+		return true;
+	return false;
+}
+
 void Map::userPositionCheck(float x, float z)
 {
 	int mask = this->checkTerrainBoundary(x, z);
 	vector<Index2> v_idxs, f_pos;
 	Index2 cidx, cpos;
-	if (mask == 1) {
+	if (mask == 1) { // out left
 		for (int i = 0; i < this->m_info.size_h; i++) {
 			if (i && i < this->m_info.size_h - 1) { // 보여주기
 				cpos = Index2(this->m_info.s_pos.x, this->m_info.s_pos.y - 16 * i);
@@ -338,7 +369,7 @@ void Map::userPositionCheck(float x, float z)
 		this->m_info.s_pos.x -= 16;
 		this->m_info.ev_pos.x -= 16;
 	}
-	else if (mask == 2) {
+	else if (mask == 2) { // out right
 		for (int i = 0; i < this->m_info.size_h; i++) {
 			if (i && i < this->m_info.size_h - 1) {
 				cpos = Index2(this->m_info.ev_pos.x, this->m_info.s_pos.y - 16 * i);
@@ -353,7 +384,7 @@ void Map::userPositionCheck(float x, float z)
 		this->m_info.s_pos.x += 16;
 		this->m_info.ev_pos.x += 16;
 	}
-	else if (mask == 4) {
+	else if (mask == 4) { // out back
 		for (int i = 0; i < this->m_info.size_w; i++) {
 			if (i && i < this->m_info.size_w - 1) {
 				cpos = Index2(this->m_info.s_pos.x + 16 * i, this->m_info.s_pos.y);
@@ -367,7 +398,7 @@ void Map::userPositionCheck(float x, float z)
 		this->m_info.s_pos.y += 16;
 		this->m_info.ev_pos.y += 16;
 	}
-	else if (mask == 8) {
+	else if (mask == 8) { // out front
 		for (int i = 0; i < this->m_info.size_w; i++) {
 			if (i && i < this->m_info.size_w - 1) {
 				cpos = Index2(this->m_info.s_pos.x + 16 * i, this->m_info.ev_pos.y);
@@ -399,6 +430,7 @@ void Map::threadFunc(vector<Index2>& vec, int dir)
 {
 	vector<thread> threads;
 	this->l_system.createLightMap(vec, dir);
+	this->t_system.createTrees(vec, dir);
 	int t = vec.size() / this->thread_cnt;
 	int m = vec.size() % this->thread_cnt;
 	int st = 0;

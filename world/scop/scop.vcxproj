@@ -195,12 +195,12 @@
     <ClInclude Include="SunMoon.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TerrainSystem.h" />
-    <ClInclude Include="Test.h" />
     <ClInclude Include="TestCam.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextureArray.h" />
+    <ClInclude Include="Trees.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="Wallpaper.h" />
     <ClInclude Include="WICTextureLoader11.h" />
@@ -256,11 +256,11 @@
     <ClCompile Include="SunMoon.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainSystem.cpp" />
-    <ClCompile Include="Test.cpp" />
     <ClCompile Include="TestCam.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
     <ClCompile Include="TextureArray.cpp" />
+    <ClCompile Include="Trees.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="Wallpaper.cpp" />
     <ClCompile Include="WICTextureLoader11.cpp" />

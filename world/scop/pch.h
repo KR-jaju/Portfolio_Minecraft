@@ -73,3 +73,11 @@ using namespace Microsoft::WRL;
 #endif
 
 #define CHECK(p)	assert(SUCCEEDED(p))
+
+
+enum class BlockType {
+	AIR,
+	GRASS,
+	OAK_LOG,
+	OAK_LEAVES,
+};

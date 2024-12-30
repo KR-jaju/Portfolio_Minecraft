@@ -34,6 +34,10 @@ public:
 	uint8 findLight(Index2 const& c_idx, Index3 const& b_idx) const;
 	void setLight(Index2 const& c_idx, int x, int y, int z, uint8 type);
 	void setLight(Index2 const& c_idx, Index3 const& b_idx, uint8 type);
+	void setWater(Index2 const& c_idx, Index3 const& b_idx, bool water);
+	void setWater(Index2 const& c_idx, int x, int y, int z, bool water);
+	bool getWater(Index2 const& c_idx, Index3 const& b_idx);
+	bool getWater(Index2 const& c_idx, int x, int y, int z);
 
 public:
 	WorldIndex getBlockIndex(float x, float y, float z) const;
@@ -57,6 +61,7 @@ public:
 
 private:
 	int* blocks;
+	bool* water;
 	int* h_map;
 	uint8* light_map;
 };

@@ -24,9 +24,11 @@ MapUtils::MapUtils(
 	this->blocks = new int[16 * 16 * size_h * size_w * 256];
 	this->light_map = new uint8[16 * 16 * size_h * size_w * 256];
 	this->h_map = new int[16 * 16 * size_h * size_w];
+	this->water = new bool[16 * 16 * size_h * size_w * 256];
 	fill(this->blocks, this->blocks + 16 * 16 * size_h * size_w * 256, 0);
 	fill(this->light_map, this->light_map + 16 * 16 * size_h * size_w * 256, 0);
 	fill(this->h_map, this->h_map + 16 * 16 * size_h * size_w, 0);
+	fill(this->water, this->water + 16 * 16 * size_h * size_w * 256, 0);
 }
 
 MapUtils::~MapUtils()
@@ -34,6 +36,7 @@ MapUtils::~MapUtils()
 	delete[] this->blocks;
 	delete[] this->h_map;
 	delete[] this->light_map;
+	delete[] this->water;
 }
 
 vec3 MapUtils::intersectionRayAndPlane(
@@ -361,4 +364,32 @@ void MapUtils::setLight(Index2 const& c_idx, Index3 const& b_idx, uint8 type)
 	int idx = 16 * 16 * 256 * (c_idx.x + this->size_w * c_idx.y) +
 		b_idx.x + 16 * (b_idx.z + 16 * b_idx.y);
 	this->light_map[idx] = type;
+}
+
+void MapUtils::setWater(Index2 const& c_idx, Index3 const& b_idx, bool water)
+{
+	int idx = 16 * 16 * 256 * (c_idx.x + this->size_w * c_idx.y) +
+		b_idx.x + 16 * (b_idx.z + 16 * b_idx.y);
+	this->water[idx] = water;
+}
+
+void MapUtils::setWater(Index2 const& c_idx, int x, int y, int z, bool water)
+{
+	int idx = 16 * 16 * 256 * (c_idx.x + this->size_w * c_idx.y) +
+		x + 16 * (z + 16 * y);
+	this->water[idx] = water;
+}
+
+bool MapUtils::getWater(Index2 const& c_idx, Index3 const& b_idx)
+{
+	int idx = 16 * 16 * 256 * (c_idx.x + this->size_w * c_idx.y) +
+		b_idx.x + 16 * (b_idx.z + 16 * b_idx.y);
+	return this->water[idx];
+}
+
+bool MapUtils::getWater(Index2 const& c_idx, int x, int y, int z)
+{
+	int idx = 16 * 16 * 256 * (c_idx.x + this->size_w * c_idx.y) +
+		x + 16 * (z + 16 * y);
+	return this->water[idx];
 }

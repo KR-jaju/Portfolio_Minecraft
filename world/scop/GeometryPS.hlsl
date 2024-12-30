@@ -34,6 +34,13 @@ PS_OUTPUT main(PS_INPUT input)
     
     output.w_pos = float4(input.w_pos, 1);
     uvw = float3(input.uv, input.tex_arr_idx);
+    output.color = texture_arr.Sample(sampler_linear, uvw);
+    if (output.color.w < 0.8)
+        discard;
+    output.color.w = 1;
+    if (uvw.z == 6 || uvw.z == 7 || uvw.z == 8)
+        output.color = float4(float3(72.0, 181.0, 24.0) / 255.0, 1);
+    
     output.uvw = float4(uvw, 1);
     float3 tangent = normalize(input.tangent -
         dot(input.tangent, input.normal) * input.normal);
@@ -42,8 +49,8 @@ PS_OUTPUT main(PS_INPUT input)
     float3 bitangent = cross(input.normal, tangent);
     bitangent = normalize(bitangent);
     float3x3 tbn = float3x3(tangent, bitangent, input.normal);
-    
     float3 normal = texture_arr_n.Sample(sampler_linear, uvw).xyz;
+    
     normal = 2 * normal - 1.0;
     normal = normalize(mul(normal, tbn));
     output.w_normal = float4(normal, 1);
@@ -51,8 +58,6 @@ PS_OUTPUT main(PS_INPUT input)
     float m = texture_arr_s.Sample(sampler_linear, uvw).g;
     float ao = texture_arr_s.Sample(sampler_linear, uvw).w;
     output.rma = float4(r, m, ao, 1);
-    output.color = 
-        float4(texture_arr.Sample(sampler_linear, uvw).rgb, 1);
     float h = texture_arr_n.Sample(sampler_linear, uvw).w;
     output.ssao_normal = float4(input.normal, 1);
     return output;

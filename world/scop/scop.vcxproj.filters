@@ -238,6 +238,9 @@
     <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\CaveShadow">
       <UniqueIdentifier>{89ffe001-d9ed-404a-a274-c265bf648884}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\Chunk\WaterChunk">
+      <UniqueIdentifier>{921ce0b1-8995-47ba-ac47-b7771cc38019}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -251,9 +254,6 @@
     </ClInclude>
     <ClInclude Include="PixelShader.h">
       <Filter>소스 파일\Engine\Pipeline\3_Shader\PixelShader</Filter>
-    </ClInclude>
-    <ClInclude Include="Test.h">
-      <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>소스 파일\Engine\Pipeline\5_Texture\Texture</Filter>
@@ -414,6 +414,9 @@
     <ClInclude Include="CaveShadow.h">
       <Filter>소스 파일\World\Map\System\RenderSystem\ShadowRender\CaveShadow</Filter>
     </ClInclude>
+    <ClInclude Include="Trees.h">
+      <Filter>소스 파일\World\Map\System\TerrainSystem\Trees</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -430,9 +433,6 @@
     </ClCompile>
     <ClCompile Include="PixelShader.cpp">
       <Filter>소스 파일\Engine\Pipeline\3_Shader\PixelShader</Filter>
-    </ClCompile>
-    <ClCompile Include="Test.cpp">
-      <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>소스 파일\Engine\Pipeline\5_Texture\Texture</Filter>
@@ -580,6 +580,9 @@
     </ClCompile>
     <ClCompile Include="CaveShadow.cpp">
       <Filter>소스 파일\World\Map\System\RenderSystem\ShadowRender\CaveShadow</Filter>
+    </ClCompile>
+    <ClCompile Include="Trees.cpp">
+      <Filter>소스 파일\World\Map\System\TerrainSystem\Trees</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
