@@ -16,6 +16,27 @@ Texture2D tex_depth : register(t0);
 SamplerState sampler0 : register(s0);
 
 
+float4 accum_0(PS_INPUT input)
+{
+    // weight function
+    float weight = 
+        clamp(pow(min(1.0, input.color.a * 10.0) + 0.01, 3.0) * 1e8 * 
+            pow(1.0 - input.pos.z * 0.9, 3.0), 1e-2, 3e3);
+    
+    float4 res = 
+        float4(input.color.rgb * input.color.a, input.color.a) * weight;
+    return res;
+}
+
+float4 MCGuire_01(PS_INPUT input)
+{
+    float weight = 
+        max(0.01, 3 * 1000 * pow(1 - input.pos.z, 3)) * input.color.a;
+    float4 res;
+    res = float4(input.color.rgb, input.color.a) * weight;
+    return res;
+}
+
 PS_OUTPUT main(PS_INPUT input)
 {
     PS_OUTPUT output;
@@ -27,15 +48,10 @@ PS_OUTPUT main(PS_INPUT input)
     float std_z = tex_depth.Sample(sampler0, texcoord).r;
     if (ndc_p.z > std_z)
         discard;
-    // weight function
-    float weight = 
-        clamp(pow(min(1.0, input.color.a * 10.0) + 0.01, 3.0) * 1e8 * 
-            pow(1.0 - ndc_p.z * 0.9, 3.0), 1e-2, 3e3);
-	
+    
 	// store pixel color accumulation
-    output.accum = 
-        float4(input.color.rgb * input.color.a, input.color.a) * weight;
-	
+    output.accum = accum_0(input);
+    
 	// store pixel revealage threshold
     output.reveal = input.color.a;
     
