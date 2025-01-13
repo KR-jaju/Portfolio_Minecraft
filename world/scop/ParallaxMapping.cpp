@@ -88,6 +88,11 @@ ComPtr<ID3D11ShaderResourceView> ParallaxMapping::getSRV(RTVIndex idx)
 	return this->d_buffer->getSRV(static_cast<int>(idx));
 }
 
+ComPtr<ID3D11RenderTargetView> ParallaxMapping::getRTV(RTVIndex idx)
+{
+	return this->d_buffer->getRTV(static_cast<int>(idx));
+}
+
 void ParallaxMapping::setPipe()
 {
 	ComPtr<ID3D11DeviceContext> context = this->d_graphic->getContext();

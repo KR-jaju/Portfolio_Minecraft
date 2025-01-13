@@ -12,6 +12,7 @@
 #include "Wallpaper.h"
 #include "Block.h"
 #include "ConstantBuffer.h"
+#include "DeferredBuffer.h"
 
 
 struct cbuffer_pbr
@@ -33,12 +34,16 @@ DeferredRendering::DeferredRendering(
 		minfo->width, minfo->height), 
 	ssao_blur(defer_graphic, minfo->width, minfo->height),
 	pbr(defer_graphic, minfo->width, minfo->height),
-	cave_shadow(defer_graphic, m_info)
+	cave_shadow(defer_graphic, m_info), oit_ia(defer_graphic, minfo),
+	oit(defer_graphic, minfo)
 {
 	this->d_graphic = defer_graphic;
 	this->cube_map = make_shared<Wallpaper>(this->d_graphic,
 		this->m_info->width, this->m_info->height);
 	ComPtr<ID3D11Device> device = this->d_graphic->getDevice();
+	this->d_buffer = make_shared<DeferredBuffer>(1);
+	this->d_buffer->setRTVsAndSRVs(device, 
+		this->m_info->width, this->m_info->height);
 	this->vertex_shader = make_shared<VertexShader>(
 		device,
 		L"ResultVS.hlsl",
@@ -164,12 +169,24 @@ void DeferredRendering::Render(
 		this->m_info->directional_light_pos);
 	// geo render
 	this->g_render.render(cam_view, cam_proj, cam_pos);
-	
+
+	// oit input assemble(oit_ia) render
+	this->oit_ia.render(
+		this->g_render.getSRV(RTVIndex::color),
+		this->cube_map->getSRV()
+	);
+
+	// oit render
+	this->oit.setRTVandSRV(this->oit_ia.getRTV(),
+		this->oit_ia.getSRV(), this->g_render.getDepthSRV());
+	this->oit.render(cam_view, cam_proj);
+	//return;
+
 	// pbr render
 	this->pbr.setRTV();
 	this->setPBRShaderResources();
 	vec3 lp = this->m_info->directional_light_pos;
-	this->pbr.render(lp, cam_pos);
+	this->pbr.render(lp, cam_pos, this->oit.getSRV());
 
 	// shadow map render
 	this->s_render.renderCSM(cam_view, cam_proj);
@@ -258,8 +275,6 @@ void DeferredRendering::setPipe()
 void DeferredRendering::setPBRShaderResources()
 {
 	ComPtr<ID3D11DeviceContext> context = this->d_graphic->getContext();
-	context->PSSetShaderResources(0, 1,
-		this->g_render.getSRV(RTVIndex::color).GetAddressOf());
 	context->PSSetShaderResources(1, 1,
 		this->g_render.getSRV(RTVIndex::w_normal).GetAddressOf());
 	context->PSSetShaderResources(2, 1,

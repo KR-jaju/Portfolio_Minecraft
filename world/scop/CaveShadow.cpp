@@ -67,8 +67,7 @@ void CaveShadow::render(Mat const& cam_view, Mat const& cam_proj)
 			if (this->m_info->chunks[i][j]->render_flag == false)
 				continue;
 			this->m_info->chunks[i][j]->setShadowRender(
-				this->d_graphic->getContext(),
-				this->vertex_shader
+				this->d_graphic->getContext()
 			);
 		}
 	}

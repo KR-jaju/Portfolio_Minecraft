@@ -50,8 +50,6 @@ float3 diffuseIBL(
     
     float3 irradiance = irradiance_tex.Sample(linear_sampler,
         normal_w).rgb;
-    //if (irradiance.r + irradiance.g + irradiance.b > 1.2)
-        //irradiance *= 0.3;
     return kd * albedo * irradiance;
 }
 
@@ -119,14 +117,14 @@ PS_OUTPUT main(PS_INPUT input)
     
     float3 pos = world_pos_tex.Sample(linear_sampler, input.uv).xyz;
     float3 normal = normal_tex.Sample(linear_sampler, input.uv).xyz;
-    normal = normalize(normal);
     float3 albedo = color_tex.Sample(linear_sampler, input.uv).rgb;
     if (normal.x == 0 && normal.y == 0 && normal.z == 0)
     {
-        output.ambient_light = float4(0, 0, 0, 1);
-        output.direct_light = float4(0, 0, 0, 1);
+        output.ambient_light = float4(albedo, 1);
+        output.direct_light = float4(0, 0, 0, 0);
         return output;
     }
+    normal = normalize(normal);
     float3 pixel_to_eye = normalize(eye_pos.xyz - pos);
     float ao = rma_tex.Sample(linear_sampler, input.uv).b;
     float metallic = rma_tex.Sample(linear_sampler, input.uv).g;

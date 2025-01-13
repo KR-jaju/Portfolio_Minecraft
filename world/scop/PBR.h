@@ -19,7 +19,11 @@ public:
 	PBR(DeferredGraphics* grpahic, UINT width, UINT height);
 	~PBR();
 	void setRTV();
-	void render(vec3 const& light_pos, vec3 const& cam_pos);
+	void render(
+		vec3 const& light_pos, 
+		vec3 const& cam_pos,
+		ComPtr<ID3D11ShaderResourceView> color_srv
+	);
 	ComPtr<ID3D11ShaderResourceView> getAmbientLight();
 	ComPtr<ID3D11ShaderResourceView> getDirectLight();
 

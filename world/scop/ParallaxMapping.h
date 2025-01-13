@@ -14,7 +14,6 @@ enum class RTVIndex
 class DeferredGraphics;
 class DeferredBuffer;
 class TextureArray;
-class Texture;
 class SamplerState;
 class VertexShader;
 class PixelShader;
@@ -33,6 +32,7 @@ public:
 	void setRTV();
 	void render(vec3 const& cam_pos);
 	ComPtr<ID3D11ShaderResourceView> getSRV(RTVIndex idx);
+	ComPtr<ID3D11RenderTargetView> getRTV(RTVIndex idx);
 
 private:
 	void setPipe();

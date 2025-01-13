@@ -210,8 +210,7 @@ void GeoRender::render(
 			if (this->m_info->chunks[i][j]->render_flag == false)
 				continue;
 			this->m_info->chunks[i][j]->setGeoRender(
-				this->d_graphic->getContext(),
-				this->vertex_shader
+				this->d_graphic->getContext()
 			);
 		}
 	}
@@ -238,6 +237,19 @@ ComPtr<ID3D11ShaderResourceView> GeoRender::getNPSRV(RTVIndex idx)
 ComPtr<ID3D11ShaderResourceView> GeoRender::getDepthSRV()
 {
 	return this->depth_map->getShaderResourceView();
+}
+
+ComPtr<ID3D11DepthStencilView> GeoRender::getDSV()
+{
+	return this->depth_map->getDepthStencilView();
+}
+
+ComPtr<ID3D11RenderTargetView> GeoRender::getRTV(RTVIndex idx)
+{
+	int index = static_cast<int>(idx);
+	if (this->parallax_flag)
+		return this->parallax_mapping->getRTV(idx);
+	return this->d_buffer->getRTV(index);
 }
 
 void GeoRender::setPipe()

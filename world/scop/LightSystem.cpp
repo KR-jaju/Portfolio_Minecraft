@@ -38,7 +38,7 @@ void LightSystem::lightBFS(int idx) // 청크 하나에 대해 bfs
 			next = here.second + move_arr[i];
 			if (this->m_info->inChunkBoundary(next) == false)
 				continue;
-			if (this->m_info->findBlock(here.first, next))
+			if (this->m_info->findBlock(here.first, next) > 0)
 				continue;
 			if (light - 1 <= this->m_info->findLight(here.first, next))
 				continue;
@@ -88,9 +88,9 @@ void LightSystem::checkBoundary(
 			for (int j = 0; j < 16; j++) {
 				setIndex3(adj, j, i, 15);
 				setIndex3(bidx, j, i, 0);
-				if (this->m_info->findBlock(c_idx, bidx))
+				if (this->m_info->findBlock(c_idx, bidx) > 0)
 					continue;
-				if (this->m_info->findBlock(apz_idx, adj))
+				if (this->m_info->findBlock(apz_idx, adj) > 0)
 					continue;
 				light = this->m_info->findLight(c_idx, bidx);
 				alight = this->m_info->findLight(apz_idx, adj);
@@ -111,9 +111,9 @@ void LightSystem::checkBoundary(
 			for (int j = 0; j < 16; j++) {
 				setIndex3(adj, j, i, 0);
 				setIndex3(bidx, j, i, 15);
-				if (this->m_info->findBlock(c_idx, bidx))
+				if (this->m_info->findBlock(c_idx, bidx) > 0)
 					continue;
-				if (this->m_info->findBlock(amz_idx, adj))
+				if (this->m_info->findBlock(amz_idx, adj) > 0)
 					continue;
 				light = this->m_info->findLight(c_idx, bidx);
 				alight = this->m_info->findLight(amz_idx, adj);
@@ -134,9 +134,9 @@ void LightSystem::checkBoundary(
 			for (int j = 0; j < 16; j++) {
 				setIndex3(adj, 0, i, j);
 				setIndex3(bidx, 15, i, j);
-				if (this->m_info->findBlock(c_idx, bidx))
+				if (this->m_info->findBlock(c_idx, bidx) > 0)
 					continue;
-				if (this->m_info->findBlock(apx_idx, adj))
+				if (this->m_info->findBlock(apx_idx, adj) > 0)
 					continue;
 				light = this->m_info->findLight(c_idx, bidx);
 				alight = this->m_info->findLight(apx_idx, adj);
@@ -157,9 +157,9 @@ void LightSystem::checkBoundary(
 			for (int j = 0; j < 16; j++) {
 				setIndex3(adj, 15, i, j);
 				setIndex3(bidx, 0, i, j);
-				if (this->m_info->findBlock(c_idx, bidx))
+				if (this->m_info->findBlock(c_idx, bidx) > 0)
 					continue;
-				if (this->m_info->findBlock(amx_idx, adj))
+				if (this->m_info->findBlock(amx_idx, adj) > 0)
 					continue;
 				light = this->m_info->findLight(c_idx, bidx);
 				alight = this->m_info->findLight(amx_idx, adj);
@@ -270,7 +270,7 @@ void LightSystem::fillLight(Index2 const& c_idx, int idx)
 	for (int i = 0; i < 16; i++) {
 		for (int j = 0; j < 16; j++) {
 			for (int y = 255; y >= 0; y--) {
-				if (m_info->findBlock(c_idx, j, y, i))
+				if (m_info->findBlock(c_idx, j, y, i) > 0)
 					break;
 				Index3 bidx(j, y, i);
 				m_info->setLight(c_idx, bidx, 15);
@@ -292,7 +292,7 @@ void LightSystem::resetLight(Index2 const& c_idx)
 	for (int z = 0; z < 16; z++) {
 		for (int x = 0; x < 16; x++) {
 			for (int y = 255; y >= 0; y--) {
-				if (m_info->findBlock(c_idx, x, y, z))
+				if (m_info->findBlock(c_idx, x, y, z) > 0)
 					break;
 				Index3 bidx(x, y, z);
 				m_info->setLight(c_idx, x, y, z, 15);

@@ -243,6 +243,80 @@ namespace Block {
 		}
 	}
 
+	inline void addBlockFacePosAndCol(
+		vec3 const& start_pos,
+		float x,
+		float y,
+		float z,
+		int dir,
+		int type,
+		vector<VertexColor>& vertices
+	)
+	{
+		static vector<vec3> sample_pos = {
+			// top
+			{-0.5f, +0.5f, -0.5f},
+			{-0.5f, +0.5f, +0.5f},
+			{+0.5f, +0.5f, +0.5f},
+			{+0.5f, +0.5f, -0.5f},
+
+			// bottom
+			{-0.5f, -0.5f, -0.5f},
+			{+0.5f, -0.5f, -0.5f},
+			{+0.5f, -0.5f, +0.5f},
+			{-0.5f, -0.5f, +0.5f},
+
+			// front
+			{-0.5f, -0.5f, -0.5f},
+			{-0.5f, +0.5f, -0.5f},
+			{+0.5f, +0.5f, -0.5f},
+			{+0.5f, -0.5f, -0.5f},
+
+			// back
+			{-0.5f, -0.5f, +0.5f},
+			{+0.5f, -0.5f, +0.5f},
+			{+0.5f, +0.5f, +0.5f},
+			{-0.5f, +0.5f, +0.5f},
+
+			// left
+			{-0.5f, -0.5f, +0.5f},
+			{-0.5f, +0.5f, +0.5f},
+			{-0.5f, +0.5f, -0.5f},
+			{-0.5f, -0.5f, -0.5f},
+
+			// right
+			{+0.5f, -0.5f, +0.5f},
+			{+0.5f, -0.5f, -0.5f},
+			{+0.5f, +0.5f, -0.5f},
+			{+0.5f, +0.5f, +0.5f}
+		};
+		static vector<vec3> normals = {
+			{0, 1, 0},
+			{0, -1, 0},
+			{0, 0, -1},
+			{0, 0, 1},
+			{-1, 0, 0},
+			{1, 0, 0}
+		};
+		vec4 col;
+		if (type == -3)
+			col = vec4(1, 0, 0, 0.3);
+		else if (type == -2)
+			col = vec4(0, 1, 0, 0.3);
+		else if (type == -1)
+			col = vec4(0, 0, 1, 0.3);
+		VertexColor vertex;
+		x = start_pos.x + x;
+		y = start_pos.y + y;
+		z = start_pos.z - z;
+
+		for (int i = dir * 4; i < dir * 4 + 4; i++) {
+			vertex.pos = sample_pos[i] + vec3(x, y, z);
+			vertex.col = col;
+			vertices.push_back(vertex);
+		}
+	}
+
 	inline void addBlockFaceIndices(
 		uint32 start, 
 		vector<uint32>& indices

@@ -51,6 +51,9 @@ public:
 		vector<uint32>* indices = nullptr,
 		uint32* index = nullptr
 	);
+	void vertexAndIndexGeneratorTP(
+		Index2 const& c_idx
+	);
 	void setSightChunk(int chunk_cnt);
 
 private:

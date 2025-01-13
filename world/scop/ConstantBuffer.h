@@ -43,7 +43,8 @@ public:
 			&subresource
 		);
 		CHECK(hr);
-		void* test_ptr = memcpy(subresource.pData, &resource, sizeof(resource));
+		void* test_ptr = memcpy(subresource.pData, &resource, 
+			sizeof(resource));
 		if (!(test_ptr))
 			cout << "constant buffer memcpy error" << endl;
 		this->context->Unmap(

@@ -23,6 +23,8 @@ public:
 	ComPtr<ID3D11ShaderResourceView> getSRV(RTVIndex idx);
 	ComPtr<ID3D11ShaderResourceView> getNPSRV(RTVIndex idx);
 	ComPtr<ID3D11ShaderResourceView> getDepthSRV();
+	ComPtr<ID3D11DepthStencilView> getDSV();
+	ComPtr<ID3D11RenderTargetView> getRTV(RTVIndex idx);
 
 private:
 	void setPipe();

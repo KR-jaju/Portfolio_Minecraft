@@ -41,8 +41,8 @@ void Map::setDeffGraphic(shared_ptr<DeferredGraphics> defer_graphic)
 	this->terrainSetVerticesAndIndices();
 	finish = clock();
 	cout << "set vi(ms): " << static_cast<double>(finish - start) << endl;
-	Index2 tcidx = this->m_info.findChunkIndex(0, 16);
-	cout << "chunk idx: " << tcidx.x << ' ' << tcidx.y << endl;
+	/*Index2 tcidx = this->m_info.findChunkIndex(0, 16);
+	cout << "chunk idx: " << tcidx.x << ' ' << tcidx.y << endl;*/
 }
 
 
@@ -107,12 +107,12 @@ void Map::vertexAndIndexGenerator(
 		for (int z = 0; z < 16; z++) {
 			for (int x = 0; x < 16; x++) {
 				int type = this->m_info.findBlock(c_idx, x, y, z);
-				if (type == 0)
+				if (type <= 0)
 					continue;
 				Index3 next(x + move.x, y + move.y, z - move.z); // index
 				if (this->m_info.inChunkBoundary(next.x, next.y, next.z)) {
 					next_type = this->m_info.findBlock(c_idx, next);
-					if (next_type && 
+					if (next_type > 0 && 
 						this->checkLeaves(c_idx, next, next_type) == false)
 						continue;
 				}
@@ -120,25 +120,25 @@ void Map::vertexAndIndexGenerator(
 					if (next.x == -1) {
 						next.x = 15;
 						next_type = this->m_info.findBlock(adj_idx, next);
-						if (next_type && this->checkLeaves(adj_idx, next, next_type) == false)
+						if (next_type > 0 && this->checkLeaves(adj_idx, next, next_type) == false)
 							continue;
 					}
 					if (next.x == 16) {
 						next.x = 0;
 						next_type = this->m_info.findBlock(adj_idx, next);
-						if (next_type && this->checkLeaves(adj_idx, next, next_type) == false)
+						if (next_type > 0 && this->checkLeaves(adj_idx, next, next_type) == false)
 							continue;
 					}
 					if (next.z == -1) {
 						next.z = 15;
 						next_type = this->m_info.findBlock(adj_idx, next);
-						if (next_type && this->checkLeaves(adj_idx, next, next_type) == false)
+						if (next_type > 0 && this->checkLeaves(adj_idx, next, next_type) == false)
 							continue;
 					}
 					if (next.z == 16) {
 						next.z = 0;
 						next_type = this->m_info.findBlock(adj_idx, next);
-						if (next_type && this->checkLeaves(adj_idx, next, next_type) == false)
+						if (next_type > 0 && this->checkLeaves(adj_idx, next, next_type) == false)
 							continue;
 					}
 				}
@@ -173,20 +173,24 @@ void Map::vertexShadowGenerator(
 		for (int z = 0; z < 16; z++) {
 			for (int x = 0; x < 16; x++) {
 				int type = this->m_info.findBlock(c_idx, x, y, z);
-				if (type == 0)
+				if (type <= 0)
 					continue;
 				Index3 next(x + move.x, y + move.y, z - move.z);
 				if (this->m_info.inChunkBoundary(next.x, next.y, next.z)
-					&& this->m_info.findBlock(c_idx, next))
+					&& this->m_info.findBlock(c_idx, next) > 0)
 					continue;
 				if (adj_idx.flag) {
-					if (next.x == -1 && this->m_info.findBlock(adj_idx, 15, next.y, next.z))
+					if (next.x == -1 && 
+						this->m_info.findBlock(adj_idx, 15, next.y, next.z) > 0)
 						continue;
-					if (next.x == 16 && this->m_info.findBlock(adj_idx, 0, next.y, next.z))
+					if (next.x == 16 && 
+						this->m_info.findBlock(adj_idx, 0, next.y, next.z) > 0)
 						continue;
-					if (next.z == -1 && this->m_info.findBlock(adj_idx, next.x, next.y, 15))
+					if (next.z == -1 && 
+						this->m_info.findBlock(adj_idx, next.x, next.y, 15) > 0)
 						continue;
-					if (next.z == 16 && this->m_info.findBlock(adj_idx, next.x, next.y, 0))
+					if (next.z == 16 && 
+						this->m_info.findBlock(adj_idx, next.x, next.y, 0) > 0)
 						continue;
 				}
 				if (next.x == -1)
@@ -216,6 +220,33 @@ void Map::vertexShadowGenerator(
 			}
 		}
 	}
+}
+
+void Map::vertexAndIndexGeneratorTP(Index2 const& c_idx)
+{
+	Chunk& chunk = *(this->m_info.chunks[c_idx.y][c_idx.x]);
+	if (chunk.tp_block_cnt == 0)
+		return;
+	uint32& v_idx = chunk.tp_chunk.vertices_idx;
+	vector<VertexColor>& vertices = chunk.tp_chunk.vertices;
+	vector<uint32>& indices = chunk.tp_chunk.indices;
+	vec4 col;
+	for (int y = 0; y <= chunk.max_h; y++) {
+		for (int z = 0; z < 16; z++) {
+			for (int x = 0; x < 16; x++) {
+				int type = this->m_info.findBlock(c_idx, x, y, z);
+				if (type < 0) {
+					for (int i = 0; i < 6; i++) {
+						Block::addBlockFacePosAndCol(
+							chunk.start_pos, x, y, z, i, type, vertices);
+						Block::addBlockFaceIndices(v_idx, indices);
+						v_idx += 4;
+					}
+				}
+			}
+		}
+	}
+	chunk.tp_chunk.createTPBuffer(this->d_graphic->getDevice());
 }
 
 void Map::setSightChunk(int chunk_cnt)
@@ -269,6 +300,7 @@ void Map::chunksSetVerticesAndIndices(
 				&s_idx
 			);
 		}
+		this->vertexAndIndexGeneratorTP(c_idx);
 		this->m_info.chunks[c_idx.y][c_idx.x]->createGeoBuffer(
 			this->d_graphic->getDevice(),
 			vertices_geo

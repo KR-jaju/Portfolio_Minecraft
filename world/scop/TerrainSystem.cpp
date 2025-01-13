@@ -188,7 +188,7 @@ void TerrainSystem::fillWater(Index2 const& c_idx)
 {
 	for (int y = 0; y < 15; y++) {
 		for (int z = 0; z < 16; z++) {
-			for (int x = 0; x < 15; x++) {
+			for (int x = 0; x < 16; x++) {
 				this->m_info->setWater(c_idx, x, y, z, true);
 			}
 		}

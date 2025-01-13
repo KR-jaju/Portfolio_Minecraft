@@ -72,6 +72,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // 기본 메시지 루프입니다:
     cam.setCursorInClient(hWnd);
     move_check = true;
+    int tp_idx = 0;
     while (msg.message != WM_QUIT)
     {
         if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -85,10 +86,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
         {
             if (lb_flag) {
-                terrain.testClickLightBlock(cam.getPos(),
-                    cam.getDir());
-                /*terrain.putBlock(cam.getPos(), 
-                    cam.getDir(), 1);*/
+                /*terrain.testClickLightBlock(cam.getPos(),
+                    cam.getDir());*/
+                terrain.putBlock(cam.getPos(), 
+                    cam.getDir(), -3 + tp_idx);
+                tp_idx++;
+                if (tp_idx == 3)
+                    tp_idx = 0;
                 lb_flag = false;
             }
             if (rb_flag) {

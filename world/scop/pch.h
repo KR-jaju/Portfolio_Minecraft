@@ -76,6 +76,9 @@ using namespace Microsoft::WRL;
 
 
 enum class BlockType {
+	TRANSPARENCY_RED = -3,
+	TRANSPARENCY_GREEN,
+	TRANSPARENCY_BLUE,
 	AIR,
 	GRASS,
 	OAK_LOG,

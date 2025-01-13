@@ -1,14 +1,7 @@
 #include "pch.h"
 #include "Chunk.h"
-#include "DepthMap.h"
 #include "Buffer.h"
-#include "Graphics.h"
 #include "DeferredGraphics.h"
-#include "PixelShader.h"
-#include "VertexShader.h"
-#include "ConstantBuffer.h"
-#include <fstream>
-#include <sstream>
 
 Chunk::Chunk()
 {
@@ -21,8 +14,7 @@ Chunk::~Chunk()
 }
 
 void Chunk::setGeoRender(
-	ComPtr<ID3D11DeviceContext> context,
-	shared_ptr<VertexShader> vertex_shader
+	ComPtr<ID3D11DeviceContext> const& context
 )
 {
 
@@ -39,8 +31,7 @@ void Chunk::setGeoRender(
 }
 
 void Chunk::setShadowRender(
-	ComPtr<ID3D11DeviceContext> context,
-	shared_ptr<VertexShader> vertex_shader
+	ComPtr<ID3D11DeviceContext> const& context
 )
 {
 	uint32 stride = this->shadow_vbuffer->getStride();
@@ -65,7 +56,7 @@ void Chunk::setShadowRender(
 }
 
 void Chunk::createGeoBuffer(
-	ComPtr<ID3D11Device> device,
+	ComPtr<ID3D11Device> const& device,
 	vector<VertexGeo> const& vertices
 )
 {
@@ -79,7 +70,7 @@ void Chunk::createGeoBuffer(
 }
 
 void Chunk::createShadowBuffer(
-	ComPtr<ID3D11Device> device,
+	ComPtr<ID3D11Device> const& device,
 	vector<VertexShadow> const& vertices,
 	vector<uint32> const& indices
 )
@@ -104,6 +95,8 @@ void Chunk::reset()
 	this->render_flag = false;
 	this->vertices_idx = 0;
 	this->max_h = -1;
+	this->tp_block_cnt = 0;
+	this->tp_chunk.reset();
 }
 
 void Chunk::setPos(Index2 const& c_pos)
@@ -113,7 +106,7 @@ void Chunk::setPos(Index2 const& c_pos)
 }
 
 void Chunk::createGeoIBuffer(
-	ComPtr<ID3D11Device> device, 
+	ComPtr<ID3D11Device> const& device, 
 	vector<uint32> const& indices
 )
 {
@@ -125,10 +118,8 @@ void Chunk::createGeoIBuffer(
 	);
 }
 
-void Chunk::setGeoRender(
-	ComPtr<ID3D11DeviceContext> const& context, 
-	shared_ptr<VertexShader> const& v_shader, 
-	int test_flag
+void Chunk::setGeoRenderIndices(
+	ComPtr<ID3D11DeviceContext> const& context
 )
 {
 	uint32 stride = this->geo_vbuffer->getStride();
