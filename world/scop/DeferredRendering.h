@@ -7,7 +7,6 @@
 #include "SsaoBlur.h"
 #include "PBR.h"
 #include "CaveShadow.h"
-#include "OITIA.h"
 #include "OIT.h"
 
 class DeferredGraphics;
@@ -31,6 +30,7 @@ public:
 	
 private:
 	void setPipe();
+	void setFinPipe();
 	void setPBRShaderResources();
 	void ssaoBlur(int cnt, 
 		Mat const& proj,
@@ -50,7 +50,6 @@ private:
 	SsaoBlur ssao_blur;
 	PBR pbr;
 	CaveShadow cave_shadow;
-	OITIA oit_ia;
 	OIT oit;
 	shared_ptr<Wallpaper> cube_map;
 	D3D11_VIEWPORT view_port;
@@ -62,5 +61,10 @@ private:
 	shared_ptr<SamplerState> sampler_state;
 	shared_ptr<RasterizerState> rasterizer_state;
 	shared_ptr<InputLayout> input_layout;
+
+private:
+	shared_ptr<VertexShader> fin_vs;
+	shared_ptr<PixelShader> fin_ps;
+	shared_ptr<InputLayout> fin_ia;
 };
 

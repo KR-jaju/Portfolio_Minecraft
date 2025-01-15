@@ -259,9 +259,6 @@
     <Filter Include="소스 파일\World\Map\System\RenderSystem\OIT\Composite">
       <UniqueIdentifier>{bcf1291a-33dd-4ab3-a5ac-508c86505a59}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\World\Map\System\RenderSystem\OIT\OITIA">
-      <UniqueIdentifier>{a53dcdbf-8b02-439f-bbf9-ac53e6af3791}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\World\WorldShaderFIle\OIT\OITIA">
       <UniqueIdentifier>{9e106afa-06dc-4444-8bc6-de36844cd32b}</UniqueIdentifier>
     </Filter>
@@ -453,9 +450,6 @@
     <ClInclude Include="Composite.h">
       <Filter>소스 파일\World\Map\System\RenderSystem\OIT\Composite</Filter>
     </ClInclude>
-    <ClInclude Include="OITIA.h">
-      <Filter>소스 파일\World\Map\System\RenderSystem\OIT\OITIA</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -635,9 +629,6 @@
     <ClCompile Include="Composite.cpp">
       <Filter>소스 파일\World\Map\System\RenderSystem\OIT\Composite</Filter>
     </ClCompile>
-    <ClCompile Include="OITIA.cpp">
-      <Filter>소스 파일\World\Map\System\RenderSystem\OIT\OITIA</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="scop.rc">
@@ -784,6 +775,12 @@
     </FxCompile>
     <FxCompile Include="OITIAPS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\OIT\OITIA</Filter>
+    </FxCompile>
+    <FxCompile Include="FinishVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle</Filter>
+    </FxCompile>
+    <FxCompile Include="FinishPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

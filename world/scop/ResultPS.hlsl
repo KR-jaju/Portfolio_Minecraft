@@ -29,19 +29,15 @@ float4 main(PS_INPUT input) : SV_TARGET
     a_color = LinearToneMapping(a_color);
     float4 d_c = 
         directional_color.Sample(sampler0, input.uv);
-    if (d_c.r == 0 && d_c.g == 0 && d_c.b == 0 && d_c.a == 0)
-    {
-        return float4(a_color, 1);
-    }
     float3 d_color = d_c.rgb;
     float cave_shadow = c_shadow_map.Sample(sampler0, input.uv).r;
     cave_shadow /= 15.0f;
     
     d_color = LinearToneMapping(d_color);
     float4 color = float4(a_color + d_color, 1);
-    //if (color.r == 0 && color.g == 0 && color.b == 0)
-        //return float4(LinearToneMapping(
-            //cube_map.Sample(sampler0, input.uv).rgb), 1);
+    if (color.r == 0 && color.g == 0 && color.b == 0)
+        return float4(LinearToneMapping(
+            cube_map.Sample(sampler0, input.uv).rgb), 1);
     
     float sp = shadow_map.Sample(sampler0, input.uv).r;
     

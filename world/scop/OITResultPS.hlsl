@@ -10,7 +10,5 @@ struct PS_INPUT
 
 float4 main(PS_INPUT input) : SV_TARGET
 {
-    //float3 color = result_color.Sample(sampler0, input.uv).rgb;
-    //return float4(color, 1);
     return result_color.Sample(sampler0, input.uv);
 }

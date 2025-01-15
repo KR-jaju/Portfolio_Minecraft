@@ -34,8 +34,7 @@ DeferredRendering::DeferredRendering(
 		minfo->width, minfo->height), 
 	ssao_blur(defer_graphic, minfo->width, minfo->height),
 	pbr(defer_graphic, minfo->width, minfo->height),
-	cave_shadow(defer_graphic, m_info), oit_ia(defer_graphic, minfo),
-	oit(defer_graphic, minfo)
+	cave_shadow(defer_graphic, m_info), oit(defer_graphic, minfo)
 {
 	this->d_graphic = defer_graphic;
 	this->cube_map = make_shared<Wallpaper>(this->d_graphic,
@@ -89,6 +88,25 @@ DeferredRendering::DeferredRendering(
 	this->view_port.Height = this->m_info->height;
 	this->view_port.MinDepth = 0.f;
 	this->view_port.MaxDepth = 1.f;
+
+	this->fin_vs = make_shared<VertexShader>(
+		device,
+		L"FinishVS.hlsl",
+		"main",
+		"vs_5_0"
+	);
+	this->fin_ia = make_shared<InputLayout>(
+		device,
+		InputLayouts::layout_deferred.data(),
+		InputLayouts::layout_deferred.size(),
+		this->fin_vs->getBlob()
+	);
+	this->fin_ps = make_shared<PixelShader>(
+		device,
+		L"FinishPS.hlsl",
+		"main",
+		"ps_5_0"
+	);
 }
 
 DeferredRendering::~DeferredRendering()
@@ -170,23 +188,12 @@ void DeferredRendering::Render(
 	// geo render
 	this->g_render.render(cam_view, cam_proj, cam_pos);
 
-	// oit input assemble(oit_ia) render
-	this->oit_ia.render(
-		this->g_render.getSRV(RTVIndex::color),
-		this->cube_map->getSRV()
-	);
-
-	// oit render
-	this->oit.setRTVandSRV(this->oit_ia.getRTV(),
-		this->oit_ia.getSRV(), this->g_render.getDepthSRV());
-	this->oit.render(cam_view, cam_proj);
-	//return;
 
 	// pbr render
 	this->pbr.setRTV();
 	this->setPBRShaderResources();
 	vec3 lp = this->m_info->directional_light_pos;
-	this->pbr.render(lp, cam_pos, this->oit.getSRV());
+	this->pbr.render(lp, cam_pos, this->g_render.getSRV(RTVIndex::color));
 
 	// shadow map render
 	this->s_render.renderCSM(cam_view, cam_proj);
@@ -217,8 +224,8 @@ void DeferredRendering::Render(
 	this->ssaoBlur(8, cam_proj, cam_view);
 	
 
-	// result render start
-	this->d_graphic->renderBegin();
+	// solid obj render result
+	this->d_graphic->renderBegin(this->d_buffer.get());
 	this->d_graphic->setViewPort(this->view_port);
 	this->setPipe();
 	context->PSSetShaderResources(0, 1,
@@ -237,6 +244,19 @@ void DeferredRendering::Render(
 		this->ibuffer->getCount(),
 		0, 0);
 
+	// oit render
+	this->oit.setRTVandSRV(this->d_buffer->getRTV(0),
+		this->d_buffer->getSRV(0), this->g_render.getDepthSRV());
+	this->oit.render(cam_view, cam_proj);
+
+	// result
+	this->d_graphic->renderBegin();
+	this->setFinPipe();
+	context->PSSetShaderResources(0, 1,
+		this->oit.getSRV().GetAddressOf());
+	context->DrawIndexed(
+		this->ibuffer->getCount(),
+		0, 0);
 	this->d_graphic->renderEnd();
 }
 
@@ -270,6 +290,36 @@ void DeferredRendering::setPipe()
 	);
 	context->PSSetSamplers(0, 1,
 		this->sampler_state->getComPtr().GetAddressOf());
+}
+
+void DeferredRendering::setFinPipe()
+{
+	ComPtr<ID3D11DeviceContext> context;
+	context = this->d_graphic->getContext();
+	context->IASetPrimitiveTopology(
+		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	context->IASetInputLayout(this->fin_ia->getComPtr().Get());
+	uint32 stride = this->vbuffer->getStride();
+	uint32 offset = this->vbuffer->getOffset();
+	context->IASetVertexBuffers(0, 1,
+		this->vbuffer->getComPtr().GetAddressOf(),
+		&stride, &offset);
+	context->IASetIndexBuffer(
+		this->ibuffer->getComPtr().Get(),
+		DXGI_FORMAT_R32_UINT,
+		0
+	);
+	context->VSSetShader(
+		this->fin_vs->getComPtr().Get(),
+		nullptr,
+		0
+	);
+	context->RSSetState(this->rasterizer_state->getComPtr().Get());
+	context->PSSetShader(
+		this->fin_ps->getComPtr().Get(),
+		nullptr,
+		0
+	);
 }
 
 void DeferredRendering::setPBRShaderResources()
