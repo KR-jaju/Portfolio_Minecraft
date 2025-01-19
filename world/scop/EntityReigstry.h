@@ -52,12 +52,12 @@ public:
 		std::size_t index;
 	};
 
-	EntityRegistry(InputRegistry& input_registry);
+	EntityRegistry(InputRegistry& input_registry, AssetManager &asset_manager);
 
 	template<typename T>
 	std::shared_ptr<T> createEntity()
 	{
-		std::shared_ptr<T> entity = make_shared<T>();
+		std::shared_ptr<T> entity = make_shared<T>(this->asset_manager);
 
 		this->entity_pool.emplace_back(entity);
 		return (entity);
@@ -69,6 +69,7 @@ public:
 	const_iterator	begin() const;
 	const_iterator	end() const;
 private:
+	AssetManager& asset_manager;
 	std::vector<std::shared_ptr<Entity>> entity_pool; // 모든 엔티티들의 벡터
 	std::shared_ptr<Player> player;
 };

@@ -5,6 +5,7 @@
 #include "Buffer.h"
 #include "EntityVertex.h"
 #include <tuple>
+#include "AssetManager.h"
 
 #include "InputRegistry.h"
 
@@ -42,9 +43,7 @@ public:
 	virtual bool	shouldDespawn() const = 0;
 
 	virtual void	setPosition(vec3 position) = 0;
-
 	virtual ivec2 getChunkIndex() const = 0;
-
 	virtual vec3	getVelocity() const = 0;
 	virtual void	setVelocity(vec3 velocity) = 0;
 	virtual int		getContactFaces() const = 0;

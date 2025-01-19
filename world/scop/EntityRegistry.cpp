@@ -3,8 +3,9 @@
 #include "Entity.h"
 #include "Player.h"
 
-EntityRegistry::EntityRegistry(InputRegistry& input_registry)
-	: player(make_shared<Player>(input_registry))
+EntityRegistry::EntityRegistry(InputRegistry& input_registry, AssetManager& asset_manager)
+	: asset_manager(asset_manager),
+    player(make_shared<Player>(input_registry, asset_manager))
 {
 	this->entity_pool.emplace_back(this->player);
 }

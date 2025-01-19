@@ -9,6 +9,16 @@ Renderer::Renderer(RenderingContext& context)
 
 }
 
+void	Renderer::render(SubchunkMeshData& data, ivec3 position)
+{
+	Graphics& graphics = this->context.graphics;
+	ComPtr<ID3D11DeviceContext> dc = graphics.getContext();
+
+	this->model_cb.update(Mat::CreateTranslation(vec3(position.x * 16, position.y * 16, position.z * 16)).Transpose());
+	dc->VSSetConstantBuffers(1, 1, this->model_cb.getComPtr().GetAddressOf());
+	data.draw(context.graphics);
+}
+
 void	Renderer::render(Entity& entity)
 {
 	Graphics& graphics = this->context.graphics;
@@ -20,8 +30,5 @@ void	Renderer::render(Entity& entity)
 		return;
 	this->model_cb.update(Mat::CreateTranslation(vec3(position.x, position.y, position.z)).Transpose());
 	dc->VSSetConstantBuffers(1, 1, this->model_cb.getComPtr().GetAddressOf());
-
-
-
 	mesh->render(graphics);
 }

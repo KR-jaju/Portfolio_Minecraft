@@ -15,7 +15,10 @@ RenderingContext::RenderingContext(TextureRegistry& texture_registry, EntityRegi
 	chunk_geometry_vs(graphics.getDevice(), L"GeometryPassVS.hlsl", "main", "vs_5_0"),
 	chunk_geometry_ps(graphics.getDevice(), L"GeometryPassPS.hlsl", "main", "ps_5_0"),
 	chunk_input_layout(graphics.getDevice(), InputLayouts::layout_chunk, 3, this->chunk_geometry_vs.getBlob()),
-	chunk_texture_sampler(graphics.getDevice())
+	chunk_texture_sampler(graphics.getDevice()),
+	entity_geometry_vs(graphics.getDevice(), L"EntityGeometryPassVS.hlsl", "main", "vs_5_0"),
+	entity_geometry_ps(graphics.getDevice(), L"EntityGeometryPassPS.hlsl", "main", "ps_5_0"),
+	entity_input_layout(graphics.getDevice(), InputLayouts::layout_entity, 6, this->entity_geometry_vs.getBlob())
 {
 	this->prepareTemporaryTextures();
 }

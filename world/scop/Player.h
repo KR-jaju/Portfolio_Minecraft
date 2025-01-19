@@ -6,7 +6,7 @@
 class Player : public Entity
 {
 public:
-	Player(InputRegistry& input_registry);
+	Player(InputRegistry& input_registry, AssetManager& asset_manager);
 
 	void	update(float dt);
 

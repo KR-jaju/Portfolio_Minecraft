@@ -102,11 +102,17 @@ void GeometryPass::execute(RenderingContext& context)
 	for (auto& chunk_mesh : chunk_mesh_registry)
 	{
 		ivec3 position = chunk_mesh.first;
+		SubchunkMeshData& mesh = chunk_mesh.second;
 
-		this->model_cb.update(Mat::CreateTranslation(vec3(position.x * 16, position.y * 16, position.z * 16)).Transpose());
-		dc->VSSetConstantBuffers(1, 1, this->model_cb.getComPtr().GetAddressOf());
-		chunk_mesh.second.draw(context.graphics);
+		this->renderer.render(mesh, position);
 	}
+	dc->IASetInputLayout(context.entity_input_layout.getComPtr().Get());
+	dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	dc->VSSetShader(context.entity_geometry_vs.getComPtr().Get(), nullptr, 0);
+	dc->PSSetShader(context.entity_geometry_ps.getComPtr().Get(), nullptr, 0);
+	dc->VSSetConstantBuffers(0, 1, context.camera_data.getComPtr().GetAddressOf());
+	//dc->PSSetSamplers(0, 1, context.entity_texture_sampler.getComPtr().GetAddressOf());
+	//dc->PSSetShaderResources(0, 1, texture_registry.getBlockTextureArray().GetAddressOf());
 	for (Entity& entity : entity_registry)
 	{
 		renderer.render(entity);

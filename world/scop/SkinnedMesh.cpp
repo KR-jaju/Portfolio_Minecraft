@@ -17,9 +17,9 @@ SkinnedMesh::SkinnedMesh(std::wstring const& path)
 	auto const& bone_indices = json["bone_indices"];
 	auto const& indices = json["indices"];
 	auto const& bindposes = json["bindposes"];
-	auto const& parent = json["bone_parent"]; // 본의 부모 본
+	//auto const& parent = json["bone_parent"]; // 본의 부모 본
 
-	for (int i = 0; i < positions.size() / 4; ++i)
+	for (int i = 0; i < positions.size() / 3; ++i)
 	{
 		this->vertices.push_back(
 			{
@@ -58,7 +58,10 @@ void	SkinnedMesh::render(Graphics& graphics)
 		this->index_buffer = std::make_unique<Buffer<uint32>>(graphics.getDevice(), this->indices.data(), this->indices.size(), D3D11_BIND_VERTEX_BUFFER);
 		this->bindposes_buffer = std::make_unique<ConstantBuffer>(graphics.getDevice(), context, this->bindposes);
 	}
-	context->IASetVertexBuffers(0, 1, this->vertex_buffer->getComPtr().GetAddressOf(), nullptr, nullptr);
+	uint32 stride = this->vertex_buffer->getStride();
+	uint32 offset = this->vertex_buffer->getOffset();
+
+	context->IASetVertexBuffers(0, 1, this->vertex_buffer->getComPtr().GetAddressOf(), &stride, &offset);
 	context->IASetIndexBuffer(this->index_buffer->getComPtr().Get(), DXGI_FORMAT_R32_UINT, 0);
 	context->VSSetConstantBuffers(3, 1, this->bindposes_buffer->getComPtr().GetAddressOf());
 	context->DrawIndexed(this->indices.size(), 0, 0);

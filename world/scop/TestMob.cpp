@@ -1,24 +1,20 @@
 #include "pch.h"
 #include "TestMob.h"
 
-TestMob::TestMob()
+TestMob::TestMob(AssetManager& asset_manager)
+	: mesh(asset_manager.load<SkinnedMesh>(L"TestMob.json")),
+	position(0.0, 35.0, 0.0),
+	bounding_box({ vec3(0, 0.9f, 0), vec3(0.3f, 0.9f, 0.3f) })
 {
 
 }
 
 void	TestMob::update(float dt)
 {
-
-	this->animator.update(this->armature, dt); // armature update
-
-
-
-
-}
-
-void	TestMob::render()
-{
-
+	if (this->contact_faces & DIRECTION_DOWN_BIT)
+		this->velocity.y = 10.0f;
+	this->velocity.y -= 25 * dt;
+	//this->animator.update(this->armature, dt); // armature update
 }
 
 vec3	TestMob::getPosition() const
@@ -66,6 +62,11 @@ void	TestMob::setContactFaces(int faces)
 	this->contact_faces = faces;
 }
 
+AABB const& TestMob::getBoundingBox() const
+{
+	return (this->bounding_box);
+}
+
 bool	TestMob::isVisible() const
 {
 	return (true);
@@ -73,5 +74,5 @@ bool	TestMob::isVisible() const
 
 SkinnedMesh* TestMob::getMesh() const
 {
-	return (nullptr);
+	return (this->mesh.get());
 }

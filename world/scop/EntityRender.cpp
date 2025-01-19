@@ -54,12 +54,12 @@ EntityRender::EntityRender(
 		"main",
 		"ps_5_0"
 		);
-	this->input_layout = make_shared<InputLayout>(
-		device,
-		layout.layout_Entity.data(),
-		layout.layout_Entity.size(),
-		this->vertex_shader->getBlob()
-		);
+	//this->input_layout = make_shared<InputLayout>(
+	//	device,
+	//	layout.layout_Entity.data(),
+	//	layout.layout_Entity.size(),
+	//	this->vertex_shader->getBlob()
+	//	);
 }
 
 void EntityRender::render(

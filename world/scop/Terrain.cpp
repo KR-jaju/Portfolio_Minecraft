@@ -5,6 +5,7 @@
 #include "Graphics.h"
 
 #include "Pig.h"
+#include "TestMob.h"
 
 Terrain::Terrain(HWND hwnd, int width, int height)
 	: last_time(std::chrono::high_resolution_clock::now()),
@@ -14,7 +15,7 @@ Terrain::Terrain(HWND hwnd, int width, int height)
 	asset_manager(graphics),
 	texture_registry(this->graphics),
 	block_data_registry(),
-	entity_registry(this->input_registry),
+	entity_registry(this->input_registry, this->asset_manager),
 	chunk_registry(this->terrain_db, this->texture_registry, this->entity_registry),
 	chunk_mesh_registry(this->texture_registry, this->chunk_registry),
 	entity_system(this->input_registry, this->entity_registry),
@@ -39,6 +40,7 @@ Terrain::Terrain(HWND hwnd, int width, int height)
 	//this->ega->registerTexture("test", L"steve.png");
 	//shared_ptr<Entity> entity = make_shared<Pig>(this->ega->getGeometry("test"), this->ega->getTexture("test"));
 	//uint32 id = this->m_manager->e_info.registerEntity(entity);
+	this->entity_registry.createEntity<TestMob>();
 }
 
 void Terrain::update()

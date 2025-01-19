@@ -806,10 +806,10 @@
     <FxCompile Include="SsaoPS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Ssao</Filter>
     </FxCompile>
-    <FxCompile Include="EntityVS.hlsl">
+    <FxCompile Include="EntityGeometryPassVS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Entity</Filter>
     </FxCompile>
-    <FxCompile Include="EntityPS.hlsl">
+    <FxCompile Include="EntityGeometryPassPS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Entity</Filter>
     </FxCompile>
     <FxCompile Include="GeometryPassVS.hlsl">
@@ -834,6 +834,9 @@
   <ItemGroup>
     <None Include="SimpleMath.inl">
       <Filter>헤더 파일\Utils\SimpleMath</Filter>
+    </None>
+    <None Include="TestMob.json">
+      <Filter>리소스 파일</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -7,7 +7,7 @@ AssetManager::AssetManager(Graphics& graphics)
     
 }
 
-void	AssetManager::unload(std::string const& path)
+void	AssetManager::unload(std::wstring const& path)
 {
     this->resources.erase(path);
 }

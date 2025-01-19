@@ -35,8 +35,15 @@ struct RenderingContext
 
 	VertexShader chunk_geometry_vs;
 	PixelShader chunk_geometry_ps;
-	InputLayout chunk_input_layout;
+
+	VertexShader entity_geometry_vs;
+	PixelShader entity_geometry_ps;
+
+	
 	SamplerState chunk_texture_sampler;
+
+	InputLayout chunk_input_layout;
+	InputLayout entity_input_layout;
 
 	std::unordered_map<std::string, ComPtr<ID3D11Texture2D>> textures;
 	std::unordered_map<std::string, ComPtr<ID3D11RenderTargetView>> rtvs;

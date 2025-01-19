@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Player.h"
 
-Player::Player(InputRegistry& input_registry)
+Player::Player(InputRegistry& input_registry, AssetManager& asset_manager)
 	: 
 	input_registry(input_registry),
 	camera(),
