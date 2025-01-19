@@ -307,7 +307,7 @@ void Test::render()
 		0
 	);
 
-	this->graphic->renderEnd();
+	//this->graphic->renderEnd();
 }
 
 void Test::renderUV()
@@ -383,7 +383,7 @@ void Test::renderUV()
 		0
 	);
 
-	this->graphic->renderEnd();
+	//this->graphic->renderEnd();
 }
 
 void Test::update()

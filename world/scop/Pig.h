@@ -10,27 +10,41 @@ class Pig : public Entity
 {
 public:
 	Pig(shared_ptr<SkinnedMesh> geometry, shared_ptr<Texture> texture);
-	void	update();
-	void	render(ComPtr<ID3D11DeviceContext> context) const;
-	void	updateBoneMatrix();
-	BoneData const& getBoneTransform() const;
+	void	update(float dt);
+	void	render();
+
+	vec3	getPosition() const;
+	vec3	getRotation() const;
+	bool	shouldDespawn() const;
+	void	setPosition(vec3 position);
+	ivec2	getChunkIndex() const;
+	vec3	getVelocity() const;
+	void	setVelocity(vec3 velocity);
+	int		getContactFaces() const;
+	void	setContactFaces(int faces);
+	AABB const& getBoundingBox() const;
 private:
-	FSM<Pig>	behavior_fsm;
-	FSM<Pig>	animation_fsm;
+	vec3	position;
+	vec3	rotation;
+	vec3	velocity;
+	AABB	bounding_box;
+	int		contact_faces;
 
-	float animation_time;
-	float animation_speed;
 
-	shared_ptr<Texture> texture;
-	shared_ptr<SkinnedMesh> mesh;
-	std::vector<Transform> armature;
-	BoneData bone_transform;
+	//shared_ptr<Texture> texture;
+	//shared_ptr<SkinnedMesh> mesh;
+	//std::vector<Transform> armature;
+	//BoneData bone_transform;
 
-	vec3 position;
-	vec3 rotation;
-	vec3 scale;
+	//FSM<Pig>	behavior_fsm;
+	//Animator	animator;
 
-	bool	behaviorIdleState();
+	//vec3 position;
+	//vec3 rotation;
+	//vec3 scale;
 
-	bool	animationIdleState();
+	//bool	behaviorIdleState();
+
+	//bool	animationIdleState();
+	//bool	animationIdleToWalkState();
 };

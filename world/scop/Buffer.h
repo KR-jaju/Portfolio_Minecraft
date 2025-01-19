@@ -33,6 +33,7 @@ public:
 	Buffer(Buffer const&) = delete;
 	~Buffer() {};
 	Buffer& operator=(Buffer const&) = delete;
+	Buffer& operator=(Buffer&&) = default;
 	ComPtr<ID3D11Buffer> getComPtr() const { return this->buffer; }
 	uint32 getStride() const { return this->stride; }
 	uint32 getOffset() const { return this->offset; }

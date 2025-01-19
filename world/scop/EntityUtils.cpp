@@ -2,6 +2,7 @@
 #include <vector>
 #include "EntityUtils.h"
 #include "ConstantBuffer.h"
+#include "SkinnedMesh.h"
 
 EntityUtils::EntityUtils()
 {
@@ -43,23 +44,21 @@ void	EntityUtils::removeEntity(uint32 id)
 
 void	EntityUtils::render(ComPtr<ID3D11DeviceContext> context)
 {
-	for (int id = 0; id < this->entity_list.size(); ++id)
-	{
-		std::shared_ptr<Entity> entity = this->entity_list[id];
-		if (entity == nullptr)
-			continue;
+	//for (std::shared_ptr<Entity> entity : this->entity_list)
+	//{
+	//	if (entity == nullptr)
+	//		continue;
+	//	entity->update();
+	//}
+	//for (std::shared_ptr<Entity> entity : this->entity_list)
+	//{
+	//	if (entity == nullptr)
+	//		continue;
 
-		entity->update();
-	}
-	for (int id = 0; id < this->entity_list.size(); ++id)
-	{
-		std::shared_ptr<Entity> entity = this->entity_list[id];
-		if (entity == nullptr)
-			continue;
-
-		this->bone_transform_cb->update(entity->getBoneTransform());
-		context->VSSetConstantBuffers(1, 1, this->bone_transform_cb->getComPtr().GetAddressOf());
-		entity->render(context);
-	}
+	//	this->bone_transform_cb->update(entity->getBoneTransform());
+	//	context->VSSetConstantBuffers(1, 1, this->bone_transform_cb->getComPtr().GetAddressOf());
+	//	context->VSSetConstantBuffers(2, 1, entity->getMesh()->getInverseBindpose().getComPtr().GetAddressOf());
+	//	entity->render(context);
+	//}
 }
 //void	EntityUtils::renderShadowMap();

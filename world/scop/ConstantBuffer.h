@@ -30,7 +30,6 @@ public:
 	~ConstantBuffer();
 	ConstantBuffer& operator=(ConstantBuffer const&) = delete;
 	ComPtr<ID3D11Buffer> getComPtr() const;
-
 	template<typename Data>
 	void update(const Data& resource) {
 		D3D11_MAPPED_SUBRESOURCE subresource;

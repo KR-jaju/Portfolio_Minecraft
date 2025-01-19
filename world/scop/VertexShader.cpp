@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "VertexShader.h"
-
+#include <iostream>
 
 VertexShader::VertexShader(
 	ComPtr<ID3D11Device> device, 
@@ -24,6 +24,7 @@ VertexShader::VertexShader(
 		this->blob.GetAddressOf(),
 		nullptr
 	);
+
 	CHECK(hr);
 	
 	hr = this->device->CreateVertexShader(

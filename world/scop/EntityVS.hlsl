@@ -8,8 +8,13 @@ cbuffer MVP : register(b0)
 cbuffer Bones : register(b1)
 {
     matrix bone[32];
+};
+
+cbuffer InverseBindpose : register(b2)
+{
     matrix inv_bindpose[32];
 };
+
 
 struct VS_INPUT
 {

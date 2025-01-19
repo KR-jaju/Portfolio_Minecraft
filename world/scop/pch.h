@@ -9,6 +9,9 @@
 #include "SimpleMath.h"
 #include "WICTextureLoader11.h"
 
+#include <utility>
+#include <functional>
+
 using int8 = __int8;
 using int16 = __int16;
 using int32 = __int32;
@@ -49,10 +52,53 @@ struct MVP {
 	Mat proj = Mat::Identity;
 };
 
+struct CameraData
+{
+	Mat view = Mat::Identity;
+	Mat projection = Mat::Identity;
+};
+
 struct BoneData {
 	Mat matrix[32];
-	Mat	bindpose[32];
 };
+
+namespace std
+{
+	template <>
+	struct hash<ivec2>
+	{
+		size_t operator()(const ivec2& p) const
+		{
+			size_t h1 = std::hash<int32_t>{}(p.x);
+			size_t h2 = std::hash<int32_t>{}(p.y);
+
+			return h1 ^ (h2 + 0x9e3779b9 + (h1 << 6) + (h1 >> 2));
+		}
+	};
+}
+
+enum class Direction : uint8_t
+{
+	East = 0,
+	West = 1,
+	Up = 2,
+	Down = 3,
+	North = 4,
+	South = 5,
+	Undefined = 6
+};
+
+enum DirectionFlags
+{
+	DIRECTION_CLEAR_BIT = 0,
+	DIRECTION_EAST_BIT = (1 << static_cast<int>(Direction::East)),
+	DIRECTION_WEST_BIT = (1 << static_cast<int>(Direction::West)),
+	DIRECTION_UP_BIT = (1 << static_cast<int>(Direction::Up)),
+	DIRECTION_DOWN_BIT = (1 << static_cast<int>(Direction::Down)),
+	DIRECTION_NORTH_BIT = (1 << static_cast<int>(Direction::North)),
+	DIRECTION_SOUTH_BIT = (1 << static_cast<int>(Direction::South)),
+};
+
 
 #include <map>
 #include <vector>

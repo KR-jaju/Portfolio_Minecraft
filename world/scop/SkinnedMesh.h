@@ -1,22 +1,32 @@
 #pragma once
 
-#include "ModelResource.h"
+#include "Asset.h"
 #include "Buffer.h"
+#include "ConstantBuffer.h"
+#include "EntityVertex.h"
+#include "Armature.h"
+#include "Graphics.h"
 
-class SkinnedMesh
+class SkinnedMesh : public Asset
 {
 public:
-	SkinnedMesh(ComPtr<ID3D11Device> device, Model const& model);
+	SkinnedMesh(std::wstring const& path);
 
-	Buffer<EntityVertex> const& getVertexBuffer() const;
-	Buffer<uint32> const& getIndexBuffer() const;
-	std::vector<int> const& getBoneOrder() const;
+	Mat const& getBindpose(int bone_idx) const;
+	std::vector<int> const& getBoneParent() const;
+	
+
+	
+	void	render(Graphics& graphics);
+
 private:
+
 	std::vector<EntityVertex> vertices;
 	std::vector<uint32> indices;
-	std::vector<Mat> bindposes;
-	std::vector<int> topological_order;
+	BoneData bindposes;
+	std::vector<int> bone_parent;
 
-	Buffer<EntityVertex> vertex_buffer;
-	Buffer<uint32> index_buffer;
+	std::unique_ptr<Buffer<EntityVertex>> vertex_buffer;
+	std::unique_ptr<Buffer<uint32>> index_buffer;
+	std::unique_ptr<ConstantBuffer> bindposes_buffer;
 };

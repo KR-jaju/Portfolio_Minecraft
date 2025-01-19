@@ -172,6 +172,24 @@
     <Filter Include="소스 파일\World\WorldShaderFIle\DefferedShader\Entity">
       <UniqueIdentifier>{0c1f6665-bdd3-4288-a52b-f0c721e26ba4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Utils\Json">
+      <UniqueIdentifier>{a6c2b2ce-55d9-4fd7-8709-a89e3bc4ec72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\EntitySystem">
+      <UniqueIdentifier>{f56b412a-6a5a-4404-9241-7417dfc09747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\GeometryPass">
+      <UniqueIdentifier>{7307930f-50e5-48c7-8f29-082debb80756}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\EntityType">
+      <UniqueIdentifier>{110b6799-910f-4a0d-a4e6-3e3c61097df5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Animation">
+      <UniqueIdentifier>{da4c4568-0d2f-491d-83b8-cdd48c2e6ea2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Asset">
+      <UniqueIdentifier>{1b200e3a-33fb-4e35-8312-a1f5e8fc2318}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -226,9 +244,6 @@
       <Filter>소스 파일\World\Utils</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">
-      <Filter>헤더 파일\etc</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
       <Filter>헤더 파일\etc</Filter>
     </ClInclude>
     <ClInclude Include="scop.h">
@@ -306,41 +321,158 @@
     <ClInclude Include="EntityRender.h">
       <Filter>소스 파일\World\Map\System\RenderSystem\EntityRender</Filter>
     </ClInclude>
-    <ClInclude Include="EntityDataAsset.h">
-      <Filter>소스 파일\World\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="EntityGeometry.h">
       <Filter>소스 파일\World\Entity</Filter>
     </ClInclude>
     <ClInclude Include="EntityVertex.h">
       <Filter>소스 파일\World\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="ModelResource.h">
-      <Filter>소스 파일\World\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="FSM.h">
-      <Filter>소스 파일\World\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Pig.h">
-      <Filter>소스 파일\World\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="AnimationResource.h">
-      <Filter>소스 파일\World\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="AnimationUtil.h">
-      <Filter>소스 파일\World\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>소스 파일\World\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>소스 파일\World\Entity</Filter>
+    <ClInclude Include="json.hpp">
+      <Filter>헤더 파일\Utils\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="EntitySystem.h">
+      <Filter>소스 파일\World\Map\System\EntitySystem</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityReigstry.h">
+      <Filter>소스 파일\World\Map\System\EntitySystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ChunkRegistry.h">
+      <Filter>소스 파일\World\Map\System\TerrainSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainDB.h">
+      <Filter>소스 파일\World\Map\System\TerrainSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainGenerator.h">
+      <Filter>소스 파일\World\Map\System\TerrainSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingContext.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPipeline.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowPass.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryPass.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\GeometryPass</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderChunk.h">
+      <Filter>소스 파일\World\Chunk</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadPool.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ChunkMeshBuilder.h">
+      <Filter>소스 파일\World\Chunk</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureRegistry.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockTextureData.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockData.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ToneMappingPass.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingPass.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowCallback.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="InputRegistry.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="LRUCache.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ChunkSection.h">
+      <Filter>소스 파일\World\Map\System\TerrainSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ChunkMeshRegistry.h">
+      <Filter>소스 파일\World\Chunk</Filter>
+    </ClInclude>
+    <ClInclude Include="SubchunkMeshData.h">
+      <Filter>소스 파일\World\Chunk</Filter>
+    </ClInclude>
+    <ClInclude Include="SubchunkSnapshot.h">
+      <Filter>소스 파일\World\Chunk</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem.h">
+      <Filter>소스 파일\World\Map\System</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockDataRegistry.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>소스 파일\EntityType</Filter>
+    </ClInclude>
+    <ClInclude Include="Pig.h">
+      <Filter>소스 파일\EntityType</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Armature.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TestMob.h">
+      <Filter>소스 파일\EntityType</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationState.h">
+      <Filter>소스 파일\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationLayer.h">
+      <Filter>소스 파일\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationCurve.h">
+      <Filter>소스 파일\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationClip.h">
+      <Filter>소스 파일\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="TestMobAnimator.h">
+      <Filter>소스 파일\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="TestMobAnimationLayer.h">
+      <Filter>소스 파일\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager.h">
+      <Filter>소스 파일\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset.h">
+      <Filter>소스 파일\Asset</Filter>
     </ClInclude>
     <ClInclude Include="SkinnedMesh.h">
-      <Filter>소스 파일\World\Entity</Filter>
+      <Filter>소스 파일\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>소스 파일\World\Entity</Filter>
+    <ClInclude Include="SkinnedMeshRenderer.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -464,26 +596,125 @@
     <ClCompile Include="EntityRender.cpp">
       <Filter>소스 파일\World\Map\System\RenderSystem\EntityRender</Filter>
     </ClCompile>
-    <ClCompile Include="EntityDataAsset.cpp">
-      <Filter>소스 파일\World\Entity</Filter>
-    </ClCompile>
     <ClCompile Include="EntityGeometry.cpp">
       <Filter>소스 파일\World\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityRegistry.cpp">
+      <Filter>소스 파일\World\Map\System\EntitySystem</Filter>
+    </ClCompile>
+    <ClCompile Include="EntitySystem.cpp">
+      <Filter>소스 파일\World\Map\System\EntitySystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ChunkRegistry.cpp">
+      <Filter>소스 파일\World\Map\System\TerrainSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainDB.cpp">
+      <Filter>소스 파일\World\Map\System\TerrainSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainGenerator.cpp">
+      <Filter>소스 파일\World\Map\System\TerrainSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPipeline.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowPass.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryPass.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\GeometryPass</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingContext.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadPool.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderChunk.cpp">
+      <Filter>소스 파일\World\Chunk</Filter>
+    </ClCompile>
+    <ClCompile Include="ChunkMeshBuilder.cpp">
+      <Filter>소스 파일\World\Chunk</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureRegistry.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockTextureData.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockData.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ToneMappingPass.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="LightingPass.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="InputRegistry.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ChunkMeshRegistry.cpp">
+      <Filter>소스 파일\World\Chunk</Filter>
+    </ClCompile>
+    <ClCompile Include="SubchunkMeshData.cpp">
+      <Filter>소스 파일\World\Chunk</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem.cpp">
+      <Filter>소스 파일\World\Map\System</Filter>
+    </ClCompile>
+    <ClCompile Include="AABB.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockDataRegistry.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일\EntityType</Filter>
+    </ClCompile>
     <ClCompile Include="Pig.cpp">
-      <Filter>소스 파일\World\Entity</Filter>
+      <Filter>소스 파일\EntityType</Filter>
     </ClCompile>
-    <ClCompile Include="PigAnimation.cpp">
-      <Filter>소스 파일\World\Entity</Filter>
+    <ClCompile Include="Game.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="PigModel.cpp">
-      <Filter>소스 파일\World\Entity</Filter>
+    <ClCompile Include="TestMob.cpp">
+      <Filter>소스 파일\EntityType</Filter>
     </ClCompile>
-    <ClCompile Include="AnimationUtil.cpp">
-      <Filter>소스 파일\World\Entity</Filter>
+    <ClCompile Include="AnimationClip.cpp">
+      <Filter>소스 파일\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationCurve.cpp">
+      <Filter>소스 파일\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationLayer.cpp">
+      <Filter>소스 파일\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="TestMobAnimator.cpp">
+      <Filter>소스 파일\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="TestMobAnimationLayer.cpp">
+      <Filter>소스 파일\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager.cpp">
+      <Filter>소스 파일\Asset</Filter>
     </ClCompile>
     <ClCompile Include="SkinnedMesh.cpp">
-      <Filter>소스 파일\World\Entity</Filter>
+      <Filter>소스 파일\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedMeshRenderer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -580,6 +811,24 @@
     </FxCompile>
     <FxCompile Include="EntityPS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Entity</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryPassVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryPassPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="LightingPassVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="LightingPassPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="ToneMappingPassVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="ToneMappingPassPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

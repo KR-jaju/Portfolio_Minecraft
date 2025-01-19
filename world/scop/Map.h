@@ -53,7 +53,7 @@ private:
 
 public:
 	MapUtils m_info;
-	EntityUtils e_info;
+	//EntityUtils e_info;
 	LightSystem l_system;
 	TerrainSystem t_system;
 	RenderSystem r_system;

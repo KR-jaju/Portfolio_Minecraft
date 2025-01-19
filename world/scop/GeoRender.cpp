@@ -93,12 +93,12 @@ void GeoRender::render(
 		cpbuffer.getComPtr().GetAddressOf());
 	for (int i = 0; i < this->m_info->size_h; i++) {
 		for (int j = 0; j < this->m_info->size_w; j++) {
-			if (this->m_info->chunks[i][j]->render_flag == false)
-				continue;
-			this->m_info->chunks[i][j]->setGeoRender(
-				this->d_graphic->getContext(),
-				this->vertex_shader
-			);
+			//if (this->m_info->chunks[i][j]->render_flag == false)
+			//	continue;
+			//this->m_info->chunks[i][j]->setGeoRender(
+			//	this->d_graphic->getContext(),
+			//	this->vertex_shader
+			//);
 		}
 	}
 }

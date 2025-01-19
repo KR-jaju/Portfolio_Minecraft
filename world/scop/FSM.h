@@ -4,11 +4,11 @@
 #include <string>
 #include <map>
 
-template <typename T>
+template <typename T, typename StateType = std::string>
 class FSM
 {
 public:
-	constexpr FSM(std::vector<std::pair<std::string, bool (T::*)(void)>> const& program, std::string const& entry)
+	constexpr FSM(std::vector<std::pair<StateType, bool (T::*)(void)>> const& program, StateType const& entry)
 		: current_state(entry)
 	{
 		for (auto state : program)
@@ -16,7 +16,7 @@ public:
 			this->state_map.emplace(state);
 		}
 	}
-	void	switchTo(std::string state_name)
+	void	switchTo(StateType const& state_name)
 	{
 		this->current_state = state_name;
 	}
@@ -30,7 +30,11 @@ public:
 				return;
 		}
 	}
+	StateType const& getState() const
+	{
+		return (this->current_state);
+	}
 private:
-	std::map<std::string, bool (T::*)(void)> state_map;
-	std::string current_state;
+	std::map<StateType, bool (T::*)(void)> state_map;
+	StateType current_state;
 };

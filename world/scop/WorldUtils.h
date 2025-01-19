@@ -157,6 +157,13 @@ struct VertexBlockUV {
 	int shadow_flag = 0;
 };
 
+struct ChunkVertex
+{
+	vec3 position;
+	vec2 uv;
+	int texture_id;
+};
+
 struct VertexGeo { // temp
 	int type;
 	vec3 pos;
