@@ -13,5 +13,6 @@ public:
 private:
 	RenderingContext& context;
 	ConstantBuffer	model_cb;
-	ConstantBuffer	armature_cb;
+	ConstantBuffer	bindpose_cb;
+	ConstantBuffer	pose_cb;
 };

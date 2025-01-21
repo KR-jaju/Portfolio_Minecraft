@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "SkinnedMesh.h"
 #include <fstream>
-#include "json.hpp"
 
 SkinnedMesh::SkinnedMesh(std::wstring const& path)
 {
@@ -17,7 +16,7 @@ SkinnedMesh::SkinnedMesh(std::wstring const& path)
 	auto const& bone_indices = json["bone_indices"];
 	auto const& indices = json["indices"];
 	auto const& bindposes = json["bindposes"];
-	//auto const& parent = json["bone_parent"]; // 본의 부모 본
+	auto const& parents = json["bone_parents"]; // 본의 부모 본
 
 	for (int i = 0; i < positions.size() / 3; ++i)
 	{
@@ -36,16 +35,46 @@ SkinnedMesh::SkinnedMesh(std::wstring const& path)
 	{
 		this->indices.push_back(indices[i]);
 	}
+	for (int i = 0; i < parents.size(); ++i) // 모든 본
+	{
+		this->bindposes.matrix[i] = {
+			bindposes[i * 16 + 0].get<float>(),
+			bindposes[i * 16 + 1].get<float>(),
+			bindposes[i * 16 + 2].get<float>(),
+			bindposes[i * 16 + 3].get<float>(),
+
+			bindposes[i * 16 + 4].get<float>(),
+			bindposes[i * 16 + 5].get<float>(),
+			bindposes[i * 16 + 6].get<float>(),
+			bindposes[i * 16 + 7].get<float>(),
+
+			bindposes[i * 16 + 8].get<float>(),
+			bindposes[i * 16 + 9].get<float>(),
+			bindposes[i * 16 + 10].get<float>(),
+			bindposes[i * 16 + 11].get<float>(),
+
+			bindposes[i * 16 + 12].get<float>(),
+			bindposes[i * 16 + 13].get<float>(),
+			bindposes[i * 16 + 14].get<float>(),
+			bindposes[i * 16 + 15].get<float>(),
+		};
+		this->bone_parents.push_back(parents[i].get<float>());
+	}
 }
 
-Mat const& SkinnedMesh::getBindpose(int bone_idx) const
+BoneData const& SkinnedMesh::getBindposes() const
 {
-	return (this->bindposes.matrix[bone_idx]);
+	return (this->bindposes);
 }
 
-std::vector<int> const& SkinnedMesh::getBoneParent() const
+std::vector<int> const& SkinnedMesh::getBoneParents() const
 {
-	return (this->bone_parent);
+	return (this->bone_parents);
+}
+
+uint32 SkinnedMesh::getBoneCount() const
+{
+	return (this->bone_parents.size());
 }
 
 void	SkinnedMesh::render(Graphics& graphics)
@@ -56,13 +85,11 @@ void	SkinnedMesh::render(Graphics& graphics)
 	{
 		this->vertex_buffer = std::make_unique<Buffer<EntityVertex>>(graphics.getDevice(), this->vertices.data(), this->vertices.size(), D3D11_BIND_VERTEX_BUFFER);
 		this->index_buffer = std::make_unique<Buffer<uint32>>(graphics.getDevice(), this->indices.data(), this->indices.size(), D3D11_BIND_VERTEX_BUFFER);
-		this->bindposes_buffer = std::make_unique<ConstantBuffer>(graphics.getDevice(), context, this->bindposes);
 	}
 	uint32 stride = this->vertex_buffer->getStride();
 	uint32 offset = this->vertex_buffer->getOffset();
 
 	context->IASetVertexBuffers(0, 1, this->vertex_buffer->getComPtr().GetAddressOf(), &stride, &offset);
 	context->IASetIndexBuffer(this->index_buffer->getComPtr().Get(), DXGI_FORMAT_R32_UINT, 0);
-	context->VSSetConstantBuffers(3, 1, this->bindposes_buffer->getComPtr().GetAddressOf());
 	context->DrawIndexed(this->indices.size(), 0, 0);
 }

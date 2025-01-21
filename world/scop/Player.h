@@ -31,6 +31,7 @@ public:
 
 	bool	isVisible() const;
 	SkinnedMesh* getMesh() const;
+	BoneData const& getPose() const;
 private:
 	InputRegistry& input_registry;
 

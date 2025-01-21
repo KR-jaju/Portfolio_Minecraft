@@ -1,0 +1,2297 @@
+{
+  "curves": [
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": -0.7071068286895752,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": -0.7071068286895752,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 0,
+      "property_name": "PropertyType::RotationX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 0,
+      "property_name": "PropertyType::RotationY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 0,
+      "property_name": "PropertyType::RotationZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.7071067094802856,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 0.7071067094802856,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 0,
+      "property_name": "PropertyType::RotationW"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.1666666716337204,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2083333432674408,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2916666865348816,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.375,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 1,
+      "property_name": "PropertyType::RotationX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0034586191177368166,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0034586191177368166,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": -0.06982913613319397,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.1698472797870636,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.1698472797870636,
+          "out_weight": 0.3333333432674408,
+          "time": 0.1666666716337204,
+          "value": -0.06059658154845238,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.44878944754600527,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.44878944754600527,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2083333432674408,
+          "value": -0.051782287657260898,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.06062740087509155,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.06062740087509155,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2916666865348816,
+          "value": -6.172162336781639e-9,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -0.6202076077461243,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.6202076077461243,
+          "out_weight": 0.3333333432674408,
+          "time": 0.375,
+          "value": -0.051782287657260898,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -0.4331241548061371,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.4331241548061371,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": -0.06982913613319397,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 1,
+      "property_name": "PropertyType::RotationY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.1666666716337204,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2083333432674408,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2916666865348816,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.375,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 1,
+      "property_name": "PropertyType::RotationZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.00024318695068359375,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.00024318695068359375,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.9975589513778687,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.01001429371535778,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.01001429371535778,
+          "out_weight": 0.3333333432674408,
+          "time": 0.1666666716337204,
+          "value": 0.9981623291969299,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.01882338710129261,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.01882338710129261,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2083333432674408,
+          "value": 0.9986584186553955,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0012531259562820197,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0012531259562820197,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2916666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -0.027317043393850328,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.027317043393850328,
+          "out_weight": 0.3333333432674408,
+          "time": 0.375,
+          "value": 0.9986584186553955,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -0.026387201622128488,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.026387201622128488,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 0.9975589513778687,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 1,
+      "property_name": "PropertyType::RotationW"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 2,
+      "property_name": "PropertyType::RotationX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 2,
+      "property_name": "PropertyType::RotationY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 2,
+      "property_name": "PropertyType::RotationZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 2,
+      "property_name": "PropertyType::RotationW"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.011517047882080078,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.011517047882080078,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.9975590109825134,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.012008428573608399,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.012008428573608399,
+          "out_weight": 0.3333333432674408,
+          "time": 0.125,
+          "value": 0.9996965527534485,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.25,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -0.016098979860544206,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.016098979860544206,
+          "out_weight": 0.3333333432674408,
+          "time": 0.3333333432674408,
+          "value": 0.9998353719711304,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -0.027316328138113023,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.027316328138113023,
+          "out_weight": 0.3333333432674408,
+          "time": 0.375,
+          "value": 0.9986584186553955,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -0.026385771110653878,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.026385771110653878,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 0.9975590109825134,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 3,
+      "property_name": "PropertyType::RotationX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 1.0628175684175386e-17,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 1.0628175684175386e-17,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": -4.275799570272863e-18,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 2.794663448479396e-17,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 2.794663448479396e-17,
+          "out_weight": 0.3333333432674408,
+          "time": 0.125,
+          "value": -1.5083049103718016e-18,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -5.264210026641846e-24,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -5.264210026641846e-24,
+          "out_weight": 0.3333333432674408,
+          "time": 0.25,
+          "value": 2.7069247230918365e-24,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -3.804901446696124e-17,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -3.804901446696124e-17,
+          "out_weight": 0.3333333432674408,
+          "time": 0.3333333432674408,
+          "value": -1.1110683783957674e-18,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -3.797677512970576e-17,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -3.797677512970576e-17,
+          "out_weight": 0.3333333432674408,
+          "time": 0.375,
+          "value": -3.1707481036528064e-18,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -2.6521221963991559e-17,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -2.6521221963991559e-17,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": -4.275799570272863e-18,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 3,
+      "property_name": "PropertyType::RotationY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.17357128858566285,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.17357128858566285,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": -0.06982910633087158,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.45640313625335696,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.45640313625335696,
+          "out_weight": 0.3333333432674408,
+          "time": 0.125,
+          "value": -0.024632489308714868,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -8.597104539376233e-8,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -8.597104539376233e-8,
+          "out_weight": 0.3333333432674408,
+          "time": 0.25,
+          "value": 4.420743593414045e-8,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -0.6213875412940979,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.6213875412940979,
+          "out_weight": 0.3333333432674408,
+          "time": 0.3333333432674408,
+          "value": -0.01814512349665165,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -0.6202077865600586,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.6202077865600586,
+          "out_weight": 0.3333333432674408,
+          "time": 0.375,
+          "value": -0.05178224667906761,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -0.4331244230270386,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.4331244230270386,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": -0.06982910633087158,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 3,
+      "property_name": "PropertyType::RotationZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": -7.05154928589205e-19,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -7.05154928589205e-19,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": -6.108287440129251e-17,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -7.353304773351395e-19,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -7.353304773351395e-19,
+          "out_weight": 0.3333333432674408,
+          "time": 0.125,
+          "value": -6.1213760843978e-17,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.25,
+          "value": -6.123234262925839e-17,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 9.857877387215486e-19,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 9.857877387215486e-19,
+          "out_weight": 0.3333333432674408,
+          "time": 0.3333333432674408,
+          "value": -6.122225764323015e-17,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 1.6725986964564714e-18,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 1.6725986964564714e-18,
+          "out_weight": 0.3333333432674408,
+          "time": 0.375,
+          "value": -6.115019366826453e-17,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 1.6156616835453386e-18,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 1.6156616835453386e-18,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": -6.108287440129251e-17,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 3,
+      "property_name": "PropertyType::RotationW"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.8456239700317383,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.8456239700317383,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.7106691002845764,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 1.1641144752502442,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 1.1641144752502442,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0416666679084301,
+          "value": 0.7459034323692322,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.741302490234375,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.741302490234375,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0833333358168602,
+          "value": 0.8076786398887634,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -0.7413031458854675,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.7413031458854675,
+          "out_weight": 0.3333333432674408,
+          "time": 0.125,
+          "value": 0.8076786398887634,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -1.1641136407852173,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -1.1641136407852173,
+          "out_weight": 0.3333333432674408,
+          "time": 0.1666666716337204,
+          "value": 0.7459033727645874,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 1.4250166416168213,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 1.4250166416168213,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2083333432674408,
+          "value": 0.7106691598892212,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 3.4719698429107668,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 3.4719698429107668,
+          "out_weight": 0.3333333432674408,
+          "time": 0.25,
+          "value": 0.8646547198295593,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.6702702045440674,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.6702702045440674,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2916666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -2.665935516357422,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -2.665935516357422,
+          "out_weight": 0.3333333432674408,
+          "time": 0.3333333432674408,
+          "value": 0.9205106496810913,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -2.5180985927581789,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -2.5180985927581789,
+          "out_weight": 0.3333333432674408,
+          "time": 0.375,
+          "value": 0.7778387665748596,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -1.6120712757110596,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -1.6120712757110596,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 0.7106691002845764,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 4,
+      "property_name": "PropertyType::RotationX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": -0.0000027640983262244846,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.0000027640983262244846,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 4.3300026675296979e-8,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -7.500770493606979e-7,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -7.500770493606979e-7,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0416666679084301,
+          "value": -7.187074402281724e-8,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 2.1304515485098819e-7,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 2.1304515485098819e-7,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0833333358168602,
+          "value": -1.9206400025950644e-8,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 1.6713238437660039e-7,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 1.6713238437660039e-7,
+          "out_weight": 0.3333333432674408,
+          "time": 0.125,
+          "value": -5.411697756585454e-8,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 2.4336083015441547e-7,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 2.4336083015441547e-7,
+          "out_weight": 0.3333333432674408,
+          "time": 0.1666666716337204,
+          "value": -5.278691705967731e-9,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -1.5883044568454353e-7,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -1.5883044568454353e-7,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2083333432674408,
+          "value": -3.383690483360624e-8,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 8.774753723628237e-8,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 8.774753723628237e-8,
+          "out_weight": 0.3333333432674408,
+          "time": 0.25,
+          "value": -1.8514569433136786e-8,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 3.9582897670698005e-7,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 3.9582897670698005e-7,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2916666865348816,
+          "value": -2.65246171693434e-8,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 1.8049652794616123e-7,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 1.8049652794616123e-7,
+          "out_weight": 0.3333333432674408,
+          "time": 0.3333333432674408,
+          "value": 1.4471161158269297e-8,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 3.4594594922054969e-7,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 3.4594594922054969e-7,
+          "out_weight": 0.3333333432674408,
+          "time": 0.375,
+          "value": -1.1483244577448204e-8,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.000001314797827944858,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.000001314797827944858,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 4.3300026675296979e-8,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 4,
+      "property_name": "PropertyType::RotationY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 2.0145485401153566,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 2.0145485401153566,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": -0.4974682927131653,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 3.96140718460083,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 3.96140718460083,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0416666679084301,
+          "value": -0.41352877020835879,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 6.970557689666748,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 6.970557689666748,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0833333358168602,
+          "value": -0.16735100746154786,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 6.970557689666748,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 6.970557689666748,
+          "out_weight": 0.3333333432674408,
+          "time": 0.125,
+          "value": 0.16735099256038667,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 3.961406707763672,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 3.961406707763672,
+          "out_weight": 0.3333333432674408,
+          "time": 0.1666666716337204,
+          "value": 0.41352877020835879,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -0.15054166316986085,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.15054166316986085,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2083333432674408,
+          "value": 0.4974682629108429,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -5.969618320465088,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -5.969618320465088,
+          "out_weight": 0.3333333432674408,
+          "time": 0.25,
+          "value": 0.40098366141319277,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -9.05024242401123,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -9.05024242401123,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2916666865348816,
+          "value": -7.668314339071003e-8,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -5.783661842346191,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -5.783661842346191,
+          "out_weight": 0.3333333432674408,
+          "time": 0.3333333432674408,
+          "value": -0.35320329666137698,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -1.731180191040039,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -1.731180191040039,
+          "out_weight": 0.3333333432674408,
+          "time": 0.375,
+          "value": -0.48197177052497866,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -0.37191635370254519,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.37191635370254519,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": -0.4974682927131653,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 4,
+      "property_name": "PropertyType::RotationZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.5919334888458252,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.5919334888458252,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.49746832251548769,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.8148797750473023,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.8148797750473023,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0416666679084301,
+          "value": 0.5221322178840637,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.5189130306243897,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.5189130306243897,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0833333358168602,
+          "value": 0.5653749704360962,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -0.5189122557640076,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.5189122557640076,
+          "out_weight": 0.3333333432674408,
+          "time": 0.125,
+          "value": 0.5653749704360962,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -0.8148800134658814,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -0.8148800134658814,
+          "out_weight": 0.3333333432674408,
+          "time": 0.1666666716337204,
+          "value": 0.5221322774887085,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -2.634037733078003,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -2.634037733078003,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2083333432674408,
+          "value": 0.4974682927131653,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -5.969616889953613,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -5.969616889953613,
+          "out_weight": 0.3333333432674408,
+          "time": 0.25,
+          "value": 0.30262917280197146,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": -1.6268789768218995,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": -1.6268789768218995,
+          "out_weight": 0.3333333432674408,
+          "time": 0.2916666865348816,
+          "value": 1.3315805347247079e-7,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 4.839885234832764,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 4.839885234832764,
+          "out_weight": 0.3333333432674408,
+          "time": 0.3333333432674408,
+          "value": 0.16705575585365296,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 3.9649510383605959,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 3.9649510383605959,
+          "out_weight": 0.3333333432674408,
+          "time": 0.375,
+          "value": 0.40332379937171938,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 2.259467363357544,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 2.259467363357544,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 0.49746832251548769,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 4,
+      "property_name": "PropertyType::RotationW"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 5,
+      "property_name": "PropertyType::RotationX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 2.6765506200124329e-24,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 2.6765506200124329e-24,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 5,
+      "property_name": "PropertyType::RotationY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 4.371138828673793e-8,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 4.371138828673793e-8,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 5,
+      "property_name": "PropertyType::RotationZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": -6.123234262925839e-17,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": -6.123234262925839e-17,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 5,
+      "property_name": "PropertyType::RotationW"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 6,
+      "property_name": "PropertyType::RotationX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 2.6765506200124329e-24,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 2.6765506200124329e-24,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 6,
+      "property_name": "PropertyType::RotationY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 4.371138828673793e-8,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 4.371138828673793e-8,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 6,
+      "property_name": "PropertyType::RotationZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": -6.123234262925839e-17,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": -6.123234262925839e-17,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 6,
+      "property_name": "PropertyType::RotationW"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 0,
+      "property_name": "PropertyType::PositionX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 0,
+      "property_name": "PropertyType::PositionY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 0,
+      "property_name": "PropertyType::PositionZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 1,
+      "property_name": "PropertyType::PositionX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.75,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.75,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 1,
+      "property_name": "PropertyType::PositionY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 1,
+      "property_name": "PropertyType::PositionZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 2,
+      "property_name": "PropertyType::PositionX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.75,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.75,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 2,
+      "property_name": "PropertyType::PositionY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 2,
+      "property_name": "PropertyType::PositionZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": -0.375,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": -0.375,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 3,
+      "property_name": "PropertyType::PositionX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.625,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.625,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 3,
+      "property_name": "PropertyType::PositionY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": -3.725290298461914e-9,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": -3.725290298461914e-9,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 3,
+      "property_name": "PropertyType::PositionZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.375,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.375,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 4,
+      "property_name": "PropertyType::PositionX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.625,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.625,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 4,
+      "property_name": "PropertyType::PositionY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 3.725290298461914e-9,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 3.725290298461914e-9,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 4,
+      "property_name": "PropertyType::PositionZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": -0.125,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": -0.125,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 5,
+      "property_name": "PropertyType::PositionX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.75,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.75,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 5,
+      "property_name": "PropertyType::PositionY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 5,
+      "property_name": "PropertyType::PositionZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.125,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.125,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 6,
+      "property_name": "PropertyType::PositionX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.75,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.75,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 6,
+      "property_name": "PropertyType::PositionY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 6,
+      "property_name": "PropertyType::PositionZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 0,
+      "property_name": "PropertyType::ScaleX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 0,
+      "property_name": "PropertyType::ScaleY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 0,
+      "property_name": "PropertyType::ScaleZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 1,
+      "property_name": "PropertyType::ScaleX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 1,
+      "property_name": "PropertyType::ScaleY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 1,
+      "property_name": "PropertyType::ScaleZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 2,
+      "property_name": "PropertyType::ScaleX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 2,
+      "property_name": "PropertyType::ScaleY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 2,
+      "property_name": "PropertyType::ScaleZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 3,
+      "property_name": "PropertyType::ScaleX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 3,
+      "property_name": "PropertyType::ScaleY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 3,
+      "property_name": "PropertyType::ScaleZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 4,
+      "property_name": "PropertyType::ScaleX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.9999999403953552,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 0.9999999403953552,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 4,
+      "property_name": "PropertyType::ScaleY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 0.9999998807907105,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 0.9999998807907105,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 4,
+      "property_name": "PropertyType::ScaleZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 5,
+      "property_name": "PropertyType::ScaleX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 5,
+      "property_name": "PropertyType::ScaleY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 5,
+      "property_name": "PropertyType::ScaleZ"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 6,
+      "property_name": "PropertyType::ScaleX"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 6,
+      "property_name": "PropertyType::ScaleY"
+    },
+    {
+      "keyframes": [
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.0,
+          "value": 1.0,
+          "weighted_mode": "None"
+        },
+        {
+          "in_tangent": 0.0,
+          "in_weight": 0.3333333432674408,
+          "out_tangent": 0.0,
+          "out_weight": 0.3333333432674408,
+          "time": 0.4166666865348816,
+          "value": 1.0,
+          "weighted_mode": "None"
+        }
+      ],
+      "bone_idx": 6,
+      "property_name": "PropertyType::ScaleZ"
+    }
+  ],
+  "length": 0.4166666865348816
+}

@@ -1,7 +1,8 @@
 #pragma once
 
 #include <string>
-#include "AnimationState.h"
+#include "AnimationClip.h"
+#include "AnimationStateInfo.h"
 
 class AnimationLayer
 {
@@ -10,11 +11,14 @@ public:
 	void	update(Armature& armature, float dt);
 	bool	isStable() const;
 	float	getTime() const;
-	void	setTransition(AnimationState const* dst_state, float duration, float offset);
+	void	setAnimation(std::shared_ptr<AnimationClip> const& animation, AnimationStateInfo info, float transition_duration = 0.0f, float transition_offset = 0.0f);
+
 	virtual void	updateState() = 0; // update animation state machine
 private:
-	AnimationState const* src_state;
-	AnimationState const* dst_state;
+	std::shared_ptr<AnimationClip> src_animation;
+	std::shared_ptr<AnimationClip> dst_animation;
+	AnimationStateInfo src_state;
+	AnimationStateInfo dst_state;
 	float	src_time; // sample time of source animation
 	float	dst_time;
 	float	transition_weight;

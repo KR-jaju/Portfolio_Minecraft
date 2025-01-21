@@ -112,7 +112,7 @@ void GeometryPass::execute(RenderingContext& context)
 	dc->PSSetShader(context.entity_geometry_ps.getComPtr().Get(), nullptr, 0);
 	dc->VSSetConstantBuffers(0, 1, context.camera_data.getComPtr().GetAddressOf());
 	//dc->PSSetSamplers(0, 1, context.entity_texture_sampler.getComPtr().GetAddressOf());
-	//dc->PSSetShaderResources(0, 1, texture_registry.getBlockTextureArray().GetAddressOf());
+	dc->PSSetShaderResources(0, 1, context.steve.getComPtr().GetAddressOf());
 	for (Entity& entity : entity_registry)
 	{
 		renderer.render(entity);

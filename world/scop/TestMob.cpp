@@ -3,6 +3,7 @@
 
 TestMob::TestMob(AssetManager& asset_manager)
 	: mesh(asset_manager.load<SkinnedMesh>(L"TestMob.json")),
+	animator(asset_manager, this->mesh),
 	position(0.0, 35.0, 0.0),
 	bounding_box({ vec3(0, 0.9f, 0), vec3(0.3f, 0.9f, 0.3f) })
 {
@@ -11,10 +12,10 @@ TestMob::TestMob(AssetManager& asset_manager)
 
 void	TestMob::update(float dt)
 {
-	if (this->contact_faces & DIRECTION_DOWN_BIT)
-		this->velocity.y = 10.0f;
+	//if (this->contact_faces & DIRECTION_DOWN_BIT)
+		//this->velocity.y = 10.0f;
 	this->velocity.y -= 25 * dt;
-	//this->animator.update(this->armature, dt); // armature update
+	this->animator.update(dt); // armature update
 }
 
 vec3	TestMob::getPosition() const
@@ -75,4 +76,9 @@ bool	TestMob::isVisible() const
 SkinnedMesh* TestMob::getMesh() const
 {
 	return (this->mesh.get());
+}
+
+BoneData const& TestMob::getPose() const
+{
+	return (this->animator.getPose());
 }

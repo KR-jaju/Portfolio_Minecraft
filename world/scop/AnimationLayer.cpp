@@ -3,7 +3,8 @@
 #include <algorithm>
 
 AnimationLayer::AnimationLayer()
-	: src_state(nullptr), dst_state(nullptr),
+	: src_animation(nullptr), dst_animation(nullptr),
+	src_state(), dst_state(),
 	src_time(0), dst_time(0),
 	transition_weight(0), transition_duration(0),
 	is_stable(true)
@@ -11,8 +12,8 @@ AnimationLayer::AnimationLayer()
 
 void	AnimationLayer::update(Armature& armature, float dt)
 {
-	this->src_time += dt;
-	this->dst_time += dt;
+	this->src_time += dt * 0.1f;
+	this->dst_time += dt * 0.1f;
 	this->updateState(); //애니매이션 상태 머신 업데이트
 	while (true)
 	{
@@ -33,16 +34,18 @@ float	AnimationLayer::getTime() const
 	return (this->dst_time);
 }
 
-void	AnimationLayer::setTransition(AnimationState const* dst_state, float duration, float offset)
+void	AnimationLayer::setAnimation(std::shared_ptr<AnimationClip> const& animation, AnimationStateInfo info, float transition_duration, float transition_offset)
 {
+	this->src_animation = this->dst_animation;
+	this->dst_animation = animation;
+	if (this->src_animation == nullptr) // 트랜지션할 시작 상태가 없음!
+		this->src_animation = animation;
 	this->src_state = this->dst_state;
-	this->dst_state = dst_state;
-	if (this->src_state == nullptr) // 트랜지션할 시작 상태가 없음!
-		return;
+	this->src_state = info;
 	this->src_time = this->dst_time;
-	this->dst_time = offset;
+	this->dst_time = transition_offset;
 	this->transition_weight = 0;
-	this->transition_duration = duration;
+	this->transition_duration = transition_duration;
 	this->is_stable = false;
 }
 
@@ -50,10 +53,11 @@ void	AnimationLayer::setTransition(AnimationState const* dst_state, float durati
 
 bool	AnimationLayer::stableState(Armature& armature, float dt)
 {
-	AnimationClip const* animation = this->dst_state->animation_clip;
 	float	t = this->dst_time;
 
-	animation->sample(armature, t); // TODO : State 값을 보고 판단하는게 좋음 (loop나 cycle offset)
+	if (this->dst_animation == nullptr)
+		return (false);
+	this->dst_animation->sample(armature, t); // TODO : State 값을 보고 판단하는게 좋음 (loop나 cycle offset)
 	return (false);
 }
 
@@ -62,41 +66,7 @@ bool	AnimationLayer::transitioningState(Armature& armature, float dt)
 	this->transition_weight = std::fminf(this->transition_weight + dt / this->transition_duration, 1.0f); // duration 동안 0.0f -> 1.0f
 	if (this->transition_weight == 1)
 		return (this->is_stable = true, true); // 트랜지션 종료
-	this->src_state->animation_clip->sample(armature, this->src_time, 1.0f - this->transition_weight);
-	this->dst_state->animation_clip->sample(armature, this->dst_time, this->transition_weight, true);
+	this->src_animation->sample(armature, this->src_time, 1.0f - this->transition_weight);
+	this->dst_animation->sample(armature, this->dst_time, this->transition_weight, true);
 	return (false);
 }
-
-
-/*
-	AnimationGraph::State const* state = this->animation_state;
-
-	for (AnimationGraph::Transition const& transition : state->transitions)
-	{
-		if (this->src_time > transition.exit_time && !transition.rule(parameters))
-			continue;
-		this->animation_state = transition.dst_state;
-		this->animation_transition = &transition;
-		this->dst_time = transition.offset; // 목표 애니매이션이 샘플링되기 시작하는 t
-		this->transition_weight = 0; // src애니매이션이 100%인 상태로 시작
-		this->is_stable = false;
-		return (true); // 바로 진행
-	}
-
-
-		AnimationTransition const& transition = this->transition;
-
-	AnimationGraph::State const* dst_state = this->animation_state;
-
-	for (AnimationGraph::Transition const& transition : dst_state->transitions)
-	{
-		if (this->dst_time > transition.exit_time || !transition.rule(parameters))
-			continue;
-		this->animation_state = transition.dst_state;
-		this->animation_transition = &transition;
-		this->src_time = this->dst_time;
-		this->dst_time = transition.offset;
-		this->transition_weight = 0; // src애니매이션이 100%인 상태로 시작
-		return (true); // 바로 진행
-	}
-*/

@@ -180,3 +180,8 @@ SkinnedMesh* Player::getMesh() const
 {
 	return (nullptr);
 }
+
+BoneData const& Player::getPose() const
+{
+	return (BoneData{});
+}

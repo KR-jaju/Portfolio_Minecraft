@@ -42,11 +42,11 @@ PS_OUTPUT main(PS_INPUT input)
     //output.color = color;
     //output.color = main_texture.Sample(sampler0, input.uv);
     //int2 uv = int2(frac(input.uv) * 16);
-    //int2 uv = int2(saturate(input.uv) * 16);
-    //output.color = main_texture.Load(int3(uv, 0));
+    int2 uv = int2(saturate(float2(0.0, 1.0) + float2(1.0, -1.0) * input.uv) * 64);
+    output.color = main_texture.Load(int3(uv, 0));
     //output.color = float4(1.0, 1.0, 1.0, 1.0);
     //output.color = texture_array.Sample(sampler0, input.uvw);
-    output.color = float4(input.uv, 1.0, 1.0);
+    //output.color = float4(input.uv, 1.0, 1.0);
 
     return output;
 }

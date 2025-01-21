@@ -23,14 +23,13 @@ public:
 
 	bool	isVisible() const;
 	SkinnedMesh* getMesh() const;
+	BoneData const& getPose() const;
 private:
 	std::shared_ptr<SkinnedMesh> mesh;
-	Armature armature;
+	TestMobAnimator animator;
 	vec3	position;
 	vec3	rotation;
 	vec3	velocity;
 	AABB	bounding_box;
 	int		contact_faces;
-
-	TestMobAnimator animator;
 };

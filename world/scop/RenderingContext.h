@@ -14,6 +14,9 @@
 #include "ChunkMeshRegistry.h"
 #include "LRUCache.h"
 
+
+#include "Texture.h"
+
 struct RenderingContext
 {
 	RenderingContext(TextureRegistry& texture_registry, EntityRegistry& entity_registry, ChunkMeshRegistry& chunk_mesh_registry, Graphics& graphics, int width, int height);
@@ -30,6 +33,8 @@ struct RenderingContext
 	int viewport_height;
 
 	RasterizerState rasterizer_state;
+
+	Texture steve;
 
 	ConstantBuffer camera_data;
 

@@ -8,6 +8,7 @@
 #include "DirectXMath.h"
 #include "SimpleMath.h"
 #include "WICTextureLoader11.h"
+#include "json.hpp"
 
 #include <utility>
 #include <functional>

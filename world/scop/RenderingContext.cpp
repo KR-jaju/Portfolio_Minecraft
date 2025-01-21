@@ -11,6 +11,7 @@ RenderingContext::RenderingContext(TextureRegistry& texture_registry, EntityRegi
 	viewport_width(width),
 	viewport_height(height),
 	rasterizer_state(graphics.getDevice(), D3D11_FILL_SOLID, D3D11_CULL_BACK),
+	steve(graphics.getDevice(), L"steve.png"),
 	camera_data(graphics.getDevice(), graphics.getContext(), Mat::Identity),
 	chunk_geometry_vs(graphics.getDevice(), L"GeometryPassVS.hlsl", "main", "vs_5_0"),
 	chunk_geometry_ps(graphics.getDevice(), L"GeometryPassPS.hlsl", "main", "ps_5_0"),

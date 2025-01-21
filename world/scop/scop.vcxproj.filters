@@ -438,9 +438,6 @@
     <ClInclude Include="TestMob.h">
       <Filter>소스 파일\EntityType</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationState.h">
-      <Filter>소스 파일\Animation</Filter>
-    </ClInclude>
     <ClInclude Include="AnimationLayer.h">
       <Filter>소스 파일\Animation</Filter>
     </ClInclude>
@@ -473,6 +470,15 @@
     </ClInclude>
     <ClInclude Include="Renderer.h">
       <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator.h">
+      <Filter>소스 파일\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationStateInfo.h">
+      <Filter>소스 파일\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="TestMobAnimatorContext.h">
+      <Filter>소스 파일\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -716,6 +722,12 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>소스 파일\World\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Armature.cpp">
+      <Filter>소스 파일\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="scop.rc">
@@ -836,6 +848,9 @@
       <Filter>헤더 파일\Utils\SimpleMath</Filter>
     </None>
     <None Include="TestMob.json">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="idle.json">
       <Filter>리소스 파일</Filter>
     </None>
   </ItemGroup>

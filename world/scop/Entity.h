@@ -53,6 +53,7 @@ public:
 	//Rendering Options
 	virtual bool	isVisible() const = 0;
 	virtual SkinnedMesh* getMesh() const = 0;
+	virtual BoneData const& getPose() const = 0;
 
 private:
 	//std::shared_ptr<SkinnedMesh>	mesh;
