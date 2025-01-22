@@ -5,6 +5,7 @@ cbuffer CameraMatrices : register(b0)
     matrix projection;
     matrix view_projection;
     matrix view_inverse_transpose;
+    matrix projection_inverse;
 };
 
 cbuffer WorldMatrix : register(b1)

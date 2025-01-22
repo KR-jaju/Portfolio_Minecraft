@@ -17,7 +17,6 @@ struct PSInput {
     float2 uv : TEXCOORD0;
 };
 
-
 static const float3 Fdielectric = float3(0.04, 0.04, 0.04);
 
 float3 schilckFresnel(float3 F0, float NdotH)
@@ -64,10 +63,10 @@ float4 main(PSInput input) : SV_TARGET
     float metallic = 0.0;
     float roughness = 0.5;
 
-    float3 ws_L = float3(0.0, 1.0, 0.0);
+    float3 ws_L = normalize(float3(0.0, 1.0, 0.0));
 
     float3 V = normalize(-vs_position.xyz); // view dir
-    float3 N = float3(normal, -sqrt(1 - dot(normal, normal))); // 뷰 스페이스 노말 복원
+    float3 N = float3(normal, sqrt(1 - dot(normal, normal))); // 뷰 스페이스 노말 복원
     float3 L = mul(ws_L, (float3x3)view);
     float3 H = normalize(V + L);
 
