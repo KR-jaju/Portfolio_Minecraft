@@ -50,8 +50,8 @@ PBR::PBR(DeferredGraphics* grpahic, UINT width, UINT height)
 	);
 	this->input_layout = make_shared<InputLayout>(
 		device,
-		InputLayouts::layout_deferred.data(),
-		InputLayouts::layout_deferred.size(),
+		InputLayouts::layout_pt.data(),
+		InputLayouts::layout_pt.size(),
 		this->vertex_shader->getBlob()
 	);
 	this->rasterizer_state = make_shared<RasterizerState>(

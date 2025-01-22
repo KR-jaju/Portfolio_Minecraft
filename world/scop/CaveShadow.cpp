@@ -29,8 +29,8 @@ CaveShadow::CaveShadow(DeferredGraphics* d_graphic, MapUtils* m_info)
 	);
 	this->input_layout = make_shared<InputLayout>(
 		this->device,
-		InputLayouts::layout_shadow.data(),
-		InputLayouts::layout_shadow.size(),
+		InputLayouts::layout_pns.data(),
+		InputLayouts::layout_pns.size(),
 		this->vertex_shader->getBlob()
 	);
 	this->rasterizer_state = make_shared<RasterizerState>(

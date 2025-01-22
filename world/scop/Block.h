@@ -39,6 +39,142 @@ inline Mat calcTangentSpace(
 
 namespace Block {
 
+	static vector<vec3> pos = {
+		//top
+		{-0.5f, +0.5f, +0.5f},
+		{+0.5f, +0.5f, +0.5f},
+		{-0.5f, +0.5f, -0.5f},
+		{+0.5f, +0.5f, -0.5f},
+
+		//bottom
+		{-0.5f, -0.5f, +0.5f},
+		{-0.5f, -0.5f, -0.5f},
+		{+0.5f, -0.5f, +0.5f},
+		{+0.5f, -0.5f, -0.5f},
+
+		// front
+		{-0.5f, +0.5f, -0.5f},
+		{+0.5f, +0.5f, -0.5f},
+		{-0.5f, -0.5f, -0.5f},
+		{+0.5f, -0.5f, -0.5f},
+
+		// back
+		{-0.5f, +0.5f, +0.5f},
+		{-0.5f, -0.5f, +0.5f},
+		{+0.5f, +0.5f, +0.5f},
+		{+0.5f, -0.5f, +0.5f},
+
+		// left
+		{-0.5f, +0.5f, +0.5f},
+		{-0.5f, +0.5f, -0.5f},
+		{-0.5f, -0.5f, +0.5f},
+		{-0.5f, -0.5f, -0.5f},
+
+		//right
+		{+0.5f, +0.5f, -0.5f},
+		{+0.5f, +0.5f, +0.5f},
+		{+0.5f, -0.5f, -0.5f},
+		{+0.5f, -0.5f, +0.5f},
+	};
+	static vector<vec2> uv = {
+		//top
+		{0.f, 0.f},
+		{1.f, 0.f},
+		{0.f, 1.f},
+		{1.f, 1.f},
+
+		//bottom
+		{0.f, 1.f},
+		{0.f, 0.f},
+		{1.f, 1.f},
+		{1.f, 0.f},
+
+		//front
+		{0.f, 0.f},
+		{1.f, 0.f},
+		{0.f, 1.f},
+		{1.f, 1.f},
+
+		//back
+		{1.f, 0.f},
+		{1.f, 1.f},
+		{0.f, 0.f},
+		{0.f, 1.f},
+
+		//left
+		{0.f, 0.f},
+		{1.f, 0.f},
+		{0.f, 1.f},
+		{1.f, 1.f},
+
+		//right
+		{0.f, 0.f},
+		{1.f, 0.f},
+		{0.f, 1.f},
+		{1.f, 1.f}
+	};
+	static vector<vec3> normals = {
+			{0, 1, 0},
+			{0, -1, 0},
+			{0, 0, -1},
+			{0, 0, 1},
+			{-1, 0, 0},
+			{1, 0, 0}
+	};
+	static vector<vec3> tangents = {
+		{1, 0, 0},
+		{1, 0, 0},
+		{1, 0, 0}, // front
+		{-1, 0, 0}, // back
+		{0, 0, -1}, // left
+		{0, 0, 1} // right
+	};
+	static vector<vec3> sample_pos = {
+		// top
+		{-0.5f, +0.5f, -0.5f},
+		{-0.5f, +0.5f, +0.5f},
+		{+0.5f, +0.5f, +0.5f},
+		{+0.5f, +0.5f, -0.5f},
+
+		// bottom
+		{-0.5f, -0.5f, -0.5f},
+		{+0.5f, -0.5f, -0.5f},
+		{+0.5f, -0.5f, +0.5f},
+		{-0.5f, -0.5f, +0.5f},
+
+		// front
+		{-0.5f, -0.5f, -0.5f},
+		{-0.5f, +0.5f, -0.5f},
+		{+0.5f, +0.5f, -0.5f},
+		{+0.5f, -0.5f, -0.5f},
+
+		// back
+		{-0.5f, -0.5f, +0.5f},
+		{+0.5f, -0.5f, +0.5f},
+		{+0.5f, +0.5f, +0.5f},
+		{-0.5f, +0.5f, +0.5f},
+
+		// left
+		{-0.5f, -0.5f, +0.5f},
+		{-0.5f, +0.5f, +0.5f},
+		{-0.5f, +0.5f, -0.5f},
+		{-0.5f, -0.5f, -0.5f},
+
+		// right
+		{+0.5f, -0.5f, +0.5f},
+		{+0.5f, -0.5f, -0.5f},
+		{+0.5f, +0.5f, -0.5f},
+		{+0.5f, +0.5f, +0.5f}
+	};
+	static vector<vec3> sample_normals = {
+		{0, 1, 0},
+		{0, -1, 0},
+		{0, 0, -1},
+		{0, 0, 1},
+		{-1, 0, 0},
+		{1, 0, 0}
+	};
+
 	inline void addFaceQuadPosAndTex(
 		vec3 const& start_pos,
 		int dir,
@@ -49,97 +185,6 @@ namespace Block {
 		vector<VertexGeo>& vertices
 	)
 	{
-		static vector<vec3> pos = {
-			//top
-			{-0.5f, +0.5f, +0.5f},
-			{+0.5f, +0.5f, +0.5f},
-			{-0.5f, +0.5f, -0.5f},
-			{+0.5f, +0.5f, -0.5f},
-
-			//bottom
-			{-0.5f, -0.5f, +0.5f},
-			{-0.5f, -0.5f, -0.5f},
-			{+0.5f, -0.5f, +0.5f},
-			{+0.5f, -0.5f, -0.5f},
-
-			// front
-			{-0.5f, +0.5f, -0.5f},
-			{+0.5f, +0.5f, -0.5f},
-			{-0.5f, -0.5f, -0.5f},
-			{+0.5f, -0.5f, -0.5f},
-
-			// back
-			{-0.5f, +0.5f, +0.5f},
-			{-0.5f, -0.5f, +0.5f},
-			{+0.5f, +0.5f, +0.5f},
-			{+0.5f, -0.5f, +0.5f},
-
-			// left
-			{-0.5f, +0.5f, +0.5f},
-			{-0.5f, +0.5f, -0.5f},
-			{-0.5f, -0.5f, +0.5f},
-			{-0.5f, -0.5f, -0.5f},
-
-			//right
-			{+0.5f, +0.5f, -0.5f},
-			{+0.5f, +0.5f, +0.5f},
-			{+0.5f, -0.5f, -0.5f},
-			{+0.5f, -0.5f, +0.5f},
-		};
-
-		static vector<vec2> uv = {
-			//top
-			{0.f, 0.f},
-			{1.f, 0.f},
-			{0.f, 1.f},
-			{1.f, 1.f},
-
-			//bottom
-			{0.f, 1.f},
-			{0.f, 0.f},
-			{1.f, 1.f},
-			{1.f, 0.f},
-
-			//front
-			{0.f, 0.f},
-			{1.f, 0.f},
-			{0.f, 1.f},
-			{1.f, 1.f},
-
-			//back
-			{1.f, 0.f},
-			{1.f, 1.f},
-			{0.f, 0.f},
-			{0.f, 1.f},
-
-			//left
-			{0.f, 0.f},
-			{1.f, 0.f},
-			{0.f, 1.f},
-			{1.f, 1.f},
-
-			//right
-			{0.f, 0.f},
-			{1.f, 0.f},
-			{0.f, 1.f},
-			{1.f, 1.f}
-		};
-		static vector<vec3> normals = {
-			{0, 1, 0},
-			{0, -1, 0},
-			{0, 0, -1},
-			{0, 0, 1},
-			{-1, 0, 0},
-			{1, 0, 0}
-		};
-		static vector<vec3> tangents = {
-			{1, 0, 0},
-			{1, 0, 0},
-			{1, 0, 0}, // front
-			{-1, 0, 0}, // back
-			{0, 0, -1}, // left
-			{0, 0, 1} // right
-		};
 		VertexGeo vertex;
 		x = start_pos.x + x;
 		y = start_pos.y + y;
@@ -186,58 +231,14 @@ namespace Block {
 		vector<VertexShadow>& vertices
 	)
 	{
-		static vector<vec3> sample_pos = {
-			// top
-			{-0.5f, +0.5f, -0.5f},
-			{-0.5f, +0.5f, +0.5f},
-			{+0.5f, +0.5f, +0.5f},
-			{+0.5f, +0.5f, -0.5f},
-
-			// bottom
-			{-0.5f, -0.5f, -0.5f},
-			{+0.5f, -0.5f, -0.5f},
-			{+0.5f, -0.5f, +0.5f},
-			{-0.5f, -0.5f, +0.5f},
-
-			// front
-			{-0.5f, -0.5f, -0.5f},
-			{-0.5f, +0.5f, -0.5f},
-			{+0.5f, +0.5f, -0.5f},
-			{+0.5f, -0.5f, -0.5f},
-
-			// back
-			{-0.5f, -0.5f, +0.5f},
-			{+0.5f, -0.5f, +0.5f},
-			{+0.5f, +0.5f, +0.5f},
-			{-0.5f, +0.5f, +0.5f},
-
-			// left
-			{-0.5f, -0.5f, +0.5f},
-			{-0.5f, +0.5f, +0.5f},
-			{-0.5f, +0.5f, -0.5f},
-			{-0.5f, -0.5f, -0.5f},
-
-			// right
-			{+0.5f, -0.5f, +0.5f},
-			{+0.5f, -0.5f, -0.5f},
-			{+0.5f, +0.5f, -0.5f},
-			{+0.5f, +0.5f, +0.5f}
-		};
-		static vector<vec3> normals = {
-			{0, 1, 0},
-			{0, -1, 0},
-			{0, 0, -1},
-			{0, 0, 1},
-			{-1, 0, 0},
-			{1, 0, 0}
-		};
+		
 		VertexShadow vertex;
 		x = start_pos.x + x;
 		y = start_pos.y + y;
 		z = start_pos.z - z;
 		for (int i = dir * 4; i < dir * 4 + 4; i++) {
 			vertex.pos = sample_pos[i] + vec3(x, y, z);
-			vertex.normal = normals[dir];
+			vertex.normal = sample_normals[dir];
 			vertex.shadow_flag = shadow_flag;
 			vertices.push_back(vertex);
 		}
@@ -253,51 +254,6 @@ namespace Block {
 		vector<VertexColor>& vertices
 	)
 	{
-		static vector<vec3> sample_pos = {
-			// top
-			{-0.5f, +0.5f, -0.5f},
-			{-0.5f, +0.5f, +0.5f},
-			{+0.5f, +0.5f, +0.5f},
-			{+0.5f, +0.5f, -0.5f},
-
-			// bottom
-			{-0.5f, -0.5f, -0.5f},
-			{+0.5f, -0.5f, -0.5f},
-			{+0.5f, -0.5f, +0.5f},
-			{-0.5f, -0.5f, +0.5f},
-
-			// front
-			{-0.5f, -0.5f, -0.5f},
-			{-0.5f, +0.5f, -0.5f},
-			{+0.5f, +0.5f, -0.5f},
-			{+0.5f, -0.5f, -0.5f},
-
-			// back
-			{-0.5f, -0.5f, +0.5f},
-			{+0.5f, -0.5f, +0.5f},
-			{+0.5f, +0.5f, +0.5f},
-			{-0.5f, +0.5f, +0.5f},
-
-			// left
-			{-0.5f, -0.5f, +0.5f},
-			{-0.5f, +0.5f, +0.5f},
-			{-0.5f, +0.5f, -0.5f},
-			{-0.5f, -0.5f, -0.5f},
-
-			// right
-			{+0.5f, -0.5f, +0.5f},
-			{+0.5f, -0.5f, -0.5f},
-			{+0.5f, +0.5f, -0.5f},
-			{+0.5f, +0.5f, +0.5f}
-		};
-		static vector<vec3> normals = {
-			{0, 1, 0},
-			{0, -1, 0},
-			{0, 0, -1},
-			{0, 0, 1},
-			{-1, 0, 0},
-			{1, 0, 0}
-		};
 		vec4 col;
 		if (type == -3)
 			col = vec4(1, 0, 0, 0.3);
@@ -305,6 +261,29 @@ namespace Block {
 			col = vec4(0, 1, 0, 0.3);
 		else if (type == -1)
 			col = vec4(0, 0, 1, 0.3);
+		VertexColor vertex;
+		x = start_pos.x + x;
+		y = start_pos.y + y;
+		z = start_pos.z - z;
+
+		for (int i = dir * 4; i < dir * 4 + 4; i++) {
+			vertex.pos = sample_pos[i] + vec3(x, y, z);
+			vertex.col = col;
+			vertices.push_back(vertex);
+		}
+	}
+
+	inline void addBlockFaceWater( //  todo mesh optimization 공부
+		vec3 const& start_pos,
+		float x,
+		float y,
+		float z,
+		int dir,
+		vector<VertexColor>& vertices
+	) 
+	{
+		vec4 col;
+		col = vec4(0, 0, 1, 0.3);
 		VertexColor vertex;
 		x = start_pos.x + x;
 		y = start_pos.y + y;
@@ -421,14 +400,14 @@ namespace Block {
 		vector<VertexDefer>& vertices,
 		vector<uint32>& indices
 	) {
-		vector<vec3> sample_pos = {
+		static const vector<vec3> sample_pos = {
 			// front
 			{-1.f, -1.f, 0.f},
 			{-1.f, +1.f, 0.f},
 			{+1.f, +1.f, 0.f},
 			{+1.f, -1.f, 0.f},
 		};
-		vector<vec2> sample_uv = {
+		static const vector<vec2> sample_uv = {
 			{0.f, 1.f},
 			{0.f, 0.f},
 			{1.f, 0.f},

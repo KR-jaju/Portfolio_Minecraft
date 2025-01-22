@@ -1,63 +1,7 @@
 #pragma once
 
 namespace InputLayouts {
-	static vector<D3D11_INPUT_ELEMENT_DESC> layout_0 = {
-		{
-			"TYPE",
-			0,
-			DXGI_FORMAT_R32_SINT,
-			0,
-			0,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		},
-		{
-			"POSITION",
-			0,
-			DXGI_FORMAT_R32G32B32_FLOAT,
-			0,
-			4,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		},
-		{
-			"NORMAL",
-			0,
-			DXGI_FORMAT_R32G32B32_FLOAT,
-			0,
-			16,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		},
-		{
-			"TEXCOORD",
-			0,
-			DXGI_FORMAT_R32G32_FLOAT,
-			0,
-			28,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		},
-		{
-			"DIRECTION",
-			0,
-			DXGI_FORMAT_R32_SINT,
-			0,
-			36,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		},
-		{
-			"SHADOW",
-			0,
-			DXGI_FORMAT_R32_SINT,
-			0,
-			40,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		}
-	};
-	static vector<D3D11_INPUT_ELEMENT_DESC> layout_Geo = {
+	static const vector<D3D11_INPUT_ELEMENT_DESC> layout_ipntt = {
 		{
 			"INDEX",
 			0,
@@ -104,7 +48,7 @@ namespace InputLayouts {
 			0
 		}
 	};
-	static vector<D3D11_INPUT_ELEMENT_DESC> layout_shadow = {
+	static const vector<D3D11_INPUT_ELEMENT_DESC> layout_pns = {
 		{
 			"POSITION",
 			0,
@@ -133,7 +77,7 @@ namespace InputLayouts {
 			0
 		},
 	};
-	static vector<D3D11_INPUT_ELEMENT_DESC> layout_deferred = {
+	static const vector<D3D11_INPUT_ELEMENT_DESC> layout_pt = {
 		{
 			"POSITION",
 			0,
@@ -153,7 +97,7 @@ namespace InputLayouts {
 			0
 		}
 	};
-	static vector<D3D11_INPUT_ELEMENT_DESC> layout_color = {
+	static const vector<D3D11_INPUT_ELEMENT_DESC> layout_pc = {
 		{
 			"POSITION",
 			0,
@@ -169,6 +113,35 @@ namespace InputLayouts {
 			DXGI_FORMAT_R32G32B32A32_FLOAT,
 			0,
 			12,
+			D3D11_INPUT_PER_VERTEX_DATA,
+			0
+		}
+	};
+	static const vector<D3D11_INPUT_ELEMENT_DESC> layout_pct = {
+		{
+			"POSITION",
+			0,
+			DXGI_FORMAT_R32G32B32_FLOAT,
+			0,
+			0,
+			D3D11_INPUT_PER_VERTEX_DATA,
+			0
+		},
+		{
+			"COLOR",
+			0,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			0,
+			12,
+			D3D11_INPUT_PER_VERTEX_DATA,
+			0
+		},
+		{
+			"TEXCOORD",
+			0,
+			DXGI_FORMAT_R32G32_FLOAT,
+			0,
+			28,
 			D3D11_INPUT_PER_VERTEX_DATA,
 			0
 		}

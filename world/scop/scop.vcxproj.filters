@@ -241,9 +241,6 @@
     <Filter Include="소스 파일\World\Chunk\WaterChunk">
       <UniqueIdentifier>{921ce0b1-8995-47ba-ac47-b7771cc38019}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\World\Map\System\RenderSystem\OIT">
-      <UniqueIdentifier>{6e14cdee-6457-4db5-af5c-a074fdb19319}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\World\WorldShaderFIle\OIT">
       <UniqueIdentifier>{5ca36f65-0d44-458d-83bb-f2a46cd8c0c7}</UniqueIdentifier>
     </Filter>
@@ -253,14 +250,23 @@
     <Filter Include="소스 파일\World\WorldShaderFIle\OIT\Composite">
       <UniqueIdentifier>{4d6798c8-ba37-4dbe-abac-a2421de9f29b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\WorldShaderFIle\OIT\Water">
+      <UniqueIdentifier>{be3cc555-209d-453d-b21a-a4a19db4866c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\OIT">
+      <UniqueIdentifier>{6e14cdee-6457-4db5-af5c-a074fdb19319}</UniqueIdentifier>
+    </Filter>
     <Filter Include="소스 파일\World\Map\System\RenderSystem\OIT\Transparent">
       <UniqueIdentifier>{620d4d18-e272-4efb-be56-b4b788edf429}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\World\Map\System\RenderSystem\OIT\Composite">
       <UniqueIdentifier>{bcf1291a-33dd-4ab3-a5ac-508c86505a59}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\World\WorldShaderFIle\OIT\OITIA">
-      <UniqueIdentifier>{9e106afa-06dc-4444-8bc6-de36844cd32b}</UniqueIdentifier>
+    <Filter Include="소스 파일\World\Map\System\RenderSystem\OIT\Water">
+      <UniqueIdentifier>{690145a1-c09a-4d00-9599-d2065155639c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Chunk\TPBlock">
+      <UniqueIdentifier>{74fc5d96-767b-4b26-b141-f1e597ab3b9c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -438,9 +444,6 @@
     <ClInclude Include="Trees.h">
       <Filter>소스 파일\World\Map\System\TerrainSystem\Trees</Filter>
     </ClInclude>
-    <ClInclude Include="TPChunk.h">
-      <Filter>소스 파일\World\Chunk\WaterChunk</Filter>
-    </ClInclude>
     <ClInclude Include="OIT.h">
       <Filter>소스 파일\World\Map\System\RenderSystem\OIT</Filter>
     </ClInclude>
@@ -449,6 +452,15 @@
     </ClInclude>
     <ClInclude Include="Composite.h">
       <Filter>소스 파일\World\Map\System\RenderSystem\OIT\Composite</Filter>
+    </ClInclude>
+    <ClInclude Include="Water.h">
+      <Filter>소스 파일\World\Map\System\RenderSystem\OIT\Water</Filter>
+    </ClInclude>
+    <ClInclude Include="TPChunk.h">
+      <Filter>소스 파일\World\Chunk\TPBlock</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterChunk.h">
+      <Filter>소스 파일\World\Chunk\WaterChunk</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -617,9 +629,6 @@
     <ClCompile Include="Trees.cpp">
       <Filter>소스 파일\World\Map\System\TerrainSystem\Trees</Filter>
     </ClCompile>
-    <ClCompile Include="TPChunk.cpp">
-      <Filter>소스 파일\World\Chunk\WaterChunk</Filter>
-    </ClCompile>
     <ClCompile Include="OIT.cpp">
       <Filter>소스 파일\World\Map\System\RenderSystem\OIT</Filter>
     </ClCompile>
@@ -628,6 +637,15 @@
     </ClCompile>
     <ClCompile Include="Composite.cpp">
       <Filter>소스 파일\World\Map\System\RenderSystem\OIT\Composite</Filter>
+    </ClCompile>
+    <ClCompile Include="Water.cpp">
+      <Filter>소스 파일\World\Map\System\RenderSystem\OIT\Water</Filter>
+    </ClCompile>
+    <ClCompile Include="TPChunk.cpp">
+      <Filter>소스 파일\World\Chunk\TPBlock</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterChunk.cpp">
+      <Filter>소스 파일\World\Chunk\WaterChunk</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -770,17 +788,20 @@
     <FxCompile Include="OITResultPS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\OIT</Filter>
     </FxCompile>
-    <FxCompile Include="OITIAVS.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\OIT\OITIA</Filter>
-    </FxCompile>
-    <FxCompile Include="OITIAPS.hlsl">
-      <Filter>소스 파일\World\WorldShaderFIle\OIT\OITIA</Filter>
-    </FxCompile>
     <FxCompile Include="FinishVS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle</Filter>
     </FxCompile>
     <FxCompile Include="FinishPS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle</Filter>
+    </FxCompile>
+    <FxCompile Include="refPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\OIT\Water</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\OIT\Water</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\OIT\Water</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

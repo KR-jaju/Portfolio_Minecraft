@@ -50,8 +50,8 @@ Wallpaper::Wallpaper(
 	);
 	this->input_layout = make_shared<InputLayout>(
 		device,
-		InputLayouts::layout_deferred.data(),
-		InputLayouts::layout_deferred.size(),
+		InputLayouts::layout_pt.data(),
+		InputLayouts::layout_pt.size(),
 		this->verex_shader->getBlob()
 	);
 	this->pixel_shader = make_shared<PixelShader>(

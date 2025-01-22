@@ -32,8 +32,8 @@ SunMoon::SunMoon(
 	);
 	this->input_layout = make_shared<InputLayout>(
 		device,
-		InputLayouts::layout_color.data(),
-		InputLayouts::layout_color.size(),
+		InputLayouts::layout_pc.data(),
+		InputLayouts::layout_pc.size(),
 		this->vertex_shader->getBlob()
 	);
 	this->pixel_shader = make_shared<PixelShader>(

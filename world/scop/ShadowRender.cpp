@@ -49,8 +49,8 @@ ShadowRender::ShadowRender(
 	);
 	this->s_input_layout = make_shared<InputLayout>(
 		this->d_graphic->getDevice(),
-		InputLayouts::layout_shadow.data(),
-		InputLayouts::layout_shadow.size(),
+		InputLayouts::layout_pns.data(),
+		InputLayouts::layout_pns.size(),
 		this->s_vertex_shader->getBlob()
 	);
 	this->vertex_shader = make_shared<VertexShader>(
@@ -83,8 +83,8 @@ ShadowRender::ShadowRender(
 	);
 	this->input_layout = make_shared<InputLayout>(
 		this->d_graphic->getDevice(),
-		InputLayouts::layout_deferred.data(),
-		InputLayouts::layout_deferred.size(),
+		InputLayouts::layout_pt.data(),
+		InputLayouts::layout_pt.size(),
 		this->vertex_shader->getBlob()
 	);
 	vector<ComPtr<ID3D11ShaderResourceView>> srvs_vec;

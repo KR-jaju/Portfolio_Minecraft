@@ -142,8 +142,8 @@ GeoRender::GeoRender(
 	);
 	this->input_layout = make_shared<InputLayout>(
 		device,
-		InputLayouts::layout_Geo.data(),
-		InputLayouts::layout_Geo.size(),
+		InputLayouts::layout_ipntt.data(),
+		InputLayouts::layout_ipntt.size(),
 		this->vertex_shader->getBlob()
 	);
 	this->hull_shader = make_shared<HullShader>(
