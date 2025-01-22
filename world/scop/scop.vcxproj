@@ -222,6 +222,7 @@
     <ClInclude Include="ShadowRender.h" />
     <ClInclude Include="SkinnedMesh.h" />
     <ClInclude Include="SkinnedMeshRenderer.h" />
+    <ClInclude Include="SkyPass.h" />
     <ClInclude Include="SsaoRender.h" />
     <ClInclude Include="SsaoBlur.h" />
     <ClInclude Include="SubchunkMeshData.h" />
@@ -314,6 +315,7 @@
     <ClCompile Include="ShadowRender.cpp" />
     <ClCompile Include="SkinnedMesh.cpp" />
     <ClCompile Include="SkinnedMeshRenderer.cpp" />
+    <ClCompile Include="SkyPass.cpp" />
     <ClCompile Include="SsaoRender.cpp" />
     <ClCompile Include="SsaoBlur.cpp" />
     <ClCompile Include="SubchunkMeshData.cpp" />

@@ -2,6 +2,7 @@
 #include "RenderSystem.h"
 #include "GeometryPass.h"
 #include "Lightingpass.h"
+#include "SkyPass.h"
 #include "ToneMappingPass.h"
 #include "CameraMatrices.h"
 #include "Player.h"
@@ -16,6 +17,7 @@ RenderSystem::RenderSystem(TextureRegistry& texture_registry, EntityRegistry& en
 {
 	this->render_pipeline.addPass<GeometryPass>();
 	this->render_pipeline.addPass<LightingPass>();
+	this->render_pipeline.addPass<SkyPass>();
 	this->render_pipeline.addPass<ToneMappingPass>();
 }
 

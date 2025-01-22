@@ -5,10 +5,10 @@ ToneMappingPass::ToneMappingPass(Renderer& renderer, RenderingContext& context)
 	: tone_mapping_vs(context.graphics.getDevice(), L"ToneMappingPassVS.hlsl", "main", "vs_5_0"),
 	tone_mapping_ps(context.graphics.getDevice(), L"ToneMappingPassPS.hlsl", "main", "ps_5_0"),
 	copy_sampler(context.graphics.getDevice()),
-	hdr_input(context.ping ? context.srvs["hdr_temporary[1]"] : context.srvs["hdr_temporary[0]"]),
-	ldr_output(context.ping ? context.rtvs["ldr_temporary[0]"] : context.rtvs["ldr_temporary[1]"])
+	hdr_input(context.ping ? context.srvs["hdr_temporary[0]"] : context.srvs["hdr_temporary[1]"]),
+	ldr_output(context.ping ? context.rtvs["ldr_temporary[1]"] : context.rtvs["ldr_temporary[0]"])
 {
-
+	context.ping = !context.ping;
 }
 
 
