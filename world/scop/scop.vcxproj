@@ -165,9 +165,11 @@
     <ClInclude Include="BlockDataRegistry.h" />
     <ClInclude Include="BlockTextureData.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraMatrices.h" />
     <ClInclude Include="ChunkMeshBuilder.h" />
     <ClInclude Include="ChunkMeshRegistry.h" />
     <ClInclude Include="ChunkSection.h" />
+    <ClInclude Include="Cubemap.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="InputRegistry.h" />
     <ClInclude Include="LightingPass.h" />
@@ -264,6 +266,7 @@
     <ClCompile Include="ChunkMeshBuilder.cpp" />
     <ClCompile Include="ChunkMeshRegistry.cpp" />
     <ClCompile Include="ChunkRegistry.cpp" />
+    <ClCompile Include="Cubemap.cpp" />
     <ClCompile Include="DeferredGraphics.cpp" />
     <ClCompile Include="DeferredRendering.cpp" />
     <ClCompile Include="DeferredBuffer.cpp" />
@@ -479,6 +482,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="SkyPassPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="SkyPassVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="SsaoBlurPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

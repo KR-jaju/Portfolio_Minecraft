@@ -480,6 +480,12 @@
     <ClInclude Include="TestMobAnimatorContext.h">
       <Filter>소스 파일\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="CameraMatrices.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Cubemap.h">
+      <Filter>소스 파일\Engine\Pipeline\5_Texture\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -728,6 +734,9 @@
     <ClCompile Include="Armature.cpp">
       <Filter>소스 파일\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="Cubemap.cpp">
+      <Filter>소스 파일\Engine\Pipeline\5_Texture\Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="scop.rc">
@@ -841,6 +850,12 @@
     </FxCompile>
     <FxCompile Include="ToneMappingPassPS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyPassVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyPassPS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

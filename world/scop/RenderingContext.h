@@ -43,7 +43,6 @@ struct RenderingContext
 
 	VertexShader entity_geometry_vs;
 	PixelShader entity_geometry_ps;
-
 	
 	SamplerState chunk_texture_sampler;
 

@@ -3,15 +3,15 @@ Texture2D main_texture : register(t0);
 
 struct PS_INPUT
 {
-    float4 pos : SV_Position;
+    float4 position : SV_Position;
+    float3 normal : NORMAL;
     float2 uv : TEXCOORD;
 };
 
 struct PS_OUTPUT
 {
-    float4 color : SV_Target0;
-    float4 normal : SV_Target1;
-    float4 position : SV_Target2;
+    float4 albedo_metallic : SV_Target0;
+    float2 normal : SV_Target1;
 };
 
 cbuffer eyePos : register(b0)
@@ -43,7 +43,11 @@ PS_OUTPUT main(PS_INPUT input)
     //output.color = main_texture.Sample(sampler0, input.uv);
     //int2 uv = int2(frac(input.uv) * 16);
     int2 uv = int2(saturate(float2(0.0, 1.0) + float2(1.0, -1.0) * input.uv) * 64);
-    output.color = main_texture.Load(int3(uv, 0));
+    float3 vs_normal = normalize(input.normal);
+
+    output.albedo_metallic = main_texture.Load(int3(uv, 0));
+    output.normal = vs_normal.xy;
+
     //output.color = float4(1.0, 1.0, 1.0, 1.0);
     //output.color = texture_array.Sample(sampler0, input.uvw);
     //output.color = float4(input.uv, 1.0, 1.0);

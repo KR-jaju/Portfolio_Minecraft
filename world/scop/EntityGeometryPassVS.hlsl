@@ -1,6 +1,9 @@
-cbuffer CameraMatrix : register(b0)
+cbuffer CameraMatrices : register(b0)
 {
-    matrix camera;
+    matrix view;
+    matrix projection;
+    matrix view_projection;
+    matrix view_inverse_transpose;
 };
 
 cbuffer WorldMatrix : register(b1)
@@ -38,30 +41,27 @@ struct VS_INPUT
 
 struct PS_INPUT
 {
-    //int type : TYPE;
-    float4 pos : SV_Position;
-    //float3 normal : NORMAL;
-    //float3 world_pos : POSITION;
+    float4 position : SV_Position;
+    float3 normal : NORMAL;
     float2 uv : TEXCOORD;
-    //int dir : DIRECTION;
 };
 
 PS_INPUT main(VS_INPUT input)
 {
     PS_INPUT output;
-    float4  object_position = float4(input.pos, 1.0);
-    float3  position = float4(0.0, 0.0, 0.0, 0.0);
-
-    position += mul(mul(object_position, bindposes[input.bone.x]), bone[input.bone.x]) * input.weight.x;
-    position += mul(mul(object_position, bindposes[input.bone.y]), bone[input.bone.y]) * input.weight.y;
-    position += mul(mul(object_position, bindposes[input.bone.z]), bone[input.bone.z]) * input.weight.z;
-    position += mul(mul(object_position, bindposes[input.bone.w]), bone[input.bone.w]) * input.weight.w;
-
+    float4  ls_position = float4(input.pos, 1.0);
+    float3  bs_position = float4(0.0, 0.0, 0.0, 0.0);
+    bs_position += mul(mul(ls_position, bindposes[input.bone.x]), bone[input.bone.x]) * input.weight.x;
+    bs_position += mul(mul(ls_position, bindposes[input.bone.y]), bone[input.bone.y]) * input.weight.y;
+    bs_position += mul(mul(ls_position, bindposes[input.bone.z]), bone[input.bone.z]) * input.weight.z;
+    bs_position += mul(mul(ls_position, bindposes[input.bone.w]), bone[input.bone.w]) * input.weight.w;
     //position = object_position;
-    position = position.xzy * float3(1.0, -1.0, 1.0); // 블렌더 루트 본 그냥 하드코딩
-    
+    bs_position = bs_position.xzy * float3(1.0, -1.0, 1.0); // 블렌더 루트 본 그냥 하드코딩
+    float4 ws_position = mul(float4(bs_position, 1.0), world);
+    float4 vs_position = mul(ws_position, view);
+
+    output.position = mul(vs_position, projection);
     output.uv = input.uv;
-    output.pos = mul(float4(position, 1.0), world);
-    output.pos = mul(output.pos, camera);
+    output.normal = mul(input.normal, view_inverse_transpose);
     return output;
 }

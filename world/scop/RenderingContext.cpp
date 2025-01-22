@@ -2,6 +2,7 @@
 #include "RenderingContext.h"
 #include "Graphics.h"
 #include "InputLayouts.h"
+#include "CameraMatrices.h"
 
 RenderingContext::RenderingContext(TextureRegistry& texture_registry, EntityRegistry& entity_registry, ChunkMeshRegistry& chunk_mesh_registry, Graphics& graphics, int width, int height)
 	: texture_registry(texture_registry),
@@ -12,10 +13,10 @@ RenderingContext::RenderingContext(TextureRegistry& texture_registry, EntityRegi
 	viewport_height(height),
 	rasterizer_state(graphics.getDevice(), D3D11_FILL_SOLID, D3D11_CULL_BACK),
 	steve(graphics.getDevice(), L"steve.png"),
-	camera_data(graphics.getDevice(), graphics.getContext(), Mat::Identity),
+	camera_data(graphics.getDevice(), graphics.getContext(), CameraMatrices{}),
 	chunk_geometry_vs(graphics.getDevice(), L"GeometryPassVS.hlsl", "main", "vs_5_0"),
 	chunk_geometry_ps(graphics.getDevice(), L"GeometryPassPS.hlsl", "main", "ps_5_0"),
-	chunk_input_layout(graphics.getDevice(), InputLayouts::layout_chunk, 3, this->chunk_geometry_vs.getBlob()),
+	chunk_input_layout(graphics.getDevice(), InputLayouts::layout_chunk, 4, this->chunk_geometry_vs.getBlob()),
 	chunk_texture_sampler(graphics.getDevice()),
 	entity_geometry_vs(graphics.getDevice(), L"EntityGeometryPassVS.hlsl", "main", "vs_5_0"),
 	entity_geometry_ps(graphics.getDevice(), L"EntityGeometryPassPS.hlsl", "main", "ps_5_0"),

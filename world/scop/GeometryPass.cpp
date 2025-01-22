@@ -16,7 +16,67 @@ static ComPtr<ID3D11RenderTargetView>	createAlbedoRTV(RenderingContext& context)
 	desc.Width = width;
 	desc.Height = height;
 	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	desc.ArraySize = 1;
+	desc.MipLevels = 0;
+	desc.SampleDesc.Count = 1;
+	desc.SampleDesc.Quality = 0;
+	desc.CPUAccessFlags = 0;
+
+	HRESULT hr = device->CreateTexture2D(&desc, nullptr, texture.GetAddressOf());
+	CHECK(hr);
+	hr = device->CreateRenderTargetView(texture.Get(), nullptr, rtv.GetAddressOf());
+	CHECK(hr); // rtv만들기!
+	hr = device->CreateShaderResourceView(texture.Get(), nullptr, srv.GetAddressOf());
+	CHECK(hr);
+	return (rtv);
+}
+
+static ComPtr<ID3D11RenderTargetView>	createPositionRTV(RenderingContext& context)
+{
+	ComPtr<ID3D11Device> device = context.graphics.getDevice();
+	int const width = context.viewport_width;
+	int const height = context.viewport_height;
+	ComPtr<ID3D11Texture2D>& texture = context.textures["gbuffer_position"];
+	ComPtr<ID3D11RenderTargetView>& rtv = context.rtvs["gbuffer_position"];
+	ComPtr<ID3D11ShaderResourceView>& srv = context.srvs["gbuffer_position"];
+	D3D11_TEXTURE2D_DESC desc = {};
+
+	desc.Width = width;
+	desc.Height = height;
+	desc.Usage = D3D11_USAGE_DEFAULT;
 	desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	desc.ArraySize = 1;
+	desc.MipLevels = 0;
+	desc.SampleDesc.Count = 1;
+	desc.SampleDesc.Quality = 0;
+	desc.CPUAccessFlags = 0;
+
+	HRESULT hr = device->CreateTexture2D(&desc, nullptr, texture.GetAddressOf());
+	CHECK(hr);
+	hr = device->CreateRenderTargetView(texture.Get(), nullptr, rtv.GetAddressOf());
+	CHECK(hr); // rtv만들기!
+	hr = device->CreateShaderResourceView(texture.Get(), nullptr, srv.GetAddressOf());
+	CHECK(hr);
+	return (rtv);
+}
+
+static ComPtr<ID3D11RenderTargetView>	createNormalRTV(RenderingContext& context)
+{
+	ComPtr<ID3D11Device> device = context.graphics.getDevice();
+	int const width = context.viewport_width;
+	int const height = context.viewport_height;
+	ComPtr<ID3D11Texture2D>& texture = context.textures["gbuffer_normal"];
+	ComPtr<ID3D11RenderTargetView>& rtv = context.rtvs["gbuffer_normal"];
+	ComPtr<ID3D11ShaderResourceView>& srv = context.srvs["gbuffer_normal"];
+	D3D11_TEXTURE2D_DESC desc = {};
+
+	desc.Width = width;
+	desc.Height = height;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.Format = DXGI_FORMAT_R16G16_FLOAT;
 	desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	desc.ArraySize = 1;
 	desc.MipLevels = 0;
@@ -38,33 +98,41 @@ static ComPtr<ID3D11DepthStencilView> createDSV(RenderingContext& context)
 	ComPtr<ID3D11Device> device = context.graphics.getDevice();
 	int const width = context.viewport_width;
 	int const height = context.viewport_height;
-	ComPtr<ID3D11Texture2D> texture = context.textures["gbuffer_depth"];
-	ComPtr<ID3D11DepthStencilView> dsv = context.dsvs["gbuffer_depth"];
+	ComPtr<ID3D11Texture2D>& texture = context.textures["gbuffer_depth"];
+	ComPtr<ID3D11DepthStencilView>& dsv = context.dsvs["gbuffer_depth"];
+	ComPtr<ID3D11ShaderResourceView>& srv = context.srvs["gbuffer_depth"];
 	D3D11_TEXTURE2D_DESC desc = {};
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsv_desc = {};
+	D3D11_SHADER_RESOURCE_VIEW_DESC srv_desc = {};
 
 	desc.Width = width;
 	desc.Height = height;
 	desc.ArraySize = 1;
 	desc.MipLevels = 1;
-	desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	desc.Format = DXGI_FORMAT_R24G8_TYPELESS;
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
 	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	desc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0;
+
+	dsv_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	dsv_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsv_desc.Texture2D.MipSlice = 0;
+
+	srv_desc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS; // SRV용 포맷
+	srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srv_desc.Texture2D.MostDetailedMip = 0;
+	srv_desc.Texture2D.MipLevels = 1;
 
 	HRESULT hr = device->CreateTexture2D(
 		&desc, nullptr, texture.GetAddressOf());
 	CHECK(hr);
-
-	D3D11_DEPTH_STENCIL_VIEW_DESC dsv_desc = {};
-
-	dsv_desc.Format = desc.Format;
-	dsv_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	dsv_desc.Texture2D.MipSlice = 0;
 	hr = device->CreateDepthStencilView(texture.Get(), &dsv_desc, dsv.GetAddressOf());
 	CHECK(hr); // rtv만들기!
+	hr = device->CreateShaderResourceView(texture.Get(), &srv_desc, srv.GetAddressOf());
+	CHECK(hr);
 	return (dsv);
 }
 
@@ -72,7 +140,8 @@ static ComPtr<ID3D11DepthStencilView> createDSV(RenderingContext& context)
 
 GeometryPass::GeometryPass(Renderer& renderer, RenderingContext& context)
 	: renderer(renderer),
-	albedo_rtv(createAlbedoRTV(context)),
+	albedo_metallic_rtv(createAlbedoRTV(context)),
+	normal_rtv(createNormalRTV(context)),
 	dsv(createDSV(context)),
 	model_cb(context.graphics.getDevice(), context.graphics.getContext(), Mat::Identity),
 	armature_cb(context.graphics.getDevice(), context.graphics.getContext(), Mat::Identity)
@@ -126,16 +195,19 @@ void GeometryPass::bind(RenderingContext& context)
 		0, 0, context.viewport_width, context.viewport_height, 0.0f, 1.0f
 	};
 	ID3D11DeviceContext* dc = context.graphics.getContext().Get();
-	ID3D11RenderTargetView* const albedo_rtv = this->albedo_rtv.Get();
+	ID3D11RenderTargetView* const albedo_metallic_rtv = this->albedo_metallic_rtv.Get();
+	//ID3D11RenderTargetView* const position_rtv = this->position_rtv.Get();
+	ID3D11RenderTargetView* const normal_rtv = this->normal_rtv.Get();
 	ID3D11DepthStencilView* const dsv = this->dsv.Get();
-	ID3D11RenderTargetView* const views[4] = {
-		albedo_rtv
+	ID3D11RenderTargetView* const views[3] = {
+		albedo_metallic_rtv,
+		normal_rtv
 	};
 	float const albedo_clear[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
 
-	dc->ClearRenderTargetView(albedo_rtv, albedo_clear);
+	dc->ClearRenderTargetView(albedo_metallic_rtv, albedo_clear);
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0);
-	dc->OMSetRenderTargets(4, views, dsv);
+	dc->OMSetRenderTargets(2, views, dsv);
 	dc->RSSetState(context.rasterizer_state.getComPtr().Get());
 	dc->RSSetViewports(1, &viewport);
 

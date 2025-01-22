@@ -3,7 +3,7 @@
 #include "GeometryPass.h"
 #include "Lightingpass.h"
 #include "ToneMappingPass.h"
-
+#include "CameraMatrices.h"
 #include "Player.h"
 
 RenderSystem::RenderSystem(TextureRegistry& texture_registry, EntityRegistry& entity_registry, ChunkMeshRegistry& chunk_mesh_registry, Graphics& graphics, int width, int height)
@@ -19,35 +19,21 @@ RenderSystem::RenderSystem(TextureRegistry& texture_registry, EntityRegistry& en
 	this->render_pipeline.addPass<ToneMappingPass>();
 }
 
-//static Mat createViewMatrix(Player const& player)
-//{
-//	vec3 position = player.getPosition();
-//	vec3 rotation = player.getRotation();	
-//	Mat inv_r = Mat::CreateFromYawPitchRoll(rotation.y + 3.141592f, rotation.x, rotation.z).Transpose(); // 180도 더하는건 z+가 앞으로 가게 하기 위함임!
-//	Mat inv_t = Mat::CreateTranslation(-position.x, -position.y - 1.6f, -position.z);
-//
-//	return (inv_t * inv_r);
-//}
-//
-//static Mat createProjectionMatrix(Player const& player, float aspect_ratio)
-//{
-//	float fov = player.getFov();
-//
-//	return Mat::CreatePerspectiveFieldOfView(fov, aspect_ratio, 0.3f, 500.0f);
-//}
-
 void	RenderSystem::update()
 {
 	Player& player = this->entity_registry.getPlayer();
 	Camera const& camera = player.getCamera();
 
 	float const aspect_ratio = this->context.viewport_width / this->context.viewport_height;
-	//Mat const view_matrix = createViewMatrix(player);
-	//Mat const projection_matrix = createProjectionMatrix(player, aspect_ratio);
-	Mat const view_matrix = camera.getViewMatrix();
-	Mat const projection_matrix = camera.getProjectionMatrix();
+	CameraMatrices vp;
 
-	this->context.camera_data.update((view_matrix * projection_matrix).Transpose());
+	vp.view = camera.getViewMatrix().Transpose();
+	vp.projection = camera.getProjectionMatrix().Transpose();
+	vp.view_projection = vp.projection * vp.view;
+	vp.view_inverse_transpose = camera.getViewInverseMatrix().Transpose();
+	vp.projection_inverse = vp.projection.Transpose().Invert().Transpose();
+
+	this->context.camera_data.update(vp);
 	this->render_pipeline.render();
 	this->graphics.present();
 }

@@ -3,20 +3,16 @@ Texture2DArray texture_array : register(t0);
 
 struct PS_INPUT
 {
-    //int type : TYPE;
-    float4 pos : SV_Position;
-    //float3 normal : NORMAL;
-    //float3 world_pos : POSITION;
-    float3 uvw : TEXCOORD;
-    //int dir : DIRECTION;
+    float4 position : SV_Position;
+    float3 normal : NORMAL;
+    float3 uv : TEXCOORD;
 };
 
 
 struct PS_OUTPUT
 {
     float4 color : SV_Target0;
-    float4 normal : SV_Target1;
-    float4 position : SV_Target2;
+    float2 normal : SV_Target1;
 };
 
 cbuffer eyePos : register(b0)
@@ -51,7 +47,10 @@ PS_OUTPUT main(PS_INPUT input)
     //color = texture_arr.SampleLevel(sampler0, uvw, lod);
     //output.color = color;
     //output.color = float4(input.uv, 0.0, 1.0);
-    output.color = texture_array.Sample(sampler0, input.uvw);
+    float3 vs_normal = normalize(input.normal);
+
+    output.color = texture_array.Sample(sampler0, input.uv);
+    output.normal = vs_normal.xy;
 
     return output;
 }

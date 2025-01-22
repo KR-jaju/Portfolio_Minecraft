@@ -10,7 +10,8 @@ public:
 	void execute(RenderingContext& context);
 private:
 	Renderer& renderer;
-	ComPtr<ID3D11RenderTargetView> albedo_rtv;
+	ComPtr<ID3D11RenderTargetView> albedo_metallic_rtv;
+	ComPtr<ID3D11RenderTargetView> normal_rtv;
 	ComPtr<ID3D11DepthStencilView> dsv;
 
 	ConstantBuffer	model_cb;

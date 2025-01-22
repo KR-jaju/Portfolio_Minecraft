@@ -1,7 +1,10 @@
 
-cbuffer CameraMatrix : register(b0)
+cbuffer CameraMatrices : register(b0)
 {
-    matrix camera;
+    matrix view;
+    matrix projection;
+    matrix view_projection;
+    matrix view_inverse_transpose;
 };
 
 
@@ -16,6 +19,7 @@ struct VS_INPUT
     float3 pos : POSITION;
     float2 uv : TEXCOORD;
     uint texture_id : BLENDINDICES;
+    uint direction : TYPE;
     //int type : TYPE;
     //float3 pos : POSITION;
     //float3 normal : NORMAL;
@@ -25,31 +29,35 @@ struct VS_INPUT
 
 struct PS_INPUT
 {
-    //int type : TYPE;
-    float4 pos : SV_Position;
-    //float3 normal : NORMAL;
-    //float3 world_pos : POSITION;
+    float4 position : SV_Position;
+    float3 normal : NORMAL;
     float3 uv : TEXCOORD;
-    //int dir : DIRECTION;
 };
 
+float3 toNormal(uint direction)
+{
+    if (direction == 0) //east
+        return float3(1, 0, 0);
+    if (direction == 1)
+        return float3(-1, 0, 0);
+    if (direction == 2)
+        return float3(0, 1, 0);
+    if (direction == 3)
+        return float3(0, -1, 0);
+    if (direction == 4)
+        return float3(0, 0, 1);
+    return float3(0, 0, -1);
+}
 
 PS_INPUT main(VS_INPUT input)
 {
     PS_INPUT output;
+    float4 os_position = float4(input.pos, 1);
+    float4 ws_position = mul(os_position, world);
+    float4 vs_position = mul(ws_position, view);
 
-    output.pos = float4(input.pos, 1);
-    //output.world_pos = input.pos;
-    //output.normal = float3(0, 0, 1);
-        //input.normal;
+    output.position = mul(vs_position, projection);
     output.uv = float3(input.uv, input.texture_id);
-    //output.dir = input.dir;
-    //output.type = input.type;
-
-    //output.pos = mul(output.pos, world);
-    //output.pos = mul(output.pos, view);
-    //output.pos = mul(output.pos, proj);
-    output.pos = mul(output.pos, world);
-    output.pos = mul(output.pos, camera);
+    output.normal = mul(toNormal(input.direction), view_inverse_transpose);
     return output;
 }

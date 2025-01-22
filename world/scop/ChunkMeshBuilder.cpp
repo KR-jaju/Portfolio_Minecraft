@@ -88,10 +88,10 @@ void	ChunkMeshBuilder::buildCube(std::vector<ChunkVertex>& vertices, std::vector
 	{
 		int offset = vertices.size();
 
-		vertices.push_back(ChunkVertex{ vec3(x + 1, y + 1, z + 1),vec2(0, 0),textures.east });
-		vertices.push_back(ChunkVertex{ vec3(x + 1, y + 1, z),vec2(1, 0),textures.east });
-		vertices.push_back(ChunkVertex{ vec3(x + 1, y, z + 1),vec2(0, 1),textures.east });
-		vertices.push_back(ChunkVertex{ vec3(x + 1, y, z),vec2(1, 1),textures.east });
+		vertices.push_back(ChunkVertex{ vec3(x + 1, y + 1, z + 1),vec2(0, 0),textures.east,static_cast<int>(Direction::East) });
+		vertices.push_back(ChunkVertex{ vec3(x + 1, y + 1, z),vec2(1, 0),textures.east,static_cast<int>(Direction::East) });
+		vertices.push_back(ChunkVertex{ vec3(x + 1, y, z + 1),vec2(0, 1),textures.east,static_cast<int>(Direction::East) });
+		vertices.push_back(ChunkVertex{ vec3(x + 1, y, z),vec2(1, 1),textures.east,static_cast<int>(Direction::East) });
 
 		indices.push_back(offset);
 		indices.push_back(offset + 1);
@@ -104,10 +104,10 @@ void	ChunkMeshBuilder::buildCube(std::vector<ChunkVertex>& vertices, std::vector
 	{
 		int offset = vertices.size();
 
-		vertices.push_back(ChunkVertex{ vec3(x, y + 1, z),vec2(0, 0),textures.west });
-		vertices.push_back(ChunkVertex{ vec3(x, y + 1, z + 1),vec2(1, 0),textures.west });
-		vertices.push_back(ChunkVertex{ vec3(x, y, z),vec2(0, 1),textures.west });
-		vertices.push_back(ChunkVertex{ vec3(x, y, z + 1),vec2(1, 1),textures.west });
+		vertices.push_back(ChunkVertex{ vec3(x, y + 1, z),vec2(0, 0),textures.west,static_cast<int>(Direction::West) });
+		vertices.push_back(ChunkVertex{ vec3(x, y + 1, z + 1),vec2(1, 0),textures.west,static_cast<int>(Direction::West) });
+		vertices.push_back(ChunkVertex{ vec3(x, y, z),vec2(0, 1),textures.west,static_cast<int>(Direction::West) });
+		vertices.push_back(ChunkVertex{ vec3(x, y, z + 1),vec2(1, 1),textures.west,static_cast<int>(Direction::West) });
 
 		indices.push_back(offset);
 		indices.push_back(offset + 1);
@@ -120,10 +120,10 @@ void	ChunkMeshBuilder::buildCube(std::vector<ChunkVertex>& vertices, std::vector
 	{
 		int offset = vertices.size();
 
-		vertices.push_back(ChunkVertex{ vec3(x, y, z + 1),vec2(0, 0),textures.down });
-		vertices.push_back(ChunkVertex{ vec3(x + 1, y, z + 1),vec2(1, 0),textures.down });
-		vertices.push_back(ChunkVertex{ vec3(x, y, z),vec2(0, 1),textures.down });
-		vertices.push_back(ChunkVertex{ vec3(x + 1, y, z),vec2(1, 1),textures.down });
+		vertices.push_back(ChunkVertex{ vec3(x, y, z + 1),vec2(0, 0),textures.down,static_cast<int>(Direction::Down) });
+		vertices.push_back(ChunkVertex{ vec3(x + 1, y, z + 1),vec2(1, 0),textures.down,static_cast<int>(Direction::Down) });
+		vertices.push_back(ChunkVertex{ vec3(x, y, z),vec2(0, 1),textures.down,static_cast<int>(Direction::Down) });
+		vertices.push_back(ChunkVertex{ vec3(x + 1, y, z),vec2(1, 1),textures.down,static_cast<int>(Direction::Down) });
 
 		indices.push_back(offset);
 		indices.push_back(offset + 1);
@@ -136,10 +136,10 @@ void	ChunkMeshBuilder::buildCube(std::vector<ChunkVertex>& vertices, std::vector
 	{
 		int offset = vertices.size();
 
-		vertices.push_back(ChunkVertex{ vec3(x, y + 1, z),vec2(0, 0),textures.up });
-		vertices.push_back(ChunkVertex{ vec3(x + 1, y + 1, z),vec2(1, 0),textures.up });
-		vertices.push_back(ChunkVertex{ vec3(x, y + 1, z + 1),vec2(0, 1),textures.up });
-		vertices.push_back(ChunkVertex{ vec3(x + 1, y + 1, z + 1),vec2(1, 1),textures.up });
+		vertices.push_back(ChunkVertex{ vec3(x, y + 1, z),vec2(0, 0),textures.up,static_cast<int>(Direction::Up) });
+		vertices.push_back(ChunkVertex{ vec3(x + 1, y + 1, z),vec2(1, 0),textures.up,static_cast<int>(Direction::Up) });
+		vertices.push_back(ChunkVertex{ vec3(x, y + 1, z + 1),vec2(0, 1),textures.up,static_cast<int>(Direction::Up) });
+		vertices.push_back(ChunkVertex{ vec3(x + 1, y + 1, z + 1),vec2(1, 1),textures.up,static_cast<int>(Direction::Up) });
 
 		indices.push_back(offset);
 		indices.push_back(offset + 1);
@@ -152,10 +152,10 @@ void	ChunkMeshBuilder::buildCube(std::vector<ChunkVertex>& vertices, std::vector
 	{
 		int offset = vertices.size();
 
-		vertices.push_back(ChunkVertex{ vec3(x + 1, y + 1, z),vec2(0, 0),textures.south });
-		vertices.push_back(ChunkVertex{ vec3(x, y + 1, z),vec2(1, 0),textures.south });
-		vertices.push_back(ChunkVertex{ vec3(x + 1, y, z),vec2(0, 1),textures.south });
-		vertices.push_back(ChunkVertex{ vec3(x, y, z),vec2(1, 1),textures.south });
+		vertices.push_back(ChunkVertex{ vec3(x + 1, y + 1, z),vec2(0, 0),textures.south,static_cast<int>(Direction::South) });
+		vertices.push_back(ChunkVertex{ vec3(x, y + 1, z),vec2(1, 0),textures.south,static_cast<int>(Direction::South) });
+		vertices.push_back(ChunkVertex{ vec3(x + 1, y, z),vec2(0, 1),textures.south,static_cast<int>(Direction::South) });
+		vertices.push_back(ChunkVertex{ vec3(x, y, z),vec2(1, 1),textures.south,static_cast<int>(Direction::South) });
 
 		indices.push_back(offset);
 		indices.push_back(offset + 1);
@@ -168,10 +168,10 @@ void	ChunkMeshBuilder::buildCube(std::vector<ChunkVertex>& vertices, std::vector
 	{
 		int offset = vertices.size();
 
-		vertices.push_back(ChunkVertex{ vec3(x, y + 1, z + 1),vec2(0, 0),textures.north });
-		vertices.push_back(ChunkVertex{ vec3(x + 1, y + 1, z + 1),vec2(1, 0),textures.north });
-		vertices.push_back(ChunkVertex{ vec3(x, y, z + 1),vec2(0, 1),textures.north });
-		vertices.push_back(ChunkVertex{ vec3(x + 1, y, z + 1),vec2(1, 1),textures.north });
+		vertices.push_back(ChunkVertex{ vec3(x, y + 1, z + 1),vec2(0, 0),textures.north,static_cast<int>(Direction::North) });
+		vertices.push_back(ChunkVertex{ vec3(x + 1, y + 1, z + 1),vec2(1, 0),textures.north,static_cast<int>(Direction::North) });
+		vertices.push_back(ChunkVertex{ vec3(x, y, z + 1),vec2(0, 1),textures.north,static_cast<int>(Direction::North) });
+		vertices.push_back(ChunkVertex{ vec3(x + 1, y, z + 1),vec2(1, 1),textures.north,static_cast<int>(Direction::North) });
 
 		indices.push_back(offset);
 		indices.push_back(offset + 1);

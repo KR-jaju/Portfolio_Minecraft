@@ -52,3 +52,23 @@ Mat		Camera::getProjectionMatrix() const
 
 	return Mat::CreatePerspectiveFieldOfView(fov, aspect_ratio, 0.3f, 500.0f);
 }
+
+Mat		Camera::getViewInverseMatrix() const
+{
+	vec3 position = this->position;
+	vec3 rotation = this->rotation;
+	Mat r_t = Mat::CreateFromYawPitchRoll(rotation.y + 3.141592f, rotation.x, rotation.z).Transpose(); // 180도 더하는건 z+가 앞으로 가게 하기 위함임!
+	Mat t_t = Mat::CreateTranslation(position.x, position.y, position.z).Transpose();
+
+	return (t_t * r_t);
+}
+/*
+(inv_t * inv_r)^-1^t
+(r * t) ^ t
+t^t * r^t
+
+
+
+
+
+*/

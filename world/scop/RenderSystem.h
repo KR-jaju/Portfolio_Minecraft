@@ -27,6 +27,7 @@ public:
 	//);
 	void	update();
 private:
+
 	TextureRegistry& texture_registry;
 	EntityRegistry& entity_registry;
 	ChunkMeshRegistry& chunk_mesh_registry;

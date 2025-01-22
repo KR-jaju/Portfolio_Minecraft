@@ -162,6 +162,7 @@ struct ChunkVertex
 	vec3 position;
 	vec2 uv;
 	int texture_id;
+	int	direction;
 };
 
 struct VertexGeo { // temp

@@ -13,6 +13,7 @@ public:
 
 	Mat		getViewMatrix() const;
 	Mat		getProjectionMatrix() const;
+	Mat		getViewInverseMatrix() const;
 private:
 	vec3 position;
 	vec3 rotation;
