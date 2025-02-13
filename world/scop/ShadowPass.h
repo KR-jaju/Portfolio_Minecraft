@@ -2,20 +2,24 @@
 
 #include "RenderPass.h"
 #include "LightRegistry.h"
-#include "CameraMatrices.h"
 #include "Camera.h"
+
+/*
+
+TODO: 그림자 전에 해야할 것이 많다
+
+*/
 
 class ShadowPass : public RenderPass
 {
 public:
-	ShadowPass(Renderer& renderer, RenderingContext& context);
+	ShadowPass(RenderingContext& context);
 	void execute(RenderingContext& context, RenderGroup const& render_group);
 private:
 	struct ShadowCasterData
 	{
 		Mat view_projection;
 	};
-	Renderer& renderer;
 	RenderingContext& context;
 	ComPtr<ID3D11DepthStencilView> main_light_dsv[4];
 

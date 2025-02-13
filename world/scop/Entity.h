@@ -12,6 +12,13 @@
 #include "AABB.h"
 #include "SkinnedMesh.h"
 
+
+/*
+
+TODO: 미래에 개발을 계속 할 예정입니다
+
+*/
+
 class EntityGeometry;
 class EntityAssetManager;
 class MobAI;

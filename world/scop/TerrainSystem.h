@@ -2,7 +2,6 @@
 
 #include "ThreadPool.h"
 
-#include "WorldUtils.h"
 #include "PerlinNoise.h"
 #include "EntityReigstry.h"
 #include "EventManager.h"

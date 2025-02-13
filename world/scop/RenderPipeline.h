@@ -2,7 +2,6 @@
 
 #include "RenderPass.h"
 #include "RenderGroup.h"
-#include "Renderer.h"
 
 class RenderPipeline
 {
@@ -15,7 +14,6 @@ private:
     AssetManager& asset_manager;
     std::vector<std::unique_ptr<RenderPass>> pass_list;
     ComPtr<ID3D11Texture2D> output;
-    //Renderer renderer;
     RenderingContext& context;
 
     void    blit();

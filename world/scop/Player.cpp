@@ -5,7 +5,7 @@ Player::Player(InputRegistry& input_registry, AssetManager& asset_manager)
 	: 
 	input_registry(input_registry),
 	camera(),
-	position(vec3(0, 30, 0)),
+	position(vec3(0, 40, 0)),
 	rotation(vec3::Zero),
 	owns_input(false),
 	bounding_box({vec3(0, 0.9f, 0), vec3(0.3f, 0.9f, 0.3f)}),
@@ -101,7 +101,8 @@ void	Player::airMovement(InputRegistry& input_registry, float dt)
 		dvxz.Normalize();
 		this->velocity += dvxz * dt * 4.0f;
 	}
-	this->velocity.y -= 25.8f * dt;
+	//플레이어의 중력을 제거
+	//this->velocity.y -= 25.8f * dt;
 }
 
 Camera const&	Player::getCamera() const

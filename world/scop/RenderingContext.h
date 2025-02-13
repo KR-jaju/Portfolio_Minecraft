@@ -12,7 +12,6 @@
 #include <unordered_map>
 
 #include "LightRegistry.h"
-#include "CameraMatrices.h"
 
 #include "Texture.h"
 

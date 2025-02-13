@@ -1,6 +1,8 @@
 #pragma once
 
-//#include "Map.h"
+/*
+TODO: World라는 이름보다는 하나의 씬처럼 동작하게 하는게 좋을 것 같다.
+*/
 
 #include <chrono>
 

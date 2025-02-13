@@ -72,6 +72,17 @@ struct CameraData
 	Mat projection = Mat::Identity;
 };
 
+struct CameraMatrices
+{
+	Mat view;
+	Mat projection;
+	Mat view_projection;
+	Mat view_inverse_transpose;
+	Mat	projection_inverse;
+	ivec4 dimension;
+};
+//TODO: 구조체 정리 좀 해야함.
+
 struct BoneData {
 	Mat matrix[32];
 };

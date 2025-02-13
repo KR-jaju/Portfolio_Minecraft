@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RenderPass.h"
-#include "Renderer.h"
 #include "TextureArray.h"
 
 class GeometryPass : public RenderPass

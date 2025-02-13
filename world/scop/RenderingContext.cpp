@@ -2,7 +2,6 @@
 #include "RenderingContext.h"
 #include "Graphics.h"
 #include "InputLayouts.h"
-#include "CameraMatrices.h"
 
 RenderingContext::RenderingContext(AssetManager& asset_manager, Graphics& graphics, int width, int height)
 	: asset_manager(asset_manager),

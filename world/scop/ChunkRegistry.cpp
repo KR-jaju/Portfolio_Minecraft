@@ -3,7 +3,7 @@
 
 ChunkRegistry::ChunkRegistry()
 	: addressing_offset(0, 0),
-	addressing_half_stride(9),
+	addressing_half_stride(12),
 	addressing_stride(this->addressing_half_stride * 2 + 1),
 	chunks(this->addressing_stride * this->addressing_stride, nullptr),
 	subchunk_meshes(),
@@ -84,7 +84,7 @@ void	ChunkRegistry::setBlock(int x, int y, int z, BlockData data)
 {
 	ivec2 const chunk_idx = ivec2((x >= 0) ? (x / 16) : ((x - 15) / 16), (z >= 0) ? (z / 16) : ((z - 15) / 16));
 	ivec2 const offset = this->addressing_offset;
-	int const half_stride = 12; // 반드시 100% 로드된 청크들만 setBlock가능
+	int const half_stride = 6; // 반드시 100% 로드된 청크들만 setBlock가능
 
 	if (std::abs(chunk_idx.x - offset.x) > half_stride || std::abs(chunk_idx.y - offset.y) > half_stride)
 		return;

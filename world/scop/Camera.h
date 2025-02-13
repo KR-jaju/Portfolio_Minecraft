@@ -1,5 +1,10 @@
 #pragma once
 
+/*
+TODO : 위치가 애매함, 개선 예정
+
+*/
+
 class Camera
 {
 public:

@@ -26,5 +26,4 @@ private:
 
 	void initialize(RenderingContext& context, AssetManager& asset_manager);
 	void bind(RenderingContext& context);
-	void unbind(RenderingContext& context);
 };

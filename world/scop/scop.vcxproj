@@ -160,14 +160,10 @@
     <ClInclude Include="Armature.h" />
     <ClInclude Include="Asset.h" />
     <ClInclude Include="BlendState.h" />
-    <ClInclude Include="Block.h" />
     <ClInclude Include="BlockData.h" />
     <ClInclude Include="BlockDataRegistry.h" />
     <ClInclude Include="BlockTextureData.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="CameraMatrices.h" />
-    <ClInclude Include="ChunkLoader.h" />
-    <ClInclude Include="ChunkMeshBuilder.h" />
     <ClInclude Include="ControlBlock.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="IntVector2.h" />
@@ -178,55 +174,41 @@
     <ClInclude Include="RenderGroup.h" />
     <ClInclude Include="SubchunkMeshGenerator.h" />
     <ClInclude Include="ChunkSection.h" />
-    <ClInclude Include="ChunkState.h" />
     <ClInclude Include="ConstantRegistry.h" />
     <ClInclude Include="Cubemap.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="EventQueue.h" />
     <ClInclude Include="Future.h" />
-    <ClInclude Include="Game.h" />
     <ClInclude Include="InputRegistry.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightingPass.h" />
     <ClInclude Include="LightRegistry.h" />
-    <ClInclude Include="LRUCache.h" />
-    <ClInclude Include="OrderedMap.h" />
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SubchunkMesh.h" />
     <ClInclude Include="ChunkRegistry.h" />
-    <ClInclude Include="DeferredGraphics.h" />
-    <ClInclude Include="DeferredRendering.h" />
-    <ClInclude Include="DeferredBuffer.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityReigstry.h" />
     <ClInclude Include="EntitySystem.h" />
     <ClInclude Include="EntityGeometry.h" />
-    <ClInclude Include="EntityRender.h" />
-    <ClInclude Include="EntityUtils.h" />
     <ClInclude Include="EntityVertex.h" />
     <ClInclude Include="GeometryPass.h" />
-    <ClInclude Include="GeoRender.h" />
     <ClInclude Include="InputLayouts.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="LightSystem.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="MyQueue.h" />
-    <ClInclude Include="Map.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="ConstantBuffer.h" />
-    <ClInclude Include="DepthMap.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="InputLayout.h" />
-    <ClInclude Include="MapUtils.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="Pig.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="RasterizerState.h" />
-    <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderingContext.h" />
     <ClInclude Include="RenderPass.h" />
     <ClInclude Include="RenderPipeline.h" />
@@ -236,21 +218,15 @@
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="scop.h" />
     <ClInclude Include="ShadowPass.h" />
-    <ClInclude Include="ShadowRender.h" />
     <ClInclude Include="SkinnedMesh.h" />
     <ClInclude Include="SkinnedMeshRenderer.h" />
     <ClInclude Include="SkyPass.h" />
-    <ClInclude Include="SsaoRender.h" />
-    <ClInclude Include="SsaoBlur.h" />
     <ClInclude Include="StripedMutex.h" />
-    <ClInclude Include="Terrain.h" />
     <ClInclude Include="VisibilityProcessor.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="TerrainDB.h" />
     <ClInclude Include="TerrainGenerator.h" />
     <ClInclude Include="TerrainSystem.h" />
-    <ClInclude Include="Test.h" />
-    <ClInclude Include="TestCam.h" />
     <ClInclude Include="TestMob.h" />
     <ClInclude Include="TestMobAnimationLayer.h" />
     <ClInclude Include="TestMobAnimatorContext.h" />
@@ -266,7 +242,6 @@
     <ClInclude Include="WICTextureLoader11.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WindowCallback.h" />
-    <ClInclude Include="WorldUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
@@ -276,30 +251,21 @@
     <ClCompile Include="Armature.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="BlendState.cpp" />
-    <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockData.cpp" />
     <ClCompile Include="BlockDataRegistry.cpp" />
     <ClCompile Include="BlockTextureData.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="ChunkMeshBuilder.cpp" />
     <ClCompile Include="ChunkRegistry.cpp" />
     <ClCompile Include="ConstantRegistry.cpp" />
     <ClCompile Include="Cubemap.cpp" />
-    <ClCompile Include="DeferredGraphics.cpp" />
-    <ClCompile Include="DeferredRendering.cpp" />
-    <ClCompile Include="DeferredBuffer.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="DirectionalShadowCaster.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityGeometry.cpp" />
     <ClCompile Include="EntityRegistry.cpp" />
-    <ClCompile Include="EntityRender.cpp" />
     <ClCompile Include="EntitySystem.cpp" />
-    <ClCompile Include="EntityUtils.cpp" />
     <ClCompile Include="Frustum.cpp" />
-    <ClCompile Include="Game.cpp" />
     <ClCompile Include="GeometryPass.cpp" />
-    <ClCompile Include="GeoRender.cpp" />
     <ClCompile Include="InputLayouts.cpp" />
     <ClCompile Include="InputRegistry.cpp" />
     <ClCompile Include="LightingPass.cpp" />
@@ -308,14 +274,11 @@
     <ClCompile Include="MainCamera.cpp" />
     <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="MyQueue.cpp" />
-    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
-    <ClCompile Include="DepthMap.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="InputLayout.cpp" />
-    <ClCompile Include="MapUtils.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -328,29 +291,22 @@
     <ClCompile Include="RasterizerState.cpp" />
     <ClCompile Include="RenderGroup.cpp" />
     <ClCompile Include="SubchunkMesh.cpp" />
-    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderingContext.cpp" />
     <ClCompile Include="RenderPipeline.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ShadowPass.cpp" />
-    <ClCompile Include="ShadowRender.cpp" />
     <ClCompile Include="SkinnedMesh.cpp" />
     <ClCompile Include="SkinnedMeshRenderer.cpp" />
     <ClCompile Include="SkyPass.cpp" />
-    <ClCompile Include="SsaoRender.cpp" />
-    <ClCompile Include="SsaoBlur.cpp" />
     <ClCompile Include="SubchunkMeshGenerator.cpp" />
-    <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="VisibilityProcessor.cpp" />
     <ClCompile Include="World.cpp" />
     <ClCompile Include="TerrainDB.cpp" />
     <ClCompile Include="TerrainGenerator.cpp" />
     <ClCompile Include="TerrainSystem.cpp" />
-    <ClCompile Include="Test.cpp" />
-    <ClCompile Include="TestCam.cpp" />
     <ClCompile Include="TestMob.cpp" />
     <ClCompile Include="TestMobAnimationLayer.cpp" />
     <ClCompile Include="TestMobAnimator.cpp" />
@@ -362,7 +318,6 @@
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="WICTextureLoader11.cpp" />
     <ClCompile Include="Window.cpp" />
-    <ClCompile Include="WorldUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="scop.rc" />
@@ -377,38 +332,6 @@
     <Image Include="steve.png" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="DeferredPS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="DeferredVS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="DepthPixelShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="DepthVertexShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
     <FxCompile Include="EntityGeometryPassPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
@@ -433,22 +356,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="GeometryPS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="GeometryVS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
     <FxCompile Include="LightingPassPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -461,59 +368,11 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="ResultPS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="ResultVS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="ShadowBlurPS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="ShadowBlurVS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
     <FxCompile Include="ShadowPassVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="ShadowPS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="ShadowVS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="SkyPassPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -526,68 +385,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="SsaoBlurPS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="SsaoBlurVS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="SsaoPS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="SsaoVS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="TestPixelShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="TestPixelShader2.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="TestVertexShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="TestVertexShader2.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="ToneMappingPassPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

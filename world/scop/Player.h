@@ -3,6 +3,10 @@
 #include "Entity.h"
 #include "Camera.h"
 
+/*
+TODO: 카메라가 여기 들어있는게 조금 이상함
+*/
+
 class Player : public Entity
 {
 public:

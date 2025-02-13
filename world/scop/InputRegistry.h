@@ -2,6 +2,10 @@
 
 #include <unordered_map>
 
+/*
+TODO: 레지스트리가 데이터만 가지도록 바꿀 필요가 있음.
+*/
+
 class InputRegistry
 {
 public:

@@ -14,7 +14,6 @@ void LightingPass::execute(RenderingContext& context, RenderGroup const& render_
 	//this->main_light_cb.update(light);
 	//dc->PSSetConstantBuffers(1, 1, this->main_light_cb.getComPtr().GetAddressOf());
 	dc->Draw(4, 0);
-	//this->unbind(context);
 }
 
 void	LightingPass::initializeShaders(RenderingContext& context, std::wstring const& vs_path, std::wstring const& ps_path)
@@ -41,10 +40,6 @@ void LightingPass::initialize(RenderingContext& context, AssetManager& asset_man
 	this->hdr_output = context.ping ? context.rtvs["hdr_temporary[0]"] : context.rtvs["hdr_temporary[1]"];
 
 	this->initializeShaders(context, L"LightingPassVS.hlsl", L"LightingPassPS.hlsl");
-	//lighting_vs(context.graphics.getDevice(), L"LightingPassVS.hlsl", "main", "vs_5_0"),
-	//lighting_ps(context.graphics.getDevice(), L"LightingPassPS.hlsl", "main", "ps_5_0"),
-	//copy_sampler(context.graphics.getDevice()),
-	//main_light_cb(context.graphics.getDevice(), context.graphics.getContext(), DirectionalLightData{})
 }
 
 void LightingPass::bind(RenderingContext& context)
@@ -67,16 +62,4 @@ void LightingPass::bind(RenderingContext& context)
 	dc->PSSetConstantBuffers(0, 1, context.camera_data.getComPtr().GetAddressOf());
 
 	dc->OMSetRenderTargets(1, rtv, nullptr);
-}
-void LightingPass::unbind(RenderingContext& context)
-{
-	ID3D11DeviceContext* const dc = context.graphics.getContext().Get();
-
-	dc->OMSetRenderTargets(0, nullptr, nullptr);
-
-	dc->PSSetShader(nullptr, nullptr, 0);
-
-	dc->VSSetShader(nullptr, nullptr, 0);
-
-	dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED);
 }

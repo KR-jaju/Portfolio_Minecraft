@@ -4,6 +4,10 @@
 #include "AABB.h"
 #include "BlockData.h"
 
+/*
+TODO: Constant Registry로 대체 예정인데 귀찮음
+*/
+
 class BlockDataRegistry
 {
 public:

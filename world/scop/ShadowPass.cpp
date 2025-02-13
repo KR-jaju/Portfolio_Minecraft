@@ -44,9 +44,8 @@ static ComPtr<ID3D11DepthStencilView> createDSV(RenderingContext& context, std::
 	return (dsv);
 }
 
-ShadowPass::ShadowPass(Renderer& renderer, RenderingContext& context)
-	: renderer(renderer),
-	context(context),
+ShadowPass::ShadowPass(RenderingContext& context)
+	: context(context),
 	shadow_caster_cb(context.graphics.getDevice(), context.graphics.getContext(), Mat::Identity),
 	shadow_vs(context.graphics.getDevice(), L"ShadowPassVS.hlsl", "main", "vs_5_0"),
 	shadow_il(context.graphics.getDevice(), InputLayouts::layout_chunk, 4, this->shadow_vs.getBlob())

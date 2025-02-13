@@ -6,6 +6,12 @@
 #include <list>
 #include <unordered_map>
 
+/*
+
+TODO: 야심차게 만들었지만 쓸모가 없었다. 언젠가 쓸모를 찾을 때까지 유기
+
+*/
+
 template <typename Key, typename T>
 class LRUCache {
 public:

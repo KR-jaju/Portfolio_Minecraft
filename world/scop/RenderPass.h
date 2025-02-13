@@ -1,8 +1,6 @@
 #pragma once
 #include "RenderingContext.h"
 
-#include "Renderer.h"
-
 class RenderGroup;
 class AssetManager;
 
