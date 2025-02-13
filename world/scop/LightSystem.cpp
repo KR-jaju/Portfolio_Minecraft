@@ -1,5 +1,5 @@
 #include "pch.h"
-//#include "LightSystem.h"
+#include "LightSystem.h"
 //#include "MapUtils.h"
 //#include "Chunk.h"
 //#include "MyQueue.h"
@@ -317,3 +317,31 @@
 //		}
 //	}
 //}
+
+#include "Camera.h"
+#include "Player.h"
+
+LightSystem::LightSystem(LightRegistry& light_registry, EntityRegistry& entity_registry)
+	: light_registry(light_registry),
+	entity_registry(entity_registry)
+{
+}
+
+void	LightSystem::update()
+{
+	Player const& player = this->entity_registry.getPlayer();
+	Camera const& camera = player.getCamera();
+
+	this->updateMainLight(camera);
+}
+
+void	LightSystem::updateMainLight(Camera const& camera)
+{
+	DirectionalLight const& light = this->light_registry.main_light;
+	DirectionalLightData& light_data = this->light_registry.main_light_data;
+
+	light_data.incoming_direciton = vec3::TransformNormal(light.getDirection(), camera.getViewMatrix());
+	light_data.color = light.getColor();
+	for (int level = 0; level < 4; ++level)
+		light_data.view_projection[level] = light.getViewProjectionMatrix(level);
+}

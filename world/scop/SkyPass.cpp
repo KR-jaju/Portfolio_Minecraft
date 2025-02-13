@@ -50,38 +50,35 @@ static std::vector<uint32>	createSphereIndices(int subdivision)
 	return (indices);
 }
 
-SkyPass::SkyPass(Renderer& renderer, RenderingContext& context)
-	: dsv(context.dsvs["gbuffer_depth"]),
-	hdr_output(context.ping ? context.rtvs["hdr_temporary[0]"] : context.rtvs["hdr_temporary[1]"]),
-	skybox_vs(context.graphics.getDevice(), L"SkyPassVS.hlsl", "main", "vs_5_0"),
-	skybox_ps(context.graphics.getDevice(), L"SkyPassPS.hlsl", "main", "ps_5_0"),
-	skybox_il(context.graphics.getDevice(), InputLayouts::layout_skybox, 1, this->skybox_vs.getBlob()),
-	sphere_vertices(createSphereVertices(3)),
-	sphere_indices(createSphereIndices(3)),
-	sphere_vertex_buffer(context.graphics.getDevice(), this->sphere_vertices.data(), this->sphere_vertices.size(), D3D11_BIND_VERTEX_BUFFER),
-	sphere_index_buffer(context.graphics.getDevice(), this->sphere_indices.data(), this->sphere_indices.size(), D3D11_BIND_INDEX_BUFFER),
-	skybox_texture(context.graphics.getDevice(), L"./textures/skybox/HDRI/MyCubesEnvHDR.dds")
-{
-}
+SkyPass::SkyPass() {}
 
-void SkyPass::execute(RenderingContext& context)
+void SkyPass::execute(RenderingContext& context, RenderGroup const& render_group)
 {
 	ID3D11DeviceContext* const dc = context.graphics.getContext().Get();
-	uint32 stride = this->sphere_vertex_buffer.getStride();
-	uint32 offset = this->sphere_vertex_buffer.getOffset();
+	uint32 stride = sizeof(vec3);
+	uint32 offset = 0;
 
 	this->bind(context);
-	dc->IASetInputLayout(this->skybox_il.getComPtr().Get());
+	dc->IASetInputLayout(this->skybox_il.Get());
 	dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	dc->IASetVertexBuffers(0, 1, this->sphere_vertex_buffer.getComPtr().GetAddressOf(), &stride, &offset);
-	dc->IASetIndexBuffer(this->sphere_index_buffer.getComPtr().Get(), DXGI_FORMAT_R32_SINT, 0);
-	dc->VSSetShader(this->skybox_vs.getComPtr().Get(), nullptr, 0);
-	dc->PSSetShader(this->skybox_ps.getComPtr().Get(), nullptr, 0);
-	dc->VSSetConstantBuffers(0, 1, context.camera_data.getComPtr().GetAddressOf());
+	dc->IASetVertexBuffers(0, 1, this->sphere_vertex_buffer.GetAddressOf(), &stride, &offset);
+	dc->IASetIndexBuffer(this->sphere_index_buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	dc->VSSetShader(this->skybox_vs.Get(), nullptr, 0);
+	dc->PSSetShader(this->skybox_ps.Get(), nullptr, 0);
 	dc->PSSetSamplers(0, 1, context.chunk_texture_sampler.getComPtr().GetAddressOf());
-	dc->PSSetShaderResources(0, 1, this->skybox_texture.getComPtr().GetAddressOf());
+	dc->PSSetShaderResources(0, 1, this->skybox_texture->getComPtr().GetAddressOf());
 	dc->DrawIndexed(this->sphere_indices.size(), 0, 0);
 	this->unbind(context);
+}
+
+
+void SkyPass::initialize(RenderingContext& context, AssetManager& asset_manager)
+{
+	this->dsv = context.dsvs["gbuffer_depth"];
+	this->hdr_output = context.ping ? context.rtvs["hdr_temporary[0]"] : context.rtvs["hdr_temporary[1]"];
+	this->skybox_texture = asset_manager.load<Cubemap>(L"./textures/skybox/HDRI/MyCubesEnvHDR.dds");
+	this->initializeSkyboxShader(context, L"SkyPassVS.hlsl", L"SkyPassPS.hlsl");
+	this->initializeSphereMesh(context);
 }
 
 void SkyPass::bind(RenderingContext& context)
@@ -112,3 +109,43 @@ void SkyPass::unbind(RenderingContext& context)
 	dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED);
 }
 
+void SkyPass::initializeSkyboxShader(RenderingContext& context, std::wstring const& vs_path, std::wstring const& ps_path)
+{
+	uint32 const compileFlag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+	ComPtr<ID3D11Device> device = context.graphics.getDevice();
+	ComPtr<ID3DBlob> shader_blob;
+
+	HRESULT hr = D3DCompileFromFile(vs_path.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", compileFlag, 0, shader_blob.GetAddressOf(), nullptr);
+	CHECK(hr);
+	hr = device->CreateVertexShader(shader_blob->GetBufferPointer(), shader_blob->GetBufferSize(), nullptr, this->skybox_vs.GetAddressOf());
+	CHECK(hr);
+	hr = device->CreateInputLayout(InputLayouts::layout_skybox, 1, shader_blob->GetBufferPointer(), shader_blob->GetBufferSize(), this->skybox_il.GetAddressOf());
+	CHECK(hr);
+	hr = D3DCompileFromFile(ps_path.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", compileFlag, 0, shader_blob.GetAddressOf(), nullptr);
+	CHECK(hr);
+	hr = device->CreatePixelShader(shader_blob->GetBufferPointer(), shader_blob->GetBufferSize(), nullptr, this->skybox_ps.GetAddressOf());
+	CHECK(hr);
+}
+
+
+void SkyPass::initializeSphereMesh(RenderingContext& context)
+{
+	ComPtr<ID3D11Device> device = context.graphics.getDevice();
+	D3D11_BUFFER_DESC desc = {};
+	D3D11_SUBRESOURCE_DATA data = {};
+
+	this->sphere_vertices = std::move(createSphereVertices(3));
+	this->sphere_indices = std::move(createSphereIndices(3));
+	desc.ByteWidth = sizeof(vec3) * this->sphere_vertices.size();
+	desc.Usage = D3D11_USAGE_IMMUTABLE;
+	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	data.pSysMem = this->sphere_vertices.data();
+	HRESULT hr = device->CreateBuffer(&desc, &data, this->sphere_vertex_buffer.GetAddressOf());
+	CHECK(hr);
+	desc.ByteWidth = sizeof(uint32) * this->sphere_indices.size();
+	desc.Usage = D3D11_USAGE_IMMUTABLE;
+	desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	data.pSysMem = this->sphere_indices.data();
+	hr = device->CreateBuffer(&desc, &data, this->sphere_index_buffer.GetAddressOf());
+	CHECK(hr);
+}

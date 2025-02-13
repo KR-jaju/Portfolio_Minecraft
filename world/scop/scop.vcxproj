@@ -166,17 +166,34 @@
     <ClInclude Include="BlockTextureData.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraMatrices.h" />
+    <ClInclude Include="ChunkLoader.h" />
     <ClInclude Include="ChunkMeshBuilder.h" />
-    <ClInclude Include="ChunkMeshRegistry.h" />
+    <ClInclude Include="ControlBlock.h" />
+    <ClInclude Include="Frustum.h" />
+    <ClInclude Include="IntVector2.h" />
+    <ClInclude Include="IntVector3.h" />
+    <ClInclude Include="MainCamera.h" />
+    <ClInclude Include="Promise.h" />
+    <ClInclude Include="DirectionalShadowCaster.h" />
+    <ClInclude Include="RenderGroup.h" />
+    <ClInclude Include="SubchunkMeshGenerator.h" />
     <ClInclude Include="ChunkSection.h" />
+    <ClInclude Include="ChunkState.h" />
+    <ClInclude Include="ConstantRegistry.h" />
     <ClInclude Include="Cubemap.h" />
+    <ClInclude Include="EventManager.h" />
+    <ClInclude Include="EventQueue.h" />
+    <ClInclude Include="Future.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="InputRegistry.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="LightingPass.h" />
+    <ClInclude Include="LightRegistry.h" />
     <ClInclude Include="LRUCache.h" />
+    <ClInclude Include="OrderedMap.h" />
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="RenderChunk.h" />
+    <ClInclude Include="SubchunkMesh.h" />
     <ClInclude Include="ChunkRegistry.h" />
     <ClInclude Include="DeferredGraphics.h" />
     <ClInclude Include="DeferredRendering.h" />
@@ -225,9 +242,10 @@
     <ClInclude Include="SkyPass.h" />
     <ClInclude Include="SsaoRender.h" />
     <ClInclude Include="SsaoBlur.h" />
-    <ClInclude Include="SubchunkMeshData.h" />
-    <ClInclude Include="SubchunkSnapshot.h" />
+    <ClInclude Include="StripedMutex.h" />
     <ClInclude Include="Terrain.h" />
+    <ClInclude Include="VisibilityProcessor.h" />
+    <ClInclude Include="World.h" />
     <ClInclude Include="TerrainDB.h" />
     <ClInclude Include="TerrainGenerator.h" />
     <ClInclude Include="TerrainSystem.h" />
@@ -241,7 +259,6 @@
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextureArray.h" />
-    <ClInclude Include="TextureRegistry.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="ToneMappingPass.h" />
     <ClInclude Include="Transform.h" />
@@ -265,25 +282,30 @@
     <ClCompile Include="BlockTextureData.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ChunkMeshBuilder.cpp" />
-    <ClCompile Include="ChunkMeshRegistry.cpp" />
     <ClCompile Include="ChunkRegistry.cpp" />
+    <ClCompile Include="ConstantRegistry.cpp" />
     <ClCompile Include="Cubemap.cpp" />
     <ClCompile Include="DeferredGraphics.cpp" />
     <ClCompile Include="DeferredRendering.cpp" />
     <ClCompile Include="DeferredBuffer.cpp" />
+    <ClCompile Include="DirectionalLight.cpp" />
+    <ClCompile Include="DirectionalShadowCaster.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityGeometry.cpp" />
     <ClCompile Include="EntityRegistry.cpp" />
     <ClCompile Include="EntityRender.cpp" />
     <ClCompile Include="EntitySystem.cpp" />
     <ClCompile Include="EntityUtils.cpp" />
+    <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GeometryPass.cpp" />
     <ClCompile Include="GeoRender.cpp" />
     <ClCompile Include="InputLayouts.cpp" />
     <ClCompile Include="InputRegistry.cpp" />
     <ClCompile Include="LightingPass.cpp" />
+    <ClCompile Include="LightRegistry.cpp" />
     <ClCompile Include="LightSystem.cpp" />
+    <ClCompile Include="MainCamera.cpp" />
     <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="MyQueue.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -304,7 +326,8 @@
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RasterizerState.cpp" />
-    <ClCompile Include="RenderChunk.cpp" />
+    <ClCompile Include="RenderGroup.cpp" />
+    <ClCompile Include="SubchunkMesh.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderingContext.cpp" />
     <ClCompile Include="RenderPipeline.cpp" />
@@ -318,8 +341,11 @@
     <ClCompile Include="SkyPass.cpp" />
     <ClCompile Include="SsaoRender.cpp" />
     <ClCompile Include="SsaoBlur.cpp" />
-    <ClCompile Include="SubchunkMeshData.cpp" />
+    <ClCompile Include="SubchunkMeshGenerator.cpp" />
     <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="ThreadPool.cpp" />
+    <ClCompile Include="VisibilityProcessor.cpp" />
+    <ClCompile Include="World.cpp" />
     <ClCompile Include="TerrainDB.cpp" />
     <ClCompile Include="TerrainGenerator.cpp" />
     <ClCompile Include="TerrainSystem.cpp" />
@@ -331,8 +357,6 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
     <ClCompile Include="TextureArray.cpp" />
-    <ClCompile Include="TextureRegistry.cpp" />
-    <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="ToneMappingPass.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="VertexShader.cpp" />
@@ -468,6 +492,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="ShadowPassVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="ShadowPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

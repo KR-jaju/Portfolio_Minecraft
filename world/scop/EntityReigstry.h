@@ -2,6 +2,7 @@
 
 #include "InputRegistry.h"
 #include "Entity.h"
+#include "Player.h"
 
 class Player;
 class Entity;

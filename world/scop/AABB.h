@@ -7,4 +7,5 @@ struct AABB
 
 	bool	isInsideExclusive(vec3 point) const;
 	bool	isInsideInclusive(vec3 point) const;
+	void	expand(vec3 point);
 };

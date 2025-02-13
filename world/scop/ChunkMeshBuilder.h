@@ -1,19 +1,22 @@
 #pragma once
 
 #include "Chunk.h"
-#include "TextureRegistry.h"
-
-#include "SubchunkSnapshot.h"
+#include "ConstantRegistry.h"
 
 class ChunkMeshBuilder
 {
 public:
-	ChunkMeshBuilder(TextureRegistry& texture_registry, SubchunkSnapshot& snapshot);
+	ChunkMeshBuilder(ConstantRegistry const& constant_registry, Chunk const& chunk, Chunk const& east, Chunk const& west, Chunk const& north, Chunk const& south);
 
 	void	buildOpaqueMesh(std::vector<ChunkVertex>& vertices, std::vector<uint32>& indices);
 private:
-	TextureRegistry& texture_registry;
-	SubchunkSnapshot& snapshot;
+	//ConstantRegistry const& constant_reg
+	std::vector<BlockTextureData> const& block_texture_data;
+	Chunk const& chunk;
+	Chunk const& east;
+	Chunk const& west;
+	Chunk const& north;
+	Chunk const& south;
 
 	BlockData	getBlock(int x, int y, int z) const;
 

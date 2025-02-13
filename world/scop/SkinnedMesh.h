@@ -10,6 +10,11 @@
 class SkinnedMesh : public Asset
 {
 public:
+	static constexpr AssetType getAssetType()
+	{
+		return AssetType::AnimationClip;
+	}
+
 	SkinnedMesh(std::wstring const& path);
 
 	BoneData const& getBindposes() const;

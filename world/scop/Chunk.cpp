@@ -1,19 +1,5 @@
 #include "pch.h"
 #include "Chunk.h"
-#include "RenderingContext.h"
-//#include "DepthMap.h"
-#include "Buffer.h"
-
-
-
-
-
-Chunk::Chunk(int chunk_x, int chunk_z)
-	: chunk_x(chunk_x),
-	chunk_z(chunk_z),
-	block_data()
-{
-}
 
 BlockData	Chunk::getBlock(int x, int y, int z) const
 {

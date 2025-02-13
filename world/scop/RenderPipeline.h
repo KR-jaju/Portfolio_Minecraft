@@ -1,24 +1,21 @@
 #pragma once
 
 #include "RenderPass.h"
+#include "RenderGroup.h"
 #include "Renderer.h"
 
 class RenderPipeline
 {
 public:
-    RenderPipeline(TextureRegistry& texture_registry, Graphics& graphics, RenderingContext& context);
+    RenderPipeline(RenderingContext& context, AssetManager& asset_manager);
 
-    template <typename T>
-    void    addPass()
-    {
-        this->pass_list.emplace_back(make_unique<T>(this->renderer, this->context));
-        this->output = this->context.ping ? context.textures["ldr_temporary[0]"] : context.textures["ldr_temporary[1]"]; // 최종 출력, 스왑체인으로 옮겨야함.
-    }
-    void render();
+    void addPass(std::unique_ptr<RenderPass> pass);
+    void render(RenderGroup const& render_group);
 private:
+    AssetManager& asset_manager;
     std::vector<std::unique_ptr<RenderPass>> pass_list;
     ComPtr<ID3D11Texture2D> output;
-    Renderer renderer;
+    //Renderer renderer;
     RenderingContext& context;
 
     void    blit();

@@ -48,6 +48,31 @@ public:
 			0
 		);
 	}
+
+	static ComPtr<ID3D11Buffer> createBuffer(ComPtr<ID3D11Device> device, D3D11_BUFFER_DESC desc, D3D11_SUBRESOURCE_DATA data)
+	{
+		ComPtr<ID3D11Buffer> result;
+		//D3D11_BUFFER_DESC desc = {};
+		//desc.Usage = D3D11_USAGE_DYNAMIC;
+		//desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		//desc.ByteWidth = size;
+		//desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+		//D3D11_SUBRESOURCE_DATA data = {};
+		//data.pSysMem = &resource;
+
+		HRESULT hr = device->CreateBuffer(&desc, &data, result.GetAddressOf());
+		CHECK(hr);
+	}
+	static ComPtr<ID3D11Buffer> createBuffer(ComPtr<ID3D11Device> device, D3D11_BUFFER_DESC desc)
+	{
+		ComPtr<ID3D11Buffer> result;
+
+		HRESULT hr = device->CreateBuffer(&desc, nullptr, result.GetAddressOf());
+		CHECK(hr);
+
+		return (result);
+	}
 private:
 	ComPtr<ID3D11Device> device;
 	ComPtr<ID3D11DeviceContext> context;

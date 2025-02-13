@@ -4,16 +4,15 @@
 #include "InputLayouts.h"
 #include "CameraMatrices.h"
 
-RenderingContext::RenderingContext(TextureRegistry& texture_registry, EntityRegistry& entity_registry, ChunkMeshRegistry& chunk_mesh_registry, Graphics& graphics, int width, int height)
-	: texture_registry(texture_registry),
-	entity_registry(entity_registry),
-	chunk_mesh_registry(chunk_mesh_registry),
+RenderingContext::RenderingContext(AssetManager& asset_manager, Graphics& graphics, int width, int height)
+	: asset_manager(asset_manager),
 	graphics(graphics),
 	viewport_width(width),
 	viewport_height(height),
 	rasterizer_state(graphics.getDevice(), D3D11_FILL_SOLID, D3D11_CULL_BACK),
 	steve(graphics.getDevice(), L"steve.png"),
 	camera_data(graphics.getDevice(), graphics.getContext(), CameraMatrices{}),
+	light_cb(graphics.getDevice(), graphics.getContext(), DirectionalLightData{}),
 	chunk_geometry_vs(graphics.getDevice(), L"GeometryPassVS.hlsl", "main", "vs_5_0"),
 	chunk_geometry_ps(graphics.getDevice(), L"GeometryPassPS.hlsl", "main", "ps_5_0"),
 	chunk_input_layout(graphics.getDevice(), InputLayouts::layout_chunk, 4, this->chunk_geometry_vs.getBlob()),

@@ -13,6 +13,9 @@
 #include <utility>
 #include <functional>
 
+#include "IntVector2.h"
+#include "IntVector3.h"
+
 using int8 = __int8;
 using int16 = __int16;
 using int32 = __int32;
@@ -30,8 +33,10 @@ using color = DirectX::XMFLOAT4;
 
 using Quaternion = DirectX::XMVECTOR;
 
-using ivec2 = DirectX::XMINT2;
-using ivec3 = DirectX::XMINT3;
+//using ivec2 = DirectX::XMINT2;
+//using ivec3 = DirectX::XMINT3;
+using ivec2 = IntVector2;
+using ivec3 = IntVector3;
 using ivec4 = DirectX::XMINT4;
 
 
@@ -45,6 +50,14 @@ struct Vertex {
 struct VertexUV {
 	vec3 pos;
 	vec2 uv;
+};
+
+struct ChunkVertex
+{
+	vec3 position;
+	vec2 uv;
+	int texture_id;
+	int	direction;
 };
 
 struct MVP {
@@ -63,20 +76,15 @@ struct BoneData {
 	Mat matrix[32];
 };
 
-namespace std
+struct BlockTextureData
 {
-	template <>
-	struct hash<ivec2>
-	{
-		size_t operator()(const ivec2& p) const
-		{
-			size_t h1 = std::hash<int32_t>{}(p.x);
-			size_t h2 = std::hash<int32_t>{}(p.y);
-
-			return h1 ^ (h2 + 0x9e3779b9 + (h1 << 6) + (h1 >> 2));
-		}
-	};
-}
+	int east;
+	int west;
+	int up;
+	int down;
+	int north;
+	int south;
+};
 
 enum class Direction : uint8_t
 {

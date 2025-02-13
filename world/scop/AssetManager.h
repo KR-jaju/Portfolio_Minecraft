@@ -12,17 +12,35 @@ public:
 	template <typename T>
 	std::shared_ptr<T> load(std::wstring const& path)
 	{
+        std::shared_ptr<T> resource = nullptr;
         auto it = this->resources.find(path);
 
-        if (it != this->resources.end()) {
-            std::shared_ptr<T> const& casted = std::dynamic_pointer_cast<T>(it->second);
-            if (!casted)
+        if (it != this->resources.end())
+        {
+            resource = std::move(std::dynamic_pointer_cast<T>(it->second));
+            if (resource == nullptr)
                 throw std::runtime_error("Resource type mismatch for path");
-            return casted;
+            return resource;
         }
-        std::shared_ptr<T> resource = std::make_shared<T>(path);
+        constexpr AssetType type = T::getAssetType();
+        if constexpr (type == AssetType::Texture2D ||
+            type == AssetType::TextureArray ||
+            type == AssetType::Cubemap)
+        {
+            resource = std::make_shared<T>(graphics, path);
+        }
+        else if constexpr (T::getAssetType() == AssetType::AnimationClip ||
+            T::getAssetType() == AssetType::SkinnedMesh ||
+            T::getAssetType() == AssetType::Blob)
+        {
+            resource = std::make_shared<T>(path);
+        }
+        else
+        {
+            //static_assert(_)
+        }
         this->resources[path] = resource;
-        return resource;
+        return std::move(resource);
 	}
     void    unload(std::wstring const& path);
 private:

@@ -36,7 +36,7 @@ double PerlinNoise::getNoise3D(
     double z, 
     int octav, 
     double delta_amplitude
-)
+) const
 {
     double total = 0;
     double total_amplitude = 0;

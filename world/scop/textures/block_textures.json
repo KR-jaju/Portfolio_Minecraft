@@ -1,0 +1,9 @@
+{
+  "textures": [
+    "./textures/pbr/grass_top/grass_ao.png",
+    "./textures/pbr/grass_top/grass_basecolor.png",
+    "./textures/pbr/grass_top/grass_height.png",
+    "./textures/pbr/grass_top/grass_normal.png",
+    "./textures/pbr/grass_top/grass_roughness.png"
+  ]
+}

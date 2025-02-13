@@ -1,28 +1,14 @@
 #pragma once
 
-#include <array>
-#include "WorldUtils.h"
-
 #include "BlockData.h"
-class RenderingContext;
-
-class DepthMap;
-class Graphics;
-class DeferedGraphics;
-class VertexShader;
-template <typename T> class Buffer;
 
 
-class Chunk
+struct Chunk
 {
-public:
-	Chunk(int chunk_x, int chunk_z);
+	BlockData	block_data[16 * 256 * 16];
+
 	BlockData	getBlock(int x, int y, int z) const;
 	void	setBlock(int x, int y, int z, BlockData data);
-private:
-	int chunk_x;
-	int chunk_z;
-	BlockData	block_data[16 * 256 * 16];
 };
 
 

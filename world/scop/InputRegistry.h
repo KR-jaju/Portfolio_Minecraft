@@ -36,7 +36,6 @@ private:
 	long	mouse_dx;
 	long	mouse_dy;
 
-	//std::unordered_map<
 	std::unordered_map<USHORT, bool>	key_down; // 처음 눌린 키들의 집합
 	std::unordered_map<USHORT, bool>	key_up; // 처음 떼진 키들의 집합
 	std::unordered_map<USHORT, bool>	key_pressed;

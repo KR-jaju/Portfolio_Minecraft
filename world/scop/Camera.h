@@ -11,10 +11,18 @@ public:
 	vec3	getRotation() const;
 	float	getFov() const;
 
-	Mat		getViewMatrix() const;
-	Mat		getProjectionMatrix() const;
-	Mat		getViewInverseMatrix() const;
+	void	updateMatrices();
+
+	Mat const&	getViewMatrix() const;
+	Mat const&	getProjectionMatrix() const;
+	Mat const& getViewInverseMatrix() const;
+	Mat const&	getViewInverseTransposeMatrix() const;
 private:
+	Mat view;
+	Mat projection;
+	Mat view_inverse;
+	Mat view_inverse_transpose;
+
 	vec3 position;
 	vec3 rotation;
 	float fov;

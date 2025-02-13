@@ -13,21 +13,30 @@ _CRT_SECURE_NO_WARNINGS를 추가합니다.
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image.h"
 #include "stb_image_write.h"
+#include <fstream>
 
-TextureArray::TextureArray(
-	ComPtr<ID3D11Device> device,
-	ComPtr<ID3D11DeviceContext> context,
-	vector<wstring> const& path_arr
-)
+TextureArray::TextureArray(Graphics& graphics, std::wstring const& path)
 {
+	ComPtr<ID3D11Device> device = graphics.getDevice();
+	ComPtr<ID3D11DeviceContext> context = graphics.getContext();
 	D3D11_TEXTURE2D_DESC texture_desc;
-	vector<ID3D11Texture2D*> textures(path_arr.size());
-	for (int i = 0; i < path_arr.size(); i++) {
+	std::ifstream ifs(path);
+	nlohmann::json json;
+
+	ifs >> json;
+	auto const& paths = json["textures"];
+
+	vector<ID3D11Texture2D*> textures(paths.size());
+	for (int i = 0; i < paths.size(); i++) {
+		std::string texture_path = paths[i].get<std::string>();
+		std::wstring w_path(texture_path.size(), L'\0');
+
+		std::mbstowcs(&w_path[0], texture_path.c_str(), texture_path.size());
 		ID3D11Resource* resource = nullptr;
 		HRESULT hr = CreateWICTextureFromFile(
 			device.Get(),
 			context.Get(),
-			path_arr[i].c_str(),
+			w_path.c_str(),
 			&resource,
 			nullptr
 		); // img 파일 읽어서 texture resource 변환
@@ -50,7 +59,7 @@ TextureArray::TextureArray(
 		}
 	}
 
-	texture_desc.ArraySize = static_cast<UINT>(path_arr.size());
+	texture_desc.ArraySize = static_cast<UINT>(paths.size());
 	texture_desc.Usage = D3D11_USAGE_DEFAULT;
 	texture_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	texture_desc.CPUAccessFlags = 0;

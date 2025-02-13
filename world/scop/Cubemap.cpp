@@ -2,9 +2,9 @@
 #include "Cubemap.h"
 #include <directxtk/DDSTextureLoader.h>
 
-Cubemap::Cubemap(ComPtr<ID3D11Device> device, wstring const& path)
-	: device(device)
+Cubemap::Cubemap(Graphics& graphics, wstring const& path)
 {
+	ComPtr<ID3D11Device> device = graphics.getDevice();
 	ComPtr<ID3D11Texture2D> texture;
 
 	HRESULT hr = CreateDDSTextureFromFileEx(

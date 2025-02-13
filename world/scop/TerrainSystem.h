@@ -1,32 +1,40 @@
 #pragma once
 
+#include "ThreadPool.h"
+
 #include "WorldUtils.h"
 #include "PerlinNoise.h"
-
+#include "EntityReigstry.h"
+#include "EventManager.h"
 #include "ChunkRegistry.h"
-#include "ChunkMeshRegistry.h"
 #include "Entity.h"
 #include "TerrainDB.h"
-
-class MapUtils;
+#include "ConstantRegistry.h"
+#include "SubchunkMeshGenerator.h"
+#include "Future.h"
 
 class TerrainSystem
 {
 public:
-	TerrainSystem(MapUtils* minfo);
-	TerrainSystem(EntityRegistry& entity_registry, ChunkRegistry& chunk_registry, ChunkMeshRegistry& chunk_mesh_registry);
+	TerrainSystem(ThreadPool& thread_pool, ConstantRegistry const& constant_registry, TerrainDB& terrain_db, EventManager const& event_manager, EntityRegistry& entity_registry, ChunkRegistry& chunk_registry);
 
-	void fillChunk(Index2 const& c_idx, Index2 const& c_pos);
-	void createHeighMap();
-
-	void update();
-
+	void	update();
 private:
+	ThreadPool& thread_pool;
+	ConstantRegistry const& constant_registry;
+	TerrainDB& terrain_db;
+	EventManager const& event_manager;
 	EntityRegistry& entity_registry;
 	ChunkRegistry& chunk_registry;
-	ChunkMeshRegistry& chunk_mesh_registry;
 
-	//MapUtils* m_info;
-	//PerlinNoise perlin_noise;
+	SubchunkMeshGenerator subchunk_mesh_generator;
+	std::unordered_map<ivec2, Future<std::shared_ptr<Chunk const>>> chunk_future_buffer; // 로드 중인 청크 선물 버퍼
+	std::unordered_map<ivec3, ThreadPool::JobID> pending_subchunk_meshes; // 생성 중인 서브청크 메쉬 작업 ID 버퍼
+
+	void	initChunkWindow();
+
+	void	applyChunkChanges(); // 변화한 청크 적용
+	void	updateChunkWindow(ivec2 center); // 청크 윈도우 업데이트(변화만)
+	void	updateSubchunkMeshes(); // 서브청크 메쉬 업데이트
 };
 

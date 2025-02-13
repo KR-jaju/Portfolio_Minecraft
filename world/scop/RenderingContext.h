@@ -11,23 +11,17 @@
 
 #include <unordered_map>
 
-#include "ChunkMeshRegistry.h"
-#include "LRUCache.h"
-
+#include "LightRegistry.h"
+#include "CameraMatrices.h"
 
 #include "Texture.h"
 
 struct RenderingContext
 {
-	RenderingContext(TextureRegistry& texture_registry, EntityRegistry& entity_registry, ChunkMeshRegistry& chunk_mesh_registry, Graphics& graphics, int width, int height);
+	RenderingContext(AssetManager& asset_manager, Graphics& graphics, int width, int height);
 
-	TextureRegistry& texture_registry;
-	EntityRegistry& entity_registry;
-	ChunkMeshRegistry& chunk_mesh_registry;
+	AssetManager& asset_manager;
 	Graphics& graphics;
-
-	std::pair<int, int> center;
-	int	render_distance;
 
 	int viewport_width;
 	int viewport_height;
@@ -36,7 +30,10 @@ struct RenderingContext
 
 	Texture steve;
 
+	CameraMatrices camera_matrices;
 	ConstantBuffer camera_data;
+
+	ConstantBuffer light_cb;
 
 	VertexShader chunk_geometry_vs;
 	PixelShader chunk_geometry_ps;

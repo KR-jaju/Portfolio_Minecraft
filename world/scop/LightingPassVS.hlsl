@@ -1,4 +1,14 @@
 
+cbuffer CameraMatrices : register(b0)
+{
+    matrix view;
+    matrix projection;
+    matrix view_projection;
+    matrix view_inverse_transpose;
+    matrix projection_inverse;
+    int2   dimension;
+};
+
 struct PSInput
 {
     float4 position : SV_POSITION;
@@ -21,6 +31,6 @@ PSInput main(uint vertexID : SV_VertexID) {
     };
 
     output.position = float4(positions[vertexID], 0.0, 1.0);
-    output.uv = texcoords[vertexID];
+    output.uv = texcoords[vertexID] * dimension;
     return output;
 }

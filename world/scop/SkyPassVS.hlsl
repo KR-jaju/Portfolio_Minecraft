@@ -6,6 +6,7 @@ cbuffer CameraMatrices : register(b0)
     matrix view_projection;
     matrix view_inverse_transpose;
     matrix projection_inverse;
+    int2   dimension;
 };
 
 cbuffer WorldMatrix : register(b1)
@@ -27,10 +28,9 @@ struct PS_INPUT
 PS_INPUT main(VS_INPUT input)
 {
     PS_INPUT output;
-    float4 os_position = float4(input.position, 0); // 화면에서 가장 멀리있는 점
-    float4 ws_position = mul(os_position, world);
+    float4 ws_position = float4(input.position, 0.0); // 화면에서 가장 멀리있는 점
     float4 vs_position = mul(ws_position, view);
-    
+
     vs_position = float4(vs_position.xyz * 200, 1.0);
     output.position = mul(vs_position, projection);
     output.direction = ws_position;

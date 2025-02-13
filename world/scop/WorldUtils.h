@@ -157,14 +157,6 @@ struct VertexBlockUV {
 	int shadow_flag = 0;
 };
 
-struct ChunkVertex
-{
-	vec3 position;
-	vec2 uv;
-	int texture_id;
-	int	direction;
-};
-
 struct VertexGeo { // temp
 	int type;
 	vec3 pos;
@@ -195,7 +187,7 @@ struct CamPos {
 	Mat view;
 };
 
-struct Light {
-	Mat view = Mat::Identity;
-	Mat proj = Mat::Identity;
-};
+//struct Light {
+//	Mat view = Mat::Identity;
+//	Mat proj = Mat::Identity;
+//};

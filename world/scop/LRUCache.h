@@ -62,6 +62,12 @@ public:
         this->cache_map[value.first] = this->cache_list.begin();
     }
 
+    size_type size() const { return (this->cache_list.size()); }
+    mapped_type& front() { return (this->cache_list.front()); }
+    mapped_type const& front() const { return (this->cache_list.front()); }
+    mapped_type& back() { return (this->cache_list.back()); }
+    mapped_type const& back() const { return (this->cache_list.back()); }
+
     size_type   count(Key const& key) const
     {
         return (this->cache_map.count(key));

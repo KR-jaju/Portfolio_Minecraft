@@ -3,8 +3,10 @@
 #include "InputLayouts.h"
 #include "DeferredRendering.h"
 #include "EntityReigstry.h"
-#include "ChunkMeshRegistry.h"
-//#include "ChunkRegistry.h"
+#include "ChunkRegistry.h"
+
+#include "DirectionalShadowCaster.h"
+#include "MainCamera.h"
 
 #include "RenderingContext.h"
 
@@ -16,7 +18,7 @@ class RenderSystem
 {
 public:
 	//RenderSystem(MapUtils* minfo, EntityUtils* einfo);
-	RenderSystem(TextureRegistry& texture_registry, EntityRegistry& entity_registry, ChunkMeshRegistry& chunk_mesh_registry, Graphics& graphics, int width, int height);
+	RenderSystem(AssetManager& asset_manager, LightRegistry& light_registry, EntityRegistry& entity_registry, ChunkRegistry& chunk_registry, Graphics& graphics, int width, int height);
 	//void setDeffGraphics(DeferredGraphics* defer_graphic);
 	//void Render(
 	//	Mat const& cam_view,
@@ -27,16 +29,14 @@ public:
 	//);
 	void	update();
 private:
-
-	TextureRegistry& texture_registry;
+	AssetManager& asset_manager;
+	LightRegistry& light_registry;
 	EntityRegistry& entity_registry;
-	ChunkMeshRegistry& chunk_mesh_registry;
+	ChunkRegistry& chunk_registry;
 	Graphics& graphics;
-	RenderingContext context;
-	RenderPipeline render_pipeline;
 
-	//MapUtils* m_info;
-	//EntityUtils* e_info;
-	//shared_ptr<DeferredRendering> r_deff;
+	RenderingContext context;
+	DirectionalShadowCaster directional_shadow_caster; // shadow_caster
+	MainCamera main_camera; // Main Camera
 };
 

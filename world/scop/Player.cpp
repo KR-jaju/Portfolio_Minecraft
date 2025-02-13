@@ -35,6 +35,7 @@ void	Player::update(float dt)
 		this->groundMovement(this->input_registry, dt);
 	else // in air
 		this->airMovement(this->input_registry, dt);
+	this->camera.updateMatrices();
 }
 
 void	Player::groundMovement(InputRegistry& input_registry, float dt)

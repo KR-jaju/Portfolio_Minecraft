@@ -31,14 +31,6 @@ struct VS_INPUT
     int4 bone : BLENDINDICES;
 };
 
-//struct PS_INPUT
-//{
-//    float4 pos : SV_Position;
-//    float3 normal : NORMAL;
-//    float3 world_pos : POSITION;
-//    float2 uv : TEXCOORD;
-//};
-
 struct PS_INPUT
 {
     float4 position : SV_Position;
@@ -56,7 +48,7 @@ PS_INPUT main(VS_INPUT input)
     bs_position += mul(mul(ls_position, bindposes[input.bone.z]), bone[input.bone.z]) * input.weight.z;
     bs_position += mul(mul(ls_position, bindposes[input.bone.w]), bone[input.bone.w]) * input.weight.w;
     //position = object_position;
-    bs_position = bs_position.xzy * float3(1.0, -1.0, 1.0); // 블렌더 루트 본 그냥 하드코딩
+    bs_position = bs_position.xzy * float3(1.0, -1.0, 1.0); // 블렌더 루트 본 그냥 하드코딩 (x축 -90도 회전)
     float4 ws_position = mul(float4(bs_position, 1.0), world);
     float4 vs_position = mul(ws_position, view);
 

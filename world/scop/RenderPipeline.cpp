@@ -3,18 +3,27 @@
 #include "ChunkRegistry.h"
 #include "Player.h"
 
-RenderPipeline::RenderPipeline(TextureRegistry& texture_registry, Graphics& graphics, RenderingContext& context)
-    : context(context),
-    renderer(context)
+RenderPipeline::RenderPipeline(RenderingContext& context, AssetManager& asset_manager)
+    : asset_manager(asset_manager),
+    context(context)
+    //renderer(context)
 {
 
 }
 
-void RenderPipeline::render()
+void    RenderPipeline::addPass(std::unique_ptr<RenderPass> pass)
 {
+    pass->initialize(this->context, this->asset_manager); // TODO: 순서를 명확하게
+    this->pass_list.emplace_back(std::move(pass));
+    this->output = this->context.ping ? context.textures["ldr_temporary[0]"] : context.textures["ldr_temporary[1]"]; // 최종 출력, 스왑체인으로 옮겨야함.
+}
+
+void RenderPipeline::render(RenderGroup const& render_group)
+{
+    //TODO : render_group DI하기
     for (std::unique_ptr<RenderPass>& pass : this->pass_list)
     {
-        pass->execute(this->context);
+        pass->execute(this->context, render_group);
     }
     this->blit();
 }

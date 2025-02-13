@@ -6,7 +6,8 @@
 class TerrainGenerator
 {
 public:
-	void	generate(int chunk_x, int chunk_z, Chunk& dest);
+	TerrainGenerator();
+	void	generate(int chunk_x, int chunk_z, Chunk& dest) const;
 private:
 	PerlinNoise perlin_noise;
 };

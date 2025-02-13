@@ -1,12 +1,17 @@
 #pragma once
-class TextureArray
+
+#include "Graphics.h"
+#include "Asset.h"
+
+class TextureArray : public Asset
 {
 public:
-	TextureArray(
-		ComPtr<ID3D11Device> device,
-		ComPtr<ID3D11DeviceContext> context,
-		vector<wstring> const& path_arr
-	);
+	static constexpr AssetType getAssetType()
+	{
+		return AssetType::TextureArray;
+	}
+
+	TextureArray(Graphics& graphics, std::wstring const& path);
 	TextureArray(
 		ComPtr<ID3D11Device> device,
 		ComPtr<ID3D11DeviceContext> context,

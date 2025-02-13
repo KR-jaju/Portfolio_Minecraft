@@ -16,7 +16,7 @@ public:
         double z,
         int octav,
         double delta_amplitude
-    );
+    ) const;
 private:
     double fade(double t) const;
     double lerp(double a, double b, double u) const;

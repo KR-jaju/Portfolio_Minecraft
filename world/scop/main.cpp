@@ -289,7 +289,7 @@
 #include "scop.h"
 #include "WindowCallback.h"
 #include "Window.h"
-#include "Terrain.h"
+#include "World.h"
 
 void RegisterRawInput(HWND hwnd) {
     RAWINPUTDEVICE rid = {};
@@ -311,9 +311,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_ int       nCmdShow)
 {
     Window  window(hInstance, nCmdShow, L"WindowClassName", 800, 800);
-    Terrain game(window.getHandle(), 800, 800);
+    World game(window.getHandle(), 800, 800);
     MSG msg = {};
-
+    //std::ios_base::sync_with_stdio(false);
     RegisterRawInput(window.getHandle());
     window.setCallback(&game);
     while (true)

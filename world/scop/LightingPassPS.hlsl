@@ -10,7 +10,15 @@ cbuffer CameraMatrices : register(b0)
     matrix view_projection;
     matrix view_inverse_transpose;
     matrix projection_inverse;
+    int2   dimension;
 };
+
+cbuffer Light : register(b1)
+{
+    matrix light_view_projection[4];
+    float3 light_direction;
+    float3 light_color; // color(rgb) + bias
+}
 
 struct PSInput {
     float4 position : SV_POSITION;
@@ -55,9 +63,9 @@ float3  reconstructViewSpacePosition(float2 uv, float depth)
 
 float4 main(PSInput input) : SV_TARGET
 {
-    float4 albedo = albedo_texture.Sample(sampler0, input.uv);
-    float2 normal = normal_texture.Sample(sampler0, input.uv).xy;
-    float  depth = depth_texture.Sample(sampler0, input.uv);
+    float4 albedo = albedo_texture.Load(int3(input.uv, 0));
+    float2 normal = normal_texture.Load(int3(input.uv, 0)).xy;
+    float  depth = depth_texture.Load(int3(input.uv, 0));
     float3 vs_position = reconstructViewSpacePosition(input.uv, depth);
 
     float metallic = 0.0;
@@ -67,7 +75,8 @@ float4 main(PSInput input) : SV_TARGET
 
     float3 V = normalize(-vs_position.xyz); // view dir
     float3 N = float3(normal, sqrt(1 - dot(normal, normal))); // 뷰 스페이스 노말 복원
-    float3 L = mul(ws_L, (float3x3)view);
+    float3 L = int3(0, 1, 0);
+        //normalize(-light_direction.xyz);
     float3 H = normalize(V + L);
 
     float NdotL = max(0.0, dot(N, L));

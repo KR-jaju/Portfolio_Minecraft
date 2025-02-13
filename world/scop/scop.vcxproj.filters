@@ -231,7 +231,7 @@
     <ClInclude Include="Chunk.h">
       <Filter>소스 파일\World\Chunk</Filter>
     </ClInclude>
-    <ClInclude Include="Terrain.h">
+    <ClInclude Include="World.h">
       <Filter>소스 파일\World</Filter>
     </ClInclude>
     <ClInclude Include="TextureArray.h">
@@ -366,7 +366,7 @@
     <ClInclude Include="GeometryPass.h">
       <Filter>소스 파일\World\Map\System\RenderSystem\GeometryPass</Filter>
     </ClInclude>
-    <ClInclude Include="RenderChunk.h">
+    <ClInclude Include="SubchunkMesh.h">
       <Filter>소스 파일\World\Chunk</Filter>
     </ClInclude>
     <ClInclude Include="ThreadPool.h">
@@ -374,9 +374,6 @@
     </ClInclude>
     <ClInclude Include="ChunkMeshBuilder.h">
       <Filter>소스 파일\World\Chunk</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureRegistry.h">
-      <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="BlockTextureData.h">
       <Filter>소스 파일</Filter>
@@ -404,15 +401,6 @@
     </ClInclude>
     <ClInclude Include="ChunkSection.h">
       <Filter>소스 파일\World\Map\System\TerrainSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="ChunkMeshRegistry.h">
-      <Filter>소스 파일\World\Chunk</Filter>
-    </ClInclude>
-    <ClInclude Include="SubchunkMeshData.h">
-      <Filter>소스 파일\World\Chunk</Filter>
-    </ClInclude>
-    <ClInclude Include="SubchunkSnapshot.h">
-      <Filter>소스 파일\World\Chunk</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsSystem.h">
       <Filter>소스 파일\World\Map\System</Filter>
@@ -489,6 +477,69 @@
     <ClInclude Include="SkyPass.h">
       <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>소스 파일\World\Map\System\LightSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="LightRegistry.h">
+      <Filter>소스 파일\World\Map\System\LightSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantRegistry.h">
+      <Filter>소스 파일\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>소스 파일\World\Chunk</Filter>
+    </ClInclude>
+    <ClInclude Include="EventQueue.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ChunkLoader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ChunkState.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="OrderedMap.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="StripedMutex.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SubchunkMeshGenerator.h">
+      <Filter>소스 파일\World\Chunk</Filter>
+    </ClInclude>
+    <ClInclude Include="Future.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Promise.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalShadowCaster.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MainCamera.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlBlock.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="VisibilityProcessor.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustum.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderGroup.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="IntVector2.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="IntVector3.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -536,7 +587,7 @@
     <ClCompile Include="Block.cpp">
       <Filter>소스 파일\World\Block</Filter>
     </ClCompile>
-    <ClCompile Include="Terrain.cpp">
+    <ClCompile Include="World.cpp">
       <Filter>소스 파일\World</Filter>
     </ClCompile>
     <ClCompile Include="TextureArray.cpp">
@@ -644,17 +695,11 @@
     <ClCompile Include="RenderingContext.cpp">
       <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
     </ClCompile>
-    <ClCompile Include="ThreadPool.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderChunk.cpp">
+    <ClCompile Include="SubchunkMesh.cpp">
       <Filter>소스 파일\World\Chunk</Filter>
     </ClCompile>
     <ClCompile Include="ChunkMeshBuilder.cpp">
       <Filter>소스 파일\World\Chunk</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureRegistry.cpp">
-      <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="BlockTextureData.cpp">
       <Filter>소스 파일</Filter>
@@ -673,12 +718,6 @@
     </ClCompile>
     <ClCompile Include="InputRegistry.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ChunkMeshRegistry.cpp">
-      <Filter>소스 파일\World\Chunk</Filter>
-    </ClCompile>
-    <ClCompile Include="SubchunkMeshData.cpp">
-      <Filter>소스 파일\World\Chunk</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSystem.cpp">
       <Filter>소스 파일\World\Map\System</Filter>
@@ -742,6 +781,39 @@
     </ClCompile>
     <ClCompile Include="SkyPass.cpp">
       <Filter>소스 파일\World\Map\System\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="LightRegistry.cpp">
+      <Filter>소스 파일\World\Map\System\LightSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantRegistry.cpp">
+      <Filter>소스 파일\World</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>소스 파일\World\Map\System\LightSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>소스 파일\World\Chunk</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadPool.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SubchunkMeshGenerator.cpp">
+      <Filter>소스 파일\World\Chunk</Filter>
+    </ClCompile>
+    <ClCompile Include="MainCamera.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalShadowCaster.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="VisibilityProcessor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderGroup.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -862,6 +934,9 @@
     </FxCompile>
     <FxCompile Include="SkyPassPS.hlsl">
       <Filter>소스 파일\World\WorldShaderFIle</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowPassVS.hlsl">
+      <Filter>소스 파일\World\WorldShaderFIle\DefferedShader\Geometry</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

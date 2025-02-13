@@ -1,20 +1,17 @@
 #include "pch.h"
 #include "ChunkMeshBuilder.h"
-#include "TextureRegistry.h"
 
-ChunkMeshBuilder::ChunkMeshBuilder(TextureRegistry& texture_registry, SubchunkSnapshot& snapshot)
-	: texture_registry(texture_registry),
-	snapshot(snapshot)
+ChunkMeshBuilder::ChunkMeshBuilder(ConstantRegistry const& constant_registry, Chunk const& chunk, Chunk const& east, Chunk const& west, Chunk const& north, Chunk const& south)
+	: block_texture_data(constant_registry.block_texture_data),
+	chunk(chunk),
+	east(east), west(west), north(north), south(south)
 {
 
 }
 
-
-
-
 void ChunkMeshBuilder::buildOpaqueMesh(std::vector<ChunkVertex>& vertices, std::vector<uint32>& indices)
 {
-	for (int y = 0; y < 16; ++y)
+	for (int y = 0; y < 256; ++y)
 	{
 		for (int z = 0; z < 16; ++z)
 		{
@@ -36,36 +33,24 @@ void ChunkMeshBuilder::buildOpaqueMesh(std::vector<ChunkVertex>& vertices, std::
 
 BlockData ChunkMeshBuilder::getBlock(int x, int y, int z) const
 {
-	SubchunkSnapshot const& snapshot = this->snapshot;
-
 	if (x < 0)
-		return snapshot.west[z + y * 16];
-	if (x >= 16)
-		return snapshot.east[z + y * 16];
-	if (y < 0)
-		return snapshot.down[x + z * 16];
-	if (y >= 16)
-		return snapshot.up[x + z * 16];
-	if (z < 0)
-		return snapshot.south[x + y * 16];
-	if (z >= 16)
-		return snapshot.north[x + y * 16];
-	return (snapshot.center[x + z * 16 + y * 16 * 16]);
+		return this->west.getBlock(15, y, z);
+	else if (x >= 16)
+		return this->east.getBlock(0, y, z);
+	else if (z < 0)
+		return this->south.getBlock(x, y, 15);
+	else if (z >= 16)
+		return this->north.getBlock(x, y, 0);
+	else if (y < 0)
+		return (0);
+	else if (y >= 256)
+		return (0);
+	return this->chunk.getBlock(x, y, z);
 }
 
 void	ChunkMeshBuilder::buildOpaqueBlock(std::vector<ChunkVertex>& vertices, std::vector<uint32>& indices, int x, int y, int z, BlockData block_data)
 {
-	BlockTextureData textures;
-	
-	//switch (block_id)
-	//{
-	//case 1:
-	//	textures = this->texture_registry.getBlockTextureData(block_id);
-
-	//	break;
-	//}
-
-	textures = this->texture_registry.getBlockTextureData(block_data);
+	BlockTextureData textures = this->block_texture_data[block_data.getId()];
 
 	if (this->getBlock(x - 1, y, z).isOpaque())
 		textures.west = -1;

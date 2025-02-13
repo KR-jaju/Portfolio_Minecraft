@@ -1,7 +1,11 @@
 #include "pch.h"
 #include "TerrainGenerator.h"
 
-void	TerrainGenerator::generate(int chunk_x, int chunk_z, Chunk& dest)
+TerrainGenerator::TerrainGenerator()
+	: perlin_noise()
+{}
+
+void	TerrainGenerator::generate(int chunk_x, int chunk_z, Chunk& dest) const
 {
 	float const offset = 0.000001f;
 
