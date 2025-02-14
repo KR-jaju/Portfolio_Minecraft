@@ -33,11 +33,12 @@ MainCamera::MainCamera(Graphics& graphics, AssetManager& asset_manager, LightReg
 
 */
 
-void MainCamera::render(RenderGroup const& render_group)
+void MainCamera::render(Camera& camera, RenderGroup const& render_group)
 {
 	VisibilityProcessor visibility(render_group);
-	RenderGroup const& result = visibility.getVisibleObjects();
-	Camera const& camera = this->player.getCamera();
+	RenderGroup const& result = visibility
+		.applyFrustumCulling(camera.getFrustum())
+		.getVisibleObjects();
 	ComPtr<ID3D11DeviceContext> dc = this->graphics.getContext();
 
 	int width = 800;
@@ -46,11 +47,12 @@ void MainCamera::render(RenderGroup const& render_group)
 	float const aspect_ratio = width / height;
 	CameraMatrices& vp = this->camera_matrices;
 
-	vp.view = camera.getViewMatrix().Transpose();
-	vp.projection = camera.getProjectionMatrix().Transpose();
-	vp.view_projection = vp.projection * vp.view;
-	vp.view_inverse_transpose = camera.getViewInverseTransposeMatrix().Transpose();
-	vp.projection_inverse = vp.projection.Transpose().Invert().Transpose();
+	vp.view = camera.getViewMatrix();
+	vp.projection = camera.getProjectionMatrix();
+	vp.view_projection = vp.view * vp.projection;
+	vp.view_inverse_transpose = camera.getViewInverseTransposeMatrix();
+	vp.projection_inverse = Mat::identity(); // TODO: invert¾î¶±ÇØ
+		//vp.projection.transpose().invert();
 	vp.dimension = ivec4(width, height, 0, 0);
 
 	this->camera_data.update(vp);

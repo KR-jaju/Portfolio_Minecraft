@@ -1,10 +1,9 @@
 #include "pch.h"
 #include "Player.h"
 
-Player::Player(InputRegistry& input_registry, AssetManager& asset_manager)
-	: 
+Player::Player(Camera& camera, InputRegistry& input_registry, AssetManager& asset_manager)
+	: camera(camera),
 	input_registry(input_registry),
-	camera(),
 	position(vec3(0, 40, 0)),
 	rotation(vec3::Zero),
 	owns_input(false),
@@ -29,13 +28,13 @@ void	Player::update(float dt)
 {
 	std::pair<float, float> mouse_delta = input_registry.getMouseDelta();
 
-	this->rotation.y -= mouse_delta.first;
+	this->rotation.y += mouse_delta.first;
 	this->rotation.x -= mouse_delta.second;
 	if (this->contact_faces & DIRECTION_DOWN_BIT)
 		this->groundMovement(this->input_registry, dt);
 	else // in air
 		this->airMovement(this->input_registry, dt);
-	this->camera.updateMatrices();
+	this->camera.update();
 }
 
 void	Player::groundMovement(InputRegistry& input_registry, float dt)
@@ -50,8 +49,8 @@ void	Player::groundMovement(InputRegistry& input_registry, float dt)
 	float offset_x = std::cosf(this->time * 0.5f) * this->bobbing_amplitude * 2.0f;
 	float offset_y = std::sinf(this->time) * this->bobbing_amplitude;
 	vec3 target = this->position + vec3(0, 1.6f, 0);
-	float target_vx = (cosine * movement.first + sine * movement.second) * move_speed;
-	float target_vz = (-sine * movement.first + cosine * movement.second) * move_speed;
+	float target_vx = (cosine * movement.first - sine * movement.second) * move_speed;
+	float target_vz = (sine * movement.first + cosine * movement.second) * move_speed;
 	vec3 dvxz = vec3(target_vx - this->velocity.x, 0, target_vz - this->velocity.z); // 속도의 변화량
 
 	if (h_speed > 0.1f) // 움직인다면
@@ -85,8 +84,8 @@ void	Player::airMovement(InputRegistry& input_registry, float dt)
 	float	h_speed = std::sqrtf(this->velocity.x * this->velocity.x + this->velocity.z * this->velocity.z);
 
 	vec3 target = this->position + vec3(0, 1.6f, 0);
-	float target_vx = (cosine * movement.first + sine * movement.second) * move_speed;
-	float target_vz = (-sine * movement.first + cosine * movement.second) * move_speed;
+	float target_vx = (cosine * movement.first - sine * movement.second) * move_speed;
+	float target_vz = (sine * movement.first + cosine * movement.second) * move_speed;
 	vec3 dvxz = vec3(target_vx - this->velocity.x, 0, target_vz - this->velocity.z); // 속도의 변화량
 
 	this->camera.setPosition(vec3::Lerp(camera.getPosition(), target, 0.4));

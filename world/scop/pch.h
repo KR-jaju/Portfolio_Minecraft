@@ -16,6 +16,8 @@
 #include "IntVector2.h"
 #include "IntVector3.h"
 
+#include "Matrix.h"
+
 using int8 = __int8;
 using int16 = __int16;
 using int32 = __int32;
@@ -40,7 +42,8 @@ using ivec3 = IntVector3;
 using ivec4 = DirectX::XMINT4;
 
 
-using Mat = DirectX::SimpleMath::Matrix;
+using Mat = Matrix;
+//DirectX::SimpleMath::Matrix;
 
 struct Vertex {
 	vec3 pos;
@@ -61,15 +64,15 @@ struct ChunkVertex
 };
 
 struct MVP {
-	Mat model = Mat::Identity;
-	Mat view = Mat::Identity;
-	Mat proj = Mat::Identity;
+	Mat model = Mat::identity();
+	Mat view = Mat::identity();
+	Mat proj = Mat::identity();
 };
 
 struct CameraData
 {
-	Mat view = Mat::Identity;
-	Mat projection = Mat::Identity;
+	Mat view = Mat::identity();
+	Mat projection = Mat::identity();
 };
 
 struct CameraMatrices

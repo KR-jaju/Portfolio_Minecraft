@@ -340,8 +340,8 @@ void	LightSystem::updateMainLight(Camera const& camera)
 	DirectionalLight const& light = this->light_registry.main_light;
 	DirectionalLightData& light_data = this->light_registry.main_light_data;
 
-	light_data.incoming_direciton = vec3::TransformNormal(light.getDirection(), camera.getViewMatrix());
+	/*light_data.incoming_direciton = vec3::TransformNormal(light.getDirection(), camera.getViewMatrix());
 	light_data.color = light.getColor();
 	for (int level = 0; level < 4; ++level)
-		light_data.view_projection[level] = light.getViewProjectionMatrix(level);
+		light_data.view_projection[level] = light.getViewProjectionMatrix(level);*/
 }

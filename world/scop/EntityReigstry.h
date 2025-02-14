@@ -53,7 +53,7 @@ public:
 		std::size_t index;
 	};
 
-	EntityRegistry(InputRegistry& input_registry, AssetManager &asset_manager);
+	EntityRegistry(Camera& camera, InputRegistry& input_registry, AssetManager &asset_manager);
 
 	template<typename T>
 	std::shared_ptr<T> createEntity()

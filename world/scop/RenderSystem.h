@@ -18,7 +18,7 @@ class RenderSystem
 {
 public:
 	//RenderSystem(MapUtils* minfo, EntityUtils* einfo);
-	RenderSystem(AssetManager& asset_manager, LightRegistry& light_registry, EntityRegistry& entity_registry, ChunkRegistry& chunk_registry, Graphics& graphics, int width, int height);
+	RenderSystem(Camera& camera, AssetManager& asset_manager, LightRegistry& light_registry, EntityRegistry& entity_registry, ChunkRegistry& chunk_registry, Graphics& graphics, int width, int height);
 	//void setDeffGraphics(DeferredGraphics* defer_graphic);
 	//void Render(
 	//	Mat const& cam_view,
@@ -29,6 +29,7 @@ public:
 	//);
 	void	update();
 private:
+	Camera& camera;
 	AssetManager& asset_manager;
 	LightRegistry& light_registry;
 	EntityRegistry& entity_registry;

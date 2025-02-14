@@ -3,9 +3,9 @@
 #include "Entity.h"
 #include "Player.h"
 
-EntityRegistry::EntityRegistry(InputRegistry& input_registry, AssetManager& asset_manager)
+EntityRegistry::EntityRegistry(Camera& camera, InputRegistry& input_registry, AssetManager& asset_manager)
 	: asset_manager(asset_manager),
-    player(make_shared<Player>(input_registry, asset_manager))
+    player(make_shared<Player>(camera, input_registry, asset_manager))
 {
 	this->entity_pool.emplace_back(this->player);
 }

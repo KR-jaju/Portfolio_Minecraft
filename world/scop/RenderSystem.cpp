@@ -2,8 +2,9 @@
 #include "RenderSystem.h"
 #include "Player.h"
 
-RenderSystem::RenderSystem(AssetManager& asset_manager, LightRegistry& light_registry, EntityRegistry& entity_registry, ChunkRegistry& chunk_registry, Graphics& graphics, int width, int height)
-	: asset_manager(asset_manager),
+RenderSystem::RenderSystem(Camera& camera, AssetManager& asset_manager, LightRegistry& light_registry, EntityRegistry& entity_registry, ChunkRegistry& chunk_registry, Graphics& graphics, int width, int height)
+	: camera(camera),
+	asset_manager(asset_manager),
 	light_registry(light_registry),
 	entity_registry(entity_registry),
 	chunk_registry(chunk_registry),
@@ -36,6 +37,6 @@ void	RenderSystem::update()
 		}
 	}
 	//this->directional_shadow_caster.render(render_group);
-	this->main_camera.render(render_group);
+	this->main_camera.render(this->camera, render_group);
 	this->graphics.present();
 }

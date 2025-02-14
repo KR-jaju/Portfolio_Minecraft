@@ -25,31 +25,31 @@ void	DirectionalLight::update(Camera const& camera)
 	Mat const& projection = camera.getProjectionMatrix();
 	Mat const& inv_view = camera.getViewInverseMatrix();
 	int const levels = 4;
-	vec3 const forward = vec3::TransformNormal(vec3(0, 0, 1), inv_view);
-	float const near_plane = projection._43 / (projection._33 - 1.0f);
-	float const far_plane = projection._43 / (projection._33 + 1.0f);
-	float height = 1.0f / projection._21;
-	float width = height * projection._21 / projection._11;
-	Mat light_view = Mat::CreateLookAt(this->direction, -this->direction, forward); // TODO: 老窜 客靛
+	//vec3 const forward = vec3::TransformNormal(vec3(0, 0, 1), inv_view);
+	//float const near_plane = projection._43 / (projection._33 - 1.0f);
+	//float const far_plane = projection._43 / (projection._33 + 1.0f);
+	//float height = 1.0f / projection._21;
+	//float width = height * projection._21 / projection._11;
+	//Mat light_view = Mat::CreateLookAt(this->direction, -this->direction, forward); // TODO: 老窜 客靛
 
-	for (int level = 0; level < levels; ++level)
-	{
-		float near_t = calculateSplitPlane(near_plane, far_plane, static_cast<float>(level) / levels);
-		float far_t = calculateSplitPlane(near_plane, far_plane, static_cast<float>(level + 1) / levels);
-		AABB projection_box = {vec3::Transform(vec3::Transform(vec3(-width, -height, near_t), inv_view), light_view), vec3::Zero};
+	//for (int level = 0; level < levels; ++level)
+	//{
+	//	float near_t = calculateSplitPlane(near_plane, far_plane, static_cast<float>(level) / levels);
+	//	float far_t = calculateSplitPlane(near_plane, far_plane, static_cast<float>(level + 1) / levels);
+	//	AABB projection_box = {vec3::Transform(vec3::Transform(vec3(-width, -height, near_t), inv_view), light_view), vec3::Zero};
 
-		projection_box.expand(vec3::Transform(vec3::Transform(vec3(width, -height, near_t), inv_view), light_view));
-		projection_box.expand(vec3::Transform(vec3::Transform(vec3(-width, height, near_t), inv_view), light_view));
-		projection_box.expand(vec3::Transform(vec3::Transform(vec3(width, -height, near_t), inv_view), light_view));
-		projection_box.expand(vec3::Transform(vec3::Transform(vec3(-width, -height, far_t), inv_view), light_view));
-		projection_box.expand(vec3::Transform(vec3::Transform(vec3(width, -height, far_t), inv_view), light_view));
-		projection_box.expand(vec3::Transform(vec3::Transform(vec3(-width, height, far_t), inv_view), light_view));
-		projection_box.expand(vec3::Transform(vec3::Transform(vec3(width, -height, far_t), inv_view), light_view));
+	//	projection_box.expand(vec3::Transform(vec3::Transform(vec3(width, -height, near_t), inv_view), light_view));
+	//	projection_box.expand(vec3::Transform(vec3::Transform(vec3(-width, height, near_t), inv_view), light_view));
+	//	projection_box.expand(vec3::Transform(vec3::Transform(vec3(width, -height, near_t), inv_view), light_view));
+	//	projection_box.expand(vec3::Transform(vec3::Transform(vec3(-width, -height, far_t), inv_view), light_view));
+	//	projection_box.expand(vec3::Transform(vec3::Transform(vec3(width, -height, far_t), inv_view), light_view));
+	//	projection_box.expand(vec3::Transform(vec3::Transform(vec3(-width, height, far_t), inv_view), light_view));
+	//	projection_box.expand(vec3::Transform(vec3::Transform(vec3(width, -height, far_t), inv_view), light_view));
 
-		vec3 min = projection_box.center - projection_box.extents;
-		vec3 max = projection_box.center + projection_box.extents;
-		this->view_projection[level] = light_view * Mat::CreateOrthographicOffCenter(min.x, max.x, min.y, max.y, min.z - 200, max.z);
-	}
+	//	vec3 min = projection_box.center - projection_box.extents;
+	//	vec3 max = projection_box.center + projection_box.extents;
+	//	this->view_projection[level] = light_view * Mat::CreateOrthographicOffCenter(min.x, max.x, min.y, max.y, min.z - 200, max.z);
+	//}
 }
 
 vec3 DirectionalLight::getDirection() const

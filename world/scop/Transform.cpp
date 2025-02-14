@@ -3,9 +3,9 @@
 
 Mat	Transform::toMatrix() const
 {
-	Mat t = Mat::CreateTranslation(this->position);
-	Mat r = Mat::CreateFromQuaternion(this->rotation);
-	Mat s = Mat::CreateScale(this->scale);
+	Mat t = Mat::createTranslation(this->position);
+	Mat r = Mat::createFromQuaternion(this->rotation);
+	Mat s = Mat::createScale(this->scale);
 	
 	return (s * r * t);
 }

@@ -233,7 +233,7 @@ void GeometryPass::createDepthTexture(RenderingContext& context)
 
 void	GeometryPass::createSubchunkConstantBuffer(RenderingContext& context)
 {
-	Mat initial_data = Mat::Identity;
+	Mat initial_data = Mat::identity();
 	ComPtr<ID3D11Device> device = context.graphics.getDevice();
 	ComPtr<ID3D11Buffer> subchunk_cb;
 	D3D11_BUFFER_DESC desc = {};

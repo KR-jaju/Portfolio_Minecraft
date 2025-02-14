@@ -12,11 +12,11 @@ static float signedDistance(vec4 plane, vec3 point)
 bool	Frustum::intersectsSphere(vec3 center, float radius) const
 {
 	return (
-		signedDistance(this->left_plane, center) < radius &&
-		signedDistance(this->right_plane, center) < radius &&
-		signedDistance(this->top_plane, center) < radius &&
-		signedDistance(this->bottom_plane, center) < radius &&
-		signedDistance(this->near_plane, center) < radius &&
-		signedDistance(this->far_plane, center) < radius
+		signedDistance(this->left_plane, center) > -radius &&
+		signedDistance(this->right_plane, center) > -radius &&
+		signedDistance(this->top_plane, center) > -radius &&
+		signedDistance(this->bottom_plane, center) > -radius &&
+		signedDistance(this->near_plane, center) > -radius &&
+		signedDistance(this->far_plane, center) > -radius
 		);
 }

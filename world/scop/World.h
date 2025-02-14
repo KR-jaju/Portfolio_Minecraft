@@ -64,6 +64,7 @@ private:
 
 	Graphics graphics;
 
+	Camera camera;
 	InputRegistry	input_registry;
 	EventManager event_manager;
 	AssetManager asset_manager;

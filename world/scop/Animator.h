@@ -16,8 +16,6 @@ public:
 
 		for (int i = 0; i < bone_count; ++i)
 			this->calculateBoneHierarchy(armature, i, processed);
-		for (int i = 0; i < bone_count; ++i)
-			this->pose.matrix[i] = this->pose.matrix[i].Transpose();
 	}
 	T& getContext() { return (this->transition_data); }
 	BoneData const& getPose() const { return (this->pose); }
