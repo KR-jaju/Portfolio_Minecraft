@@ -7,6 +7,7 @@ ThreadPool::ThreadPool(size_t thread_count)
     workers.reserve(thread_count);
     for (size_t i = 0; i < thread_count; ++i)
         workers.emplace_back([this]() { this->workerMain(); });
+    this->is_pending.max_load_factor(0.7);
 }
 
 ThreadPool::~ThreadPool()

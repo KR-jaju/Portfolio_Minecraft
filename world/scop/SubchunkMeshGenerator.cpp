@@ -9,17 +9,18 @@ SubchunkMeshGenerator::SubchunkMeshGenerator(ThreadPool& thread_pool, std::vecto
 
 }
 
-ThreadPool::JobID	SubchunkMeshGenerator::dispatch(std::shared_ptr<Chunk const> const& center,
+ThreadPool::JobID	SubchunkMeshGenerator::dispatch(ComPtr<ID3D11Device> device, 
+	std::shared_ptr<Chunk const> const& center,
 	std::shared_ptr<Chunk const> const& east,
 	std::shared_ptr<Chunk const> const& west,
 	std::shared_ptr<Chunk const> const& north,
 	std::shared_ptr<Chunk const> const& south, ivec3 subchunk_idx)
 {
 
-	ThreadPool::JobID job_id = this->thread_pool.enqueue(ThreadPool::Priority::Normal, [this, center, east, west, north, south, subchunk_idx]()
+	ThreadPool::JobID job_id = this->thread_pool.enqueue(ThreadPool::Priority::Normal, [this, device, center, east, west, north, south, subchunk_idx]()
 	{
 		MeshGenerationTask task(this->block_texture_data, center, east, west, north, south, subchunk_idx.y);
-		SubchunkMesh mesh = task();
+		SubchunkMesh mesh = std::move(task(device));
 		std::unique_lock<std::mutex> lock(this->result_mutex);
 
 		this->results.emplace(subchunk_idx, std::move(mesh));
@@ -47,11 +48,11 @@ SubchunkMeshGenerator::MeshGenerationTask::MeshGenerationTask(
 	east(east), west(west),
 	north(north), south(south), subchunk_y(subchunk_y) {}
 
-SubchunkMesh SubchunkMeshGenerator::MeshGenerationTask::operator()()
+SubchunkMesh SubchunkMeshGenerator::MeshGenerationTask::operator()(ComPtr<ID3D11Device> device)
 {
 	this->generateOpaqueMesh();
 
-	return SubchunkMesh(std::move(this->vertices), std::move(this->indices));
+	return SubchunkMesh(device, std::move(this->vertices), std::move(this->indices));
 }
 
 void SubchunkMeshGenerator::MeshGenerationTask::generateOpaqueMesh()

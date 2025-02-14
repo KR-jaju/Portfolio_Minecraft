@@ -15,10 +15,11 @@
 class TerrainSystem
 {
 public:
-	TerrainSystem(ThreadPool& thread_pool, ConstantRegistry const& constant_registry, TerrainDB& terrain_db, EventManager const& event_manager, EntityRegistry& entity_registry, ChunkRegistry& chunk_registry);
+	TerrainSystem(ComPtr<ID3D11Device> device, ThreadPool& thread_pool, ConstantRegistry const& constant_registry, TerrainDB& terrain_db, EventManager const& event_manager, EntityRegistry& entity_registry, ChunkRegistry& chunk_registry);
 
 	void	update();
 private:
+	ComPtr<ID3D11Device> device;
 	ThreadPool& thread_pool;
 	ConstantRegistry const& constant_registry;
 	TerrainDB& terrain_db;

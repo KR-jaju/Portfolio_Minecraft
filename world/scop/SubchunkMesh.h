@@ -8,7 +8,7 @@ class SubchunkMesh
 {
 public:
 	SubchunkMesh();
-	SubchunkMesh(std::vector<ChunkVertex>&& vertices, std::vector<uint32>&& indices);
+	SubchunkMesh(ComPtr<ID3D11Device> device, std::vector<ChunkVertex>&& vertices, std::vector<uint32>&& indices);
 
 	void	draw(Graphics& graphics) const;
 private:

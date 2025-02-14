@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "RenderGroup.h"
 
+
+RenderGroup::Subchunk::Subchunk(std::reference_wrapper<SubchunkMesh const> mesh, int x, int y, int z)
+	: mesh(mesh), x(x), y(y), z(z) {}
+
 RenderGroup::RenderGroup()
 {
 	this->subchunks.reserve(50 * 50);

@@ -21,7 +21,7 @@ World::World(HWND hwnd, int width, int height)
 	entity_registry(this->input_registry, this->asset_manager),
 	chunk_registry(),
 	entity_system(this->input_registry, this->entity_registry),
-	terrain_system(this->thread_pool, this->constant_registry, this->terrain_db, this->event_manager, this->entity_registry, this->chunk_registry),
+	terrain_system(this->graphics.getDevice(), this->thread_pool, this->constant_registry, this->terrain_db, this->event_manager, this->entity_registry, this->chunk_registry),
 	physics_system(this->block_data_registry, this->entity_registry, this->chunk_registry),
 	light_system(this->light_registry, this->entity_registry),
 	render_system(this->asset_manager, this->light_registry, this->entity_registry, this->chunk_registry, this->graphics, width, height)
@@ -72,13 +72,13 @@ void World::update()
 	auto t5 = Clock::now();
 	this->render_system.update();
 	auto t6 = Clock::now();
-	std::cout << "Total input update: " << Duration(t1 - t0).count() << " ms\n";
-	std::cout << "Total entity update: " << Duration(t2 - t1).count() << " ms\n";
-	std::cout << "Total terrain update: " << Duration(t3 - t2).count() << " ms\n";
-	std::cout << "Total physics update: " << Duration(t4 - t3).count() << " ms\n";
-	std::cout << "Total light update: " << Duration(t5 - t4).count() << " ms\n";
-	std::cout << "Total render update: " << Duration(t6 - t5).count() << " ms\n";
-	std::cout << "Total total update: " << Duration(t6 - t0).count() << " ms\n\n";
+	//std::cout << "Total input update: " << Duration(t1 - t0).count() << " ms\n";
+	//std::cout << "Total entity update: " << Duration(t2 - t1).count() << " ms\n";
+	//std::cout << "Total terrain update: " << Duration(t3 - t2).count() << " ms\n";
+	//std::cout << "Total physics update: " << Duration(t4 - t3).count() << " ms\n";
+	//std::cout << "Total light update: " << Duration(t5 - t4).count() << " ms\n";
+	//std::cout << "Total render update: " << Duration(t6 - t5).count() << " ms\n";
+	//std::cout << "Total total update: " << Duration(t6 - t0).count() << " ms\n\n";
 }
 
 

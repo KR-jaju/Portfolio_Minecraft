@@ -4,8 +4,9 @@
 #include <iostream>
 #include <chrono>
 
-TerrainSystem::TerrainSystem(ThreadPool& thread_pool, ConstantRegistry const& constant_registry, TerrainDB& terrain_db, EventManager const& event_manager, EntityRegistry& entity_registry, ChunkRegistry& chunk_registry)
-	: thread_pool(thread_pool),
+TerrainSystem::TerrainSystem(ComPtr<ID3D11Device> device, ThreadPool& thread_pool, ConstantRegistry const& constant_registry, TerrainDB& terrain_db, EventManager const& event_manager, EntityRegistry& entity_registry, ChunkRegistry& chunk_registry)
+	: device(device),
+	thread_pool(thread_pool),
 	constant_registry(constant_registry),
 	terrain_db(terrain_db),
 	event_manager(event_manager),
@@ -26,6 +27,7 @@ void TerrainSystem::update()
 	this->applyChunkChanges(); // 변화한 청크 적용
 	this->updateChunkWindow(player.getChunkIndex()); // 청크 윈도우 업데이트(변화만)
 	this->updateSubchunkMeshes(); // 서브청크 메쉬 업데이트
+
 }
 
 void	TerrainSystem::initChunkWindow() // N * N을 전부 요청 (초기화)
@@ -119,43 +121,152 @@ void	TerrainSystem::updateChunkWindow(ivec2 center) // toroidal addressing updat
 
 void TerrainSystem::updateSubchunkMeshes()
 {
+	using Clock = std::chrono::high_resolution_clock;
+	using Duration = std::chrono::duration<double, std::milli>;
+
 	int const simulation_distance = 5;
 	int const generation_distance = this->chunk_registry.addressing_half_stride - 1;
 	ivec2 offset = this->chunk_registry.addressing_offset;
 
-	for (ivec3 subchunk_idx : this->chunk_registry.dirty_subchunks) // 메쉬 생성이 필요한 모든 서브청크 인덱스
+	// --- 측정용 변수들 ---
+	auto totalStart = Clock::now();
+
+	double chunkGetAccum = 0.0;  // getChunk() 5번 호출( center, east, west, north, south ) 소요 시간 누적
+	double dispatchAccum = 0.0;  // this->subchunk_mesh_generator.dispatch() 소요 시간 누적
+	double tryEmplaceAccum = 0.0;  // pending_subchunk_meshes.try_emplace(...) + cancel(...) 소요 시간 누적
+
+	// --------------------
+
+	auto t0 = Clock::now();
+	for (ivec3 subchunk_idx : this->chunk_registry.dirty_subchunks)
 	{
+		// 1) getChunk() 시간 측정
+		auto chunkGetStart = Clock::now();
 		std::shared_ptr<Chunk const> const& center = this->chunk_registry.getChunk(subchunk_idx.x, subchunk_idx.z);
-		if (center == nullptr)
-			continue;
 		std::shared_ptr<Chunk const> const& east = this->chunk_registry.getChunk(subchunk_idx.x + 1, subchunk_idx.z);
 		std::shared_ptr<Chunk const> const& west = this->chunk_registry.getChunk(subchunk_idx.x - 1, subchunk_idx.z);
 		std::shared_ptr<Chunk const> const& north = this->chunk_registry.getChunk(subchunk_idx.x, subchunk_idx.z + 1);
 		std::shared_ptr<Chunk const> const& south = this->chunk_registry.getChunk(subchunk_idx.x, subchunk_idx.z - 1);
+		auto chunkGetEnd = Clock::now();
+		chunkGetAccum += Duration(chunkGetEnd - chunkGetStart).count();
 
-		if (east == nullptr || west == nullptr || north == nullptr || south == nullptr)
+		if (center == nullptr || east == nullptr || west == nullptr || north == nullptr || south == nullptr)
 			continue;
 
-		ThreadPool::JobID job_id = this->subchunk_mesh_generator.dispatch(center, east, west, north, south, subchunk_idx);
+		// 2) dispatch() 시간 측정
+		auto dispatchStart = Clock::now();
+		ThreadPool::JobID job_id = this->subchunk_mesh_generator.dispatch(
+			this->device, center, east, west, north, south, subchunk_idx
+		);
+		auto dispatchEnd = Clock::now();
+		dispatchAccum += Duration(dispatchEnd - dispatchStart).count();
 
-		// 기존 메쉬 생성 작업이 있다면 중단 처리 / 덮어쓰기
+		// 3) try_emplace + cancel 시간 측정
+		auto tryEmplaceStart = Clock::now();
 		if (auto [it, exists] = this->pending_subchunk_meshes.try_emplace(subchunk_idx, job_id); !exists)
 		{
 			this->thread_pool.cancel(it->second); // 기존 작업 취소
 			it->second = job_id;                  // 새로운 작업 ID로 갱신
 		}
+		auto tryEmplaceEnd = Clock::now();
+		tryEmplaceAccum += Duration(tryEmplaceEnd - tryEmplaceStart).count();
 	}
-	this->chunk_registry.dirty_subchunks.clear(); // TODO: 나중에 재사용할 수도 있으니 필요에 따라 조정
-	std::unordered_map<ivec3, SubchunkMesh> result;
+	// --- 전체 Dispatch 루프가 끝난 시간 ---
+	auto t1 = Clock::now();
 
+	// 결과를 받는 시간 측정(원래대로)
+	std::unordered_map<ivec3, SubchunkMesh> result;
 	result.max_load_factor(0.7);
+
 	this->subchunk_mesh_generator.drainResult(result);
 	for (auto& pair : result)
 	{
 		this->chunk_registry.setSubchunkMesh(pair.first, std::move(pair.second));
-		this->pending_subchunk_meshes.erase(pair.first); // 더 이상 대기 중이 아님
+		this->pending_subchunk_meshes.erase(pair.first);
 	}
+
+	auto t2 = Clock::now();
+
+	// 전체 끝난 시간
+	auto totalEnd = Clock::now();
+
+	// 기존 출력
+	std::cout << "Total dispatch: "
+		<< Duration(t1 - t0).count()
+		<< " ms, count:" << this->chunk_registry.dirty_subchunks.size()
+		<< "\n";
+	std::cout << "Total setSubchunkMesh: "
+		<< Duration(t2 - t1).count()
+		<< " ms, count:" << result.size()
+		<< "\n\n";
+
+	// --- 세부 측정 결과 출력 ---
+	double totalLoopTime = Duration(t1 - t0).count();
+	double totalTime = Duration(totalEnd - totalStart).count();
+
+	std::cout << "=== [Detailed Timing] ===\n";
+	std::cout << "Loop(subchunk) total        : " << totalLoopTime << " ms\n";
+	std::cout << "└─ getChunk() Accum         : " << chunkGetAccum << " ms\n";
+	std::cout << "└─ dispatch() Accum         : " << dispatchAccum << " ms\n";
+	std::cout << "└─ try_emplace() Accum      : " << tryEmplaceAccum << " ms\n";
+	std::cout << "---------------------------\n";
+	std::cout << "Remaining post-loop (drain) : " << Duration(t2 - t1).count() << " ms\n";
+	std::cout << "Entire function total       : " << totalTime << " ms\n";
+	std::cout << "===========================\n\n";
+
+	this->chunk_registry.dirty_subchunks.clear();
 }
+
+
+//void TerrainSystem::updateSubchunkMeshes()
+//{
+//	using Clock = std::chrono::high_resolution_clock;
+//	using Duration = std::chrono::duration<double, std::milli>;
+//
+//
+//	int const simulation_distance = 5;
+//	int const generation_distance = this->chunk_registry.addressing_half_stride - 1;
+//	ivec2 offset = this->chunk_registry.addressing_offset;
+//
+//	auto t0 = Clock::now();
+//	for (ivec3 subchunk_idx : this->chunk_registry.dirty_subchunks) // 메쉬 생성이 필요한 모든 서브청크 인덱스
+//	{
+//		std::shared_ptr<Chunk const> const& center = this->chunk_registry.getChunk(subchunk_idx.x, subchunk_idx.z);
+//		if (center == nullptr)
+//			continue;
+//		std::shared_ptr<Chunk const> const& east = this->chunk_registry.getChunk(subchunk_idx.x + 1, subchunk_idx.z);
+//		std::shared_ptr<Chunk const> const& west = this->chunk_registry.getChunk(subchunk_idx.x - 1, subchunk_idx.z);
+//		std::shared_ptr<Chunk const> const& north = this->chunk_registry.getChunk(subchunk_idx.x, subchunk_idx.z + 1);
+//		std::shared_ptr<Chunk const> const& south = this->chunk_registry.getChunk(subchunk_idx.x, subchunk_idx.z - 1);
+//
+//		if (east == nullptr || west == nullptr || north == nullptr || south == nullptr)
+//			continue;
+//
+//		ThreadPool::JobID job_id = this->subchunk_mesh_generator.dispatch(this->device, center, east, west, north, south, subchunk_idx);
+//
+//		// 기존 메쉬 생성 작업이 있다면 중단 처리 / 덮어쓰기
+//		if (auto [it, exists] = this->pending_subchunk_meshes.try_emplace(subchunk_idx, job_id); !exists)
+//		{
+//			this->thread_pool.cancel(it->second); // 기존 작업 취소
+//			it->second = job_id;                  // 새로운 작업 ID로 갱신
+//		}
+//	}
+//	std::unordered_map<ivec3, SubchunkMesh> result;
+//	auto t1 = Clock::now();
+//	result.max_load_factor(0.7);
+//	this->subchunk_mesh_generator.drainResult(result);
+//	for (auto& pair : result)
+//	{
+//		this->chunk_registry.setSubchunkMesh(pair.first, std::move(pair.second));
+//		this->pending_subchunk_meshes.erase(pair.first); // 더 이상 대기 중이 아님
+//	}
+//	auto t2 = Clock::now();
+//
+//	std::cout << "Total dispatch: " << Duration(t1 - t0).count() << " ms, count:" << this->chunk_registry.dirty_subchunks.size() << "\n";
+//	std::cout << "Total setSubchunkMesh: " << Duration(t2 - t1).count() << " ms, count:" << result.size() << "\n\n";
+//
+//	this->chunk_registry.dirty_subchunks.clear(); // TODO: 나중에 재사용할 수도 있으니 필요에 따라 조정
+//}
 
 
 

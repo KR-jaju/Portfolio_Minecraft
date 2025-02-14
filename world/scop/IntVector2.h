@@ -82,7 +82,7 @@ namespace std
     template <>
     struct hash<IntVector2>
     {
-        size_t operator()(const IntVector2& p) const
+        size_t operator()(IntVector2 p) const
         {
             size_t h1 = std::hash<int32_t>{}(p.x);
             size_t h2 = std::hash<int32_t>{}(p.y);

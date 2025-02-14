@@ -8,7 +8,7 @@ class SubchunkMeshGenerator
 {
 public:
 	SubchunkMeshGenerator(ThreadPool& thread_pool, std::vector<BlockTextureData> const& block_texture_data);
-	ThreadPool::JobID dispatch(std::shared_ptr<Chunk const> const& center, std::shared_ptr<Chunk const> const& east, std::shared_ptr<Chunk const> const& west, std::shared_ptr<Chunk const> const& north, std::shared_ptr<Chunk const> const& south, ivec3 subchunk_idx);
+	ThreadPool::JobID dispatch(ComPtr<ID3D11Device> device, std::shared_ptr<Chunk const> const& center, std::shared_ptr<Chunk const> const& east, std::shared_ptr<Chunk const> const& west, std::shared_ptr<Chunk const> const& north, std::shared_ptr<Chunk const> const& south, ivec3 subchunk_idx);
 	void drainResult(std::unordered_map<ivec3, SubchunkMesh>& output);
 private:
 	ThreadPool& thread_pool;
@@ -24,7 +24,7 @@ private:
 			std::shared_ptr<Chunk const> const& west,
 			std::shared_ptr<Chunk const> const& north,
 			std::shared_ptr<Chunk const> const& south, int subchunk_y);
-		SubchunkMesh operator()();
+		SubchunkMesh operator()(ComPtr<ID3D11Device> device);
 	private:
 		std::vector<BlockTextureData> const& block_texture_data;
 		std::shared_ptr<Chunk const> center;

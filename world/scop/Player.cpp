@@ -102,7 +102,7 @@ void	Player::airMovement(InputRegistry& input_registry, float dt)
 		this->velocity += dvxz * dt * 4.0f;
 	}
 	//플레이어의 중력을 제거
-	//this->velocity.y -= 25.8f * dt;
+	this->velocity.y -= 25.8f * dt;
 }
 
 Camera const&	Player::getCamera() const

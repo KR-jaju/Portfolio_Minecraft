@@ -9,6 +9,9 @@
 #include <mutex>
 #include <condition_variable>
 
+
+#include <chrono>
+
 class ThreadPool {
 public:
     enum class Priority {
@@ -74,14 +77,6 @@ public:
         return (job_id);
     }
 private:
-    //template <typename F>
-    //Job(Priority priority, F job) : priority(priority), job(std::make_unique<JobWrapper<F>>(std::move(job))) {}
-    //Job(Job const&) = delete;
-    //Job& operator=(Job const&) = delete;
-    //Job(Job&& job) = default;
-    //Job& operator=(Job&& job) = default;
-    //bool operator<(Job const& other) const { return (static_cast<int>(this->priority) < static_cast<int>(other.priority)); }
-    //void operator()() const { this->job->invoke(); }
     std::vector<std::thread> workers;
     std::priority_queue<Job> jobs;
     std::unordered_map<JobID, bool> is_pending;
@@ -91,3 +86,10 @@ private:
 
     void workerMain();
 };
+
+/*
+1. FIFO로 하되 멀티 큐를 써서 우선순위를 나타냄
+2. 작업을 배치 단위로 묶어서 락 컨텐션을 줄임.
+
+
+*/

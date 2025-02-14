@@ -13,6 +13,8 @@ public:
 		int x;
 		int y;
 		int z;
+
+		Subchunk(std::reference_wrapper<SubchunkMesh const> mesh, int x, int y, int z);
 	};
 	RenderGroup();
 	void	add(int x, int y, int z, SubchunkMesh const& mesh);
