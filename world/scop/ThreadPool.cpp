@@ -59,7 +59,7 @@ void ThreadPool::workerMain()
         this->barrier.wait(lock, [this]() { return !this->jobs.empty() || this->stop_flag; });
         if (this->stop_flag && this->jobs.empty()) // stop_flag가 true고 일이 모두 처리됐다면
             return;
-        Job job = std::move(const_cast<Job&>(this->jobs.top()));
+        Job job = std::move(const_cast<Job&>(this->jobs.front()));
         JobID job_id = job.getID();
 
         this->jobs.pop();
@@ -68,7 +68,7 @@ void ThreadPool::workerMain()
             this->is_pending.erase(job_id); // 상태 제거
             if (this->jobs.empty()) // 더 이상 뽑을 잡이 없음
                 goto wait_for_job;
-            job = std::move(const_cast<Job&>(this->jobs.top()));
+            job = std::move(const_cast<Job&>(this->jobs.front()));
             job_id = job.getID(); // 다음 잡 뽑기
             this->jobs.pop();
         }

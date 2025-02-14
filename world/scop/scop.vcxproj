@@ -176,6 +176,7 @@
     <ClInclude Include="IntVector3.h" />
     <ClInclude Include="MainCamera.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="MultiLevelQueue.h" />
     <ClInclude Include="Promise.h" />
     <ClInclude Include="DirectionalShadowCaster.h" />
     <ClInclude Include="RenderGroup.h" />

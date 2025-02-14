@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bitset>
 #include "TerrainDB.h"
 #include "Future.h"
 #include "SubchunkMesh.h"
@@ -8,12 +9,18 @@ class SubchunkMeshGenerator
 {
 public:
 	SubchunkMeshGenerator(ThreadPool& thread_pool, std::vector<BlockTextureData> const& block_texture_data);
-	ThreadPool::JobID dispatch(ComPtr<ID3D11Device> device, std::shared_ptr<Chunk const> const& center, std::shared_ptr<Chunk const> const& east, std::shared_ptr<Chunk const> const& west, std::shared_ptr<Chunk const> const& north, std::shared_ptr<Chunk const> const& south, ivec3 subchunk_idx);
-	void drainResult(std::unordered_map<ivec3, SubchunkMesh>& output);
+	ThreadPool::JobID dispatch(ComPtr<ID3D11Device> device,
+		std::shared_ptr<Chunk const> const& center,
+		std::shared_ptr<Chunk const> const& east,
+		std::shared_ptr<Chunk const> const& west,
+		std::shared_ptr<Chunk const> const& north,
+		std::shared_ptr<Chunk const> const& south,
+		ivec2 chunk_idx, std::bitset<16> dirty_info);
+	void drainResult(std::unordered_map<ivec2, std::unordered_map<int, SubchunkMesh>>& output);
 private:
 	ThreadPool& thread_pool;
 	std::vector<BlockTextureData> const& block_texture_data;
-	std::unordered_map<ivec3, SubchunkMesh> results;
+	std::unordered_map<ivec2, std::unordered_map<int, SubchunkMesh>> results;
 	std::mutex result_mutex;
 	
 	class MeshGenerationTask

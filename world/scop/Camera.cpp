@@ -98,25 +98,22 @@ void	Camera::updateMatrices()
 	vec3 position = this->position;
 	vec3 rotation = this->rotation;
 	Mat t = Mat::createTranslation(position.x, position.y, position.z);
-	Mat r = Mat::createRotation(rotation.y, rotation.x, rotation.z); // 180도 더하는건 z+가 앞으로 가게 하기 위함임!
+	Mat r = Mat::createRotation(rotation.y, rotation.x, rotation.z);
 	Mat inv_r = r.transpose();
 	Mat inv_t = Mat::createTranslation(-position.x, -position.y, -position.z);
 
 	this->view = inv_t * inv_r;
 	this->projection = Mat::createPerspective(this->fov, this->aspect_ratio, 0.3f, 500.0f);
 	this->view_inverse = r * t;
+	this->projection_inverse.m[0] = 1.0f / this->projection.m[0]; // 1/h
+	this->projection_inverse.m[5] = 1.0f / this->projection.m[5]; // 1/v
+	this->projection_inverse.m[11] = 1.0f;
+	this->projection_inverse.m[14] = 1.0f / this->projection.m[11];
+	this->projection_inverse.m[15] = -this->projection.m[10] / this->projection.m[11];
 
 	this->left = vec3(1, 0, 0) * this->view_inverse;
 	this->up = vec3(0, 1, 0) * this->view_inverse;
 	this->forward = vec3(0, 0, 1) * this->view_inverse;
-
-	vec4 t0 = vec4(0, 0, 1, 0) * this->view; // 
-	vec4 t1 = vec4(1, 0, 1, 0) * this->view; // 
-	vec4 t2 = vec4(0, 1, 1, 0) * this->view; // 
-
-	vec4 v0 = vec4(0, 0, 1, 1) * this->projection;
-	vec4 v1 = vec4(1, 0, 1, 1) * this->projection;
-	vec4 v2 = vec4(0, 1, 1, 1) * this->projection;
 }
 
 Mat const&	Camera::getViewMatrix() const
@@ -138,3 +135,9 @@ Mat const&	Camera::getViewInverseTransposeMatrix() const
 {
 	return (this->view_inverse.transpose());
 }
+
+Mat const& Camera::getProjectionInverseMatrix() const
+{
+	return (this->projection_inverse.transpose());
+}
+

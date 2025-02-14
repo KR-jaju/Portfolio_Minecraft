@@ -4,7 +4,6 @@
 
 /*
 TODO : 위치가 애매함, 개선 예정
-
 */
 
 class Camera
@@ -26,12 +25,14 @@ public:
 	Mat const&	getProjectionMatrix() const;
 	Mat const&	getViewInverseMatrix() const;
 	Mat const&	getViewInverseTransposeMatrix() const;
+	Mat const&	getProjectionInverseMatrix() const;
 	Frustum const& getFrustum() const;
 private:
 	Mat view;
 	Mat projection;
 	Mat view_inverse;
 	Mat view_inverse_transpose;
+	Mat projection_inverse;
 	Frustum frustum;
 	vec3 left;
 	vec3 up;

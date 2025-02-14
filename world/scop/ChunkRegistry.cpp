@@ -3,7 +3,7 @@
 
 ChunkRegistry::ChunkRegistry()
 	: addressing_offset(0, 0),
-	addressing_half_stride(25),
+	addressing_half_stride(12),
 	addressing_stride(this->addressing_half_stride * 2 + 1),
 	chunks(this->addressing_stride * this->addressing_stride, nullptr),
 	subchunk_meshes(),

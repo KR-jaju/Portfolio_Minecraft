@@ -175,6 +175,9 @@
     <Filter Include="소스 파일\Utils\Asset">
       <UniqueIdentifier>{1b200e3a-33fb-4e35-8312-a1f5e8fc2318}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Utils\DataStructure">
+      <UniqueIdentifier>{98766055-afaf-4ecc-a625-b7e861988876}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -452,6 +455,9 @@
     </ClInclude>
     <ClInclude Include="Matrix.h">
       <Filter>소스 파일\Utils\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiLevelQueue.h">
+      <Filter>소스 파일\Utils\DataStructure</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,21 +14,30 @@ ThreadPool::JobID	SubchunkMeshGenerator::dispatch(ComPtr<ID3D11Device> device,
 	std::shared_ptr<Chunk const> const& east,
 	std::shared_ptr<Chunk const> const& west,
 	std::shared_ptr<Chunk const> const& north,
-	std::shared_ptr<Chunk const> const& south, ivec3 subchunk_idx)
+	std::shared_ptr<Chunk const> const& south, 
+	ivec2 chunk_idx, std::bitset<16> dirty_info)
 {
 
-	ThreadPool::JobID job_id = this->thread_pool.enqueue(ThreadPool::Priority::Normal, [this, device, center, east, west, north, south, subchunk_idx]()
-	{
-		MeshGenerationTask task(this->block_texture_data, center, east, west, north, south, subchunk_idx.y);
-		SubchunkMesh mesh = std::move(task(device));
-		std::unique_lock<std::mutex> lock(this->result_mutex);
+	ThreadPool::JobID job_id = this->thread_pool.enqueue(ThreadPool::Priority::Normal, [this, device, center, east, west, north, south, chunk_idx, dirty_info]()
+		{
+			std::unordered_map<int, SubchunkMesh> result;
 
-		this->results.emplace(subchunk_idx, std::move(mesh));
-	});
+			for (int subchunk_y = 0; subchunk_y < 16; ++subchunk_y)
+			{
+				if (!dirty_info.test(subchunk_y))
+					continue;
+				MeshGenerationTask task(this->block_texture_data, center, east, west, north, south, subchunk_y);
+
+				result.emplace(subchunk_y, std::move(task(device)));
+			}
+			std::unique_lock<std::mutex> lock(this->result_mutex);
+
+			this->results.emplace(chunk_idx, std::move(result));
+		});
 	return (job_id);
 }
 
-void SubchunkMeshGenerator::drainResult(std::unordered_map<ivec3, SubchunkMesh>& output)
+void SubchunkMeshGenerator::drainResult(std::unordered_map<ivec2, std::unordered_map<int, SubchunkMesh>>& output)
 {
 	output.clear();
 	std::unique_lock<std::mutex> lock(this->result_mutex);
@@ -46,7 +55,8 @@ SubchunkMeshGenerator::MeshGenerationTask::MeshGenerationTask(
 	: block_texture_data(block_texture_data),
 	center(center),
 	east(east), west(west),
-	north(north), south(south), subchunk_y(subchunk_y) {}
+	north(north), south(south),
+	subchunk_y(subchunk_y) {}
 
 SubchunkMesh SubchunkMeshGenerator::MeshGenerationTask::operator()(ComPtr<ID3D11Device> device)
 {

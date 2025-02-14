@@ -29,7 +29,7 @@ private:
 
 	SubchunkMeshGenerator subchunk_mesh_generator;
 	std::unordered_map<ivec2, Future<std::shared_ptr<Chunk const>>> chunk_future_buffer; // 로드 중인 청크 선물 버퍼
-	std::unordered_map<ivec3, ThreadPool::JobID> pending_subchunk_meshes; // 생성 중인 서브청크 메쉬 작업 ID 버퍼
+	std::unordered_map<ivec2, ThreadPool::JobID> pending_mesh_generation_task; // 생성 중인 서브청크 메쉬 작업 ID 버퍼
 
 	void	initChunkWindow();
 

@@ -8,18 +8,17 @@
 #include <future>
 #include <mutex>
 #include <condition_variable>
-
+#include "MultiLevelQueue.h"
 
 #include <chrono>
+
 
 class ThreadPool {
 public:
     enum class Priority {
-        Immediate = 4,
-        High = 3,
-        Normal = 2,
-        Low = 1,
-        Background = 0
+        Immediate = 0,
+        High,
+        Normal
     };
     using JobID = uintptr_t;
 private:
@@ -41,13 +40,11 @@ private:
     struct Job
     {
         std::unique_ptr<JobBase> job;
-        Priority priority;
 
         template <typename F>
-        Job(Priority priority, F callable) : job(std::make_unique<JobWrapper<F>>(std::move(callable))), priority(priority) {}
+        Job(F callable) : job(std::make_unique<JobWrapper<F>>(std::move(callable))) {}
         JobID getID() const { return (reinterpret_cast<JobID>(this->job.get())); }
         void operator()() { this->job->invoke(); }
-        bool operator<(Job const& other) const { return (static_cast<int>(this->priority) < static_cast<int>(other.priority)); }
     };
 public:
     ThreadPool(size_t thread_count = std::thread::hardware_concurrency());
@@ -63,14 +60,14 @@ public:
     {
         if (this->stop_flag)
             throw std::runtime_error("ThreadPool »ç¿ë ÁßÁöµÊ");
-        Job job(priority, std::move(callable));
+        Job job(std::move(callable));
         JobID job_id = job.getID();
 
-        assert(job_id != 0); // nullptr job X
+        assert(job_id != 0);
         {
             std::lock_guard<std::mutex> lock(this->mutex); 
 
-            this->jobs.emplace(std::move(job));
+            this->jobs.push(std::move(job), static_cast<size_t>(priority));
             this->is_pending.emplace(job_id, true);
         }
         this->barrier.notify_one();
@@ -78,7 +75,7 @@ public:
     }
 private:
     std::vector<std::thread> workers;
-    std::priority_queue<Job> jobs;
+    MultiLevelQueue<Job, 3> jobs;
     std::unordered_map<JobID, bool> is_pending;
     std::condition_variable barrier;
     mutable std::mutex mutex;

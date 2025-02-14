@@ -15,7 +15,7 @@ TerrainSystem::TerrainSystem(ComPtr<ID3D11Device> device, ThreadPool& thread_poo
 	subchunk_mesh_generator(thread_pool, constant_registry.block_texture_data)
 {
 	this->chunk_future_buffer.max_load_factor(0.7);
-	this->pending_subchunk_meshes.max_load_factor(0.7);
+	this->pending_mesh_generation_task.max_load_factor(0.7);
 	
 	this->initChunkWindow();
 }
@@ -94,20 +94,15 @@ void	TerrainSystem::updateChunkWindow(ivec2 center) // toroidal addressing updat
 			continue;
 		}
 		this->chunk_registry.setChunk(chunk_idx, chunk_future_it->second.get());
-		for (int y = 0; y < 16; ++y)
-			this->chunk_registry.dirty_subchunks.emplace(chunk_idx.x, y, chunk_idx.y);
+		this->chunk_registry.dirty_subchunks.emplace(chunk_idx, std::bitset<16>(0xFFFF));
 		if (chunk_idx.x - center.x < load_distance)
-			for (int y = 0; y < 16; ++y)
-				this->chunk_registry.dirty_subchunks.emplace(chunk_idx.x + 1, y, chunk_idx.y);
+			this->chunk_registry.dirty_subchunks.emplace(ivec2(chunk_idx.x + 1, chunk_idx.y), std::bitset<16>(0xFFFF));
 		if (chunk_idx.x - center.x > -load_distance)
-			for (int y = 0; y < 16; ++y)
-				this->chunk_registry.dirty_subchunks.emplace(chunk_idx.x - 1, y, chunk_idx.y);
+			this->chunk_registry.dirty_subchunks.emplace(ivec2(chunk_idx.x - 1, chunk_idx.y), std::bitset<16>(0xFFFF));
 		if (chunk_idx.y - center.y < load_distance)
-			for (int y = 0; y < 16; ++y)
-				this->chunk_registry.dirty_subchunks.emplace(chunk_idx.x, y, chunk_idx.y + 1);
+			this->chunk_registry.dirty_subchunks.emplace(ivec2(chunk_idx.x, chunk_idx.y + 1), std::bitset<16>(0xFFFF));
 		if (chunk_idx.y - center.y > -load_distance)
-			for (int y = 0; y < 16; ++y)
-				this->chunk_registry.dirty_subchunks.emplace(chunk_idx.x, y, chunk_idx.y - 1);
+			this->chunk_registry.dirty_subchunks.emplace(ivec2(chunk_idx.x, chunk_idx.y - 1), std::bitset<16>(0xFFFF));
 		chunk_future_it = this->chunk_future_buffer.erase(chunk_future_it); // 실물을 받았으니 선물 버퍼에서 제거
 	}
 	/*
@@ -128,89 +123,45 @@ void TerrainSystem::updateSubchunkMeshes()
 	int const generation_distance = this->chunk_registry.addressing_half_stride - 1;
 	ivec2 offset = this->chunk_registry.addressing_offset;
 
-	for (ivec3 subchunk_idx : this->chunk_registry.dirty_subchunks)
+	for (auto const& pair : this->chunk_registry.dirty_subchunks)
 	{
-		std::shared_ptr<Chunk const> const& center = this->chunk_registry.getChunk(subchunk_idx.x, subchunk_idx.z);
-		std::shared_ptr<Chunk const> const& east = this->chunk_registry.getChunk(subchunk_idx.x + 1, subchunk_idx.z);
-		std::shared_ptr<Chunk const> const& west = this->chunk_registry.getChunk(subchunk_idx.x - 1, subchunk_idx.z);
-		std::shared_ptr<Chunk const> const& north = this->chunk_registry.getChunk(subchunk_idx.x, subchunk_idx.z + 1);
-		std::shared_ptr<Chunk const> const& south = this->chunk_registry.getChunk(subchunk_idx.x, subchunk_idx.z - 1);
+		ivec2 chunk_idx = pair.first;
+		std::bitset<16> const& dirty_info = pair.second;
+
+		std::shared_ptr<Chunk const> const& center = this->chunk_registry.getChunk(chunk_idx);
+		std::shared_ptr<Chunk const> const& east = this->chunk_registry.getChunk(chunk_idx.x + 1, chunk_idx.y);
+		std::shared_ptr<Chunk const> const& west = this->chunk_registry.getChunk(chunk_idx.x - 1, chunk_idx.y);
+		std::shared_ptr<Chunk const> const& north = this->chunk_registry.getChunk(chunk_idx.x, chunk_idx.y + 1);
+		std::shared_ptr<Chunk const> const& south = this->chunk_registry.getChunk(chunk_idx.x, chunk_idx.y - 1);
 
 		if (center == nullptr || east == nullptr || west == nullptr || north == nullptr || south == nullptr)
 			continue;
-		ThreadPool::JobID job_id = this->subchunk_mesh_generator.dispatch(this->device, center, east, west, north, south, subchunk_idx);
+		ThreadPool::JobID job_id = this->subchunk_mesh_generator.dispatch(this->device, center, east, west, north, south, chunk_idx, dirty_info);
 
-		if (auto [it, exists] = this->pending_subchunk_meshes.try_emplace(subchunk_idx, job_id); !exists)
+
+		if (auto [it, exists] = this->pending_mesh_generation_task.try_emplace(chunk_idx, job_id); !exists)
 		{
-			this->thread_pool.cancel(it->second); // 기존 작업 취소
+			//this->thread_pool.cancel(it->second); // 기존 작업 취소 (배칭하면서 취소가 불가능해짐)
 			it->second = job_id;                  // 새로운 작업 ID로 갱신
 		}
 	}
 
-	std::unordered_map<ivec3, SubchunkMesh> result;
+	std::unordered_map<ivec2, std::unordered_map<int, SubchunkMesh>> result;
 	result.max_load_factor(0.7);
 
 	this->subchunk_mesh_generator.drainResult(result);
-	for (auto& pair : result)
+	for (auto& [chunk_idx, subchunks] : result)
 	{
-		this->chunk_registry.setSubchunkMesh(pair.first, std::move(pair.second));
-		this->pending_subchunk_meshes.erase(pair.first);
+		for (auto& [subchunk_y, subchunk] : subchunks)
+		{
+			ivec3 subchunk_idx(chunk_idx.x, subchunk_y, chunk_idx.y);
+
+			this->chunk_registry.setSubchunkMesh(subchunk_idx, std::move(subchunk));
+		}
+		this->pending_mesh_generation_task.erase(chunk_idx);
 	}
 	this->chunk_registry.dirty_subchunks.clear();
 }
-
-
-//void TerrainSystem::updateSubchunkMeshes()
-//{
-//	using Clock = std::chrono::high_resolution_clock;
-//	using Duration = std::chrono::duration<double, std::milli>;
-//
-//
-//	int const simulation_distance = 5;
-//	int const generation_distance = this->chunk_registry.addressing_half_stride - 1;
-//	ivec2 offset = this->chunk_registry.addressing_offset;
-//
-//	auto t0 = Clock::now();
-//	for (ivec3 subchunk_idx : this->chunk_registry.dirty_subchunks) // 메쉬 생성이 필요한 모든 서브청크 인덱스
-//	{
-//		std::shared_ptr<Chunk const> const& center = this->chunk_registry.getChunk(subchunk_idx.x, subchunk_idx.z);
-//		if (center == nullptr)
-//			continue;
-//		std::shared_ptr<Chunk const> const& east = this->chunk_registry.getChunk(subchunk_idx.x + 1, subchunk_idx.z);
-//		std::shared_ptr<Chunk const> const& west = this->chunk_registry.getChunk(subchunk_idx.x - 1, subchunk_idx.z);
-//		std::shared_ptr<Chunk const> const& north = this->chunk_registry.getChunk(subchunk_idx.x, subchunk_idx.z + 1);
-//		std::shared_ptr<Chunk const> const& south = this->chunk_registry.getChunk(subchunk_idx.x, subchunk_idx.z - 1);
-//
-//		if (east == nullptr || west == nullptr || north == nullptr || south == nullptr)
-//			continue;
-//
-//		ThreadPool::JobID job_id = this->subchunk_mesh_generator.dispatch(this->device, center, east, west, north, south, subchunk_idx);
-//
-//		// 기존 메쉬 생성 작업이 있다면 중단 처리 / 덮어쓰기
-//		if (auto [it, exists] = this->pending_subchunk_meshes.try_emplace(subchunk_idx, job_id); !exists)
-//		{
-//			this->thread_pool.cancel(it->second); // 기존 작업 취소
-//			it->second = job_id;                  // 새로운 작업 ID로 갱신
-//		}
-//	}
-//	std::unordered_map<ivec3, SubchunkMesh> result;
-//	auto t1 = Clock::now();
-//	result.max_load_factor(0.7);
-//	this->subchunk_mesh_generator.drainResult(result);
-//	for (auto& pair : result)
-//	{
-//		this->chunk_registry.setSubchunkMesh(pair.first, std::move(pair.second));
-//		this->pending_subchunk_meshes.erase(pair.first); // 더 이상 대기 중이 아님
-//	}
-//	auto t2 = Clock::now();
-//
-//	std::cout << "Total dispatch: " << Duration(t1 - t0).count() << " ms, count:" << this->chunk_registry.dirty_subchunks.size() << "\n";
-//	std::cout << "Total setSubchunkMesh: " << Duration(t2 - t1).count() << " ms, count:" << result.size() << "\n\n";
-//
-//	this->chunk_registry.dirty_subchunks.clear(); // TODO: 나중에 재사용할 수도 있으니 필요에 따라 조정
-//}
-
-
 
 //void TerrainSystem::fillChunk(Index2 const& c_idx, Index2 const& c_pos)
 //{

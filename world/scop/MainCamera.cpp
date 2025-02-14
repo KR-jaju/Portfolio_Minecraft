@@ -7,15 +7,6 @@
 #include "SkyPass.h"
 #include "ToneMappingPass.h"
 
-//D3D11_BUFFER_DESC desc = {};
-//desc.Usage = D3D11_USAGE_DYNAMIC;
-//desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-//desc.ByteWidth = size;
-//desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-
-//D3D11_SUBRESOURCE_DATA data = {};
-//data.pSysMem = &resource;
-
 MainCamera::MainCamera(Graphics& graphics, AssetManager& asset_manager, LightRegistry& light_registry, EntityRegistry& entity_registry, ChunkRegistry& chunk_registry, RenderingContext& context)
 	: graphics(graphics),
 	player(entity_registry.getPlayer()),
@@ -30,7 +21,6 @@ MainCamera::MainCamera(Graphics& graphics, AssetManager& asset_manager, LightReg
 }
 /*
 1. VS,PS의 0번 CB는 메인 카메라의 행렬로 고정함.
-
 */
 
 void MainCamera::render(Camera& camera, RenderGroup const& render_group)
@@ -51,8 +41,7 @@ void MainCamera::render(Camera& camera, RenderGroup const& render_group)
 	vp.projection = camera.getProjectionMatrix();
 	vp.view_projection = vp.view * vp.projection;
 	vp.view_inverse_transpose = camera.getViewInverseTransposeMatrix();
-	vp.projection_inverse = Mat::identity(); // TODO: invert어떡해
-		//vp.projection.transpose().invert();
+	vp.projection_inverse = camera.getProjectionInverseMatrix();
 	vp.dimension = ivec4(width, height, 0, 0);
 
 	this->camera_data.update(vp);
