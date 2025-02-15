@@ -17,7 +17,7 @@ class Graphics;
 class RenderSystem
 {
 public:
-	RenderSystem(Camera& camera, AssetManager& asset_manager, LightRegistry& light_registry, EntityRegistry& entity_registry, ChunkRegistry& chunk_registry, Graphics& graphics, int width, int height);
+	RenderSystem(ThreadPool& thread_pool, Camera& camera, AssetManager& asset_manager, LightRegistry& light_registry, EntityRegistry& entity_registry, ChunkRegistry& chunk_registry, Graphics& graphics, int width, int height);
 
 	void	update();
 private:
@@ -29,7 +29,7 @@ private:
 	Graphics& graphics;
 
 	RenderingContext context;
-	DirectionalShadowCaster directional_shadow_caster; // shadow_caster
+	//DirectionalShadowCaster directional_shadow_caster; // shadow_caster
 	MainCamera main_camera; // Main Camera
 };
 

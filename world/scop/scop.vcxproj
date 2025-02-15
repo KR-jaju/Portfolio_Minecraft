@@ -228,7 +228,6 @@
     <ClInclude Include="ShadowPass.h" />
     <ClInclude Include="SkinnedMesh.h" />
     <ClInclude Include="SkinnedMeshRenderer.h" />
-    <ClInclude Include="SkyPass.h" />
     <ClInclude Include="StripedMutex.h" />
     <ClInclude Include="VisibilityProcessor.h" />
     <ClInclude Include="World.h" />
@@ -308,7 +307,6 @@
     <ClCompile Include="ShadowPass.cpp" />
     <ClCompile Include="SkinnedMesh.cpp" />
     <ClCompile Include="SkinnedMeshRenderer.cpp" />
-    <ClCompile Include="SkyPass.cpp" />
     <ClCompile Include="SubchunkMeshGenerator.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="VisibilityProcessor.cpp" />

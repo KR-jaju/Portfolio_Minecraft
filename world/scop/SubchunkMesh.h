@@ -10,7 +10,7 @@ public:
 	SubchunkMesh();
 	SubchunkMesh(ComPtr<ID3D11Device> device, std::vector<ChunkVertex>&& vertices, std::vector<uint32>&& indices);
 
-	void	draw(Graphics& graphics) const;
+	void	draw(ComPtr<ID3D11DeviceContext> const& context) const;
 private:
 	std::vector<ChunkVertex> vertices;
 	std::vector<uint32> indices;

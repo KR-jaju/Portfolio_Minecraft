@@ -27,16 +27,14 @@ SubchunkMesh::SubchunkMesh(ComPtr<ID3D11Device> device, std::vector<ChunkVertex>
 	CHECK(hr);
 }
 
-void	SubchunkMesh::draw(Graphics& graphics) const
+void	SubchunkMesh::draw(ComPtr<ID3D11DeviceContext> const& context) const
 {
-	ComPtr<ID3D11DeviceContext> const dc = graphics.getContext();
-
 	if (this->vertex_buffer == nullptr || this->index_buffer == nullptr)
 		return;
 	uint32 stride = sizeof(ChunkVertex);
 	uint32 offset = 0;
 
-	dc->IASetVertexBuffers(0, 1, this->vertex_buffer.GetAddressOf(), &stride, &offset);
-	dc->IASetIndexBuffer(this->index_buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-	dc->DrawIndexed(this->indices.size(), 0, 0);
+	context->IASetVertexBuffers(0, 1, this->vertex_buffer.GetAddressOf(), &stride, &offset);
+	context->IASetIndexBuffer(this->index_buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	context->DrawIndexed(this->indices.size(), 0, 0);
 }

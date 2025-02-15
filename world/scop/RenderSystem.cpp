@@ -2,7 +2,7 @@
 #include "RenderSystem.h"
 #include "Player.h"
 
-RenderSystem::RenderSystem(Camera& camera, AssetManager& asset_manager, LightRegistry& light_registry, EntityRegistry& entity_registry, ChunkRegistry& chunk_registry, Graphics& graphics, int width, int height)
+RenderSystem::RenderSystem(ThreadPool& thread_pool, Camera& camera, AssetManager& asset_manager, LightRegistry& light_registry, EntityRegistry& entity_registry, ChunkRegistry& chunk_registry, Graphics& graphics, int width, int height)
 	: camera(camera),
 	asset_manager(asset_manager),
 	light_registry(light_registry),
@@ -10,8 +10,8 @@ RenderSystem::RenderSystem(Camera& camera, AssetManager& asset_manager, LightReg
 	chunk_registry(chunk_registry),
 	graphics(graphics),
 	context(asset_manager, graphics, width, height),
-	directional_shadow_caster(this->context, asset_manager, light_registry, entity_registry, chunk_registry),
-	main_camera(graphics, asset_manager, light_registry, entity_registry, chunk_registry, this->context)
+	//directional_shadow_caster(this->context, asset_manager, light_registry, entity_registry, chunk_registry),
+	main_camera(thread_pool, graphics, asset_manager, light_registry, entity_registry, chunk_registry, this->context)
 {
 	
 }

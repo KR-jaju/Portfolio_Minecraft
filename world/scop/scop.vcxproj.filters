@@ -130,9 +130,6 @@
     <Filter Include="소스 파일\System\RenderSystem\RenderPass\ShadowPass">
       <UniqueIdentifier>{e2294d0e-9bdb-4fa4-8e72-21b1e6671ca0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\System\RenderSystem\RenderPass\SkyPass">
-      <UniqueIdentifier>{c9627b02-5739-4393-a2a8-02af92c20be7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\System\RenderSystem\RenderPass\ToneMappingPass">
       <UniqueIdentifier>{f54f4677-e776-45fa-b401-55dd0144035d}</UniqueIdentifier>
     </Filter>
@@ -344,9 +341,6 @@
     </ClInclude>
     <ClInclude Include="ShadowPass.h">
       <Filter>소스 파일\System\RenderSystem\RenderPass\ShadowPass</Filter>
-    </ClInclude>
-    <ClInclude Include="SkyPass.h">
-      <Filter>소스 파일\System\RenderSystem\RenderPass\SkyPass</Filter>
     </ClInclude>
     <ClInclude Include="ToneMappingPass.h">
       <Filter>소스 파일\System\RenderSystem\RenderPass\ToneMappingPass</Filter>
@@ -592,9 +586,6 @@
     </ClCompile>
     <ClCompile Include="ShadowPass.cpp">
       <Filter>소스 파일\System\RenderSystem\RenderPass\ShadowPass</Filter>
-    </ClCompile>
-    <ClCompile Include="SkyPass.cpp">
-      <Filter>소스 파일\System\RenderSystem\RenderPass\SkyPass</Filter>
     </ClCompile>
     <ClCompile Include="ToneMappingPass.cpp">
       <Filter>소스 파일\System\RenderSystem\RenderPass\ToneMappingPass</Filter>

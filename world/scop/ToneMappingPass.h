@@ -1,25 +1,29 @@
 #pragma once
 #include "RenderPass.h"
+#include "LightingPass.h"
 
-class ToneMappingPass : public RenderPass
+class ToneMappingPass
 {
 public:
-	ToneMappingPass();
-	void execute(RenderingContext& context, RenderGroup const& render_group);
+	struct Resources
+	{
+		ComPtr<ID3D11Texture2D> texture;
+		ComPtr<ID3D11RenderTargetView> rtv;
+		ComPtr<ID3D11ShaderResourceView> srv;
+	};
+	ToneMappingPass(ThreadPool& thread_pool);
+	void initialize(ComPtr<ID3D11Device> const& device, AssetManager& asset_manager);
+	void execute(ComPtr<ID3D11DeviceContext> const& context, LightingPass::Resources const& lighting);
+	Resources const& getResources() const;
 private:
-	//VertexShader	tone_mapping_vs;
-	//PixelShader	tone_mapping_ps;
-	//SamplerState copy_sampler;
+	ThreadPool& thread_pool;
+	ComPtr<ID3D11Device> device;
+	Resources resources;
 
 	ComPtr<ID3D11VertexShader> tone_mapping_vs;
 	ComPtr<ID3D11PixelShader> tone_mapping_ps;
 	ComPtr<ID3D11SamplerState> copy_sampler;
-	ComPtr<ID3D11ShaderResourceView> hdr_input;
-	ComPtr<ID3D11RenderTargetView> ldr_output;
 
-	void initialize(RenderingContext& context, AssetManager& asset_manager);
-	void initializeToneMappingShader(RenderingContext& context, std::wstring const& vs_path, std::wstring const& ps_path);
-
-	void bind(RenderingContext& context);
-	void unbind(RenderingContext& context);
+	void initializeTextures(ComPtr<ID3D11Device> const& device);
+	void initializeData(ComPtr<ID3D11Device> const& device);
 };

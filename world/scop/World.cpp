@@ -24,7 +24,7 @@ World::World(HWND hwnd, int width, int height)
 	terrain_system(this->graphics.getDevice(), this->thread_pool, this->constant_registry, this->terrain_db, this->event_manager, this->entity_registry, this->chunk_registry),
 	physics_system(this->block_data_registry, this->entity_registry, this->chunk_registry),
 	light_system(this->light_registry, this->entity_registry),
-	render_system(this->camera, this->asset_manager, this->light_registry, this->entity_registry, this->chunk_registry, this->graphics, width, height)
+	render_system(this->thread_pool, this->camera, this->asset_manager, this->light_registry, this->entity_registry, this->chunk_registry, this->graphics, width, height)
 {
 	/*this->deff_graphic = 
 		make_shared<DeferredGraphics>(hwnd, width, height);*/
