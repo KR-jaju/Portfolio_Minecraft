@@ -113,7 +113,7 @@ float4 main(PSInput input) : SV_TARGET
     float D = NdfGGX(NdotH, roughness);
     float G = SchlickGGX(NdotL, NdotV, roughness);
     float3 specular_brdf = (F * D * G) / max(1e-5, 4.0 * NdotL * NdotV);
-    float3 radiance = 3.0f;
+    float3 radiance = 1.0f;
     float3 direct_lighting = (diffuse_brdf + specular_brdf) * radiance * NdotL;
 
     return float4(direct_lighting, 1.0);

@@ -7,14 +7,14 @@ struct PSInput {
 };
 
 float3 ReinhardToneMapping(float3 color) {
-    return color / (color + 1.0); // 간단한 Reinhard 톤 매핑
+    return color / (color + 0.18); // 간단한 Reinhard 톤 매핑
 }
 
 float4 main(PSInput input) : SV_TARGET
 {
     float3  hdr_color = hdr_texture.Sample(sampler0, input.uv).rgb;
     float3  tone_mapped = ReinhardToneMapping(hdr_color);
+    float3  gamma_corrected = pow(tone_mapped, 1 / 2.2);
 
-    //return float4(tone_mapped, 1.0);
-    return float4(hdr_color, 1.0);
+    return float4(gamma_corrected, 1.0);
 }

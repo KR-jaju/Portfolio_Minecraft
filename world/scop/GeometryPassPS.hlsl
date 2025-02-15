@@ -56,7 +56,7 @@ PS_OUTPUT main(PS_INPUT input)
     //output.color = float4(input.uv, 0.0, 1.0);
     float3 vs_normal = normalize(input.normal);
 
-    output.color = texture_array.Sample(sampler0, input.uv);
+    output.color = float4(pow(texture_array.Sample(sampler0, input.uv).xyz, 2.2), 1.0);
     output.normal = encodeNormal(normalize(vs_normal));
 
     return output;
