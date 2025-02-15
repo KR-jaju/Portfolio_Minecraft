@@ -22,6 +22,13 @@ cbuffer eyePos : register(b0)
     matrix view;
 };
 
+float2 encodeNormal(float3 normal)
+{
+    float p = sqrt(normal.z * -8 + 8); // z == 1은 인코딩 불가
+    
+    return float2(normal.xy / p + 0.5);
+}
+
 PS_OUTPUT main(PS_INPUT input)
 {
     //float4 color;
@@ -50,7 +57,7 @@ PS_OUTPUT main(PS_INPUT input)
     float3 vs_normal = normalize(input.normal);
 
     output.color = texture_array.Sample(sampler0, input.uv);
-    output.normal = vs_normal.xy;
+    output.normal = encodeNormal(normalize(vs_normal));
 
     return output;
 }

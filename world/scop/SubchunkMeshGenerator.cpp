@@ -20,8 +20,8 @@ ThreadPool::JobID	SubchunkMeshGenerator::dispatch(ComPtr<ID3D11Device> device,
 
 	ThreadPool::JobID job_id = this->thread_pool.enqueue(ThreadPool::Priority::Normal, [this, device, center, east, west, north, south, chunk_idx, dirty_info]()
 		{
-			std::unordered_map<int, SubchunkMesh> result;
-
+			std::unordered_map<int, SubchunkMesh> result(24); // 최대 16개니까 대충 24면 load_factor 최대 0.66
+			
 			for (int subchunk_y = 0; subchunk_y < 16; ++subchunk_y)
 			{
 				if (!dirty_info.test(subchunk_y))

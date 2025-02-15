@@ -58,8 +58,7 @@ void LightingPass::bind(RenderingContext& context)
 	dc->VSSetShader(this->lighting_vs.Get(), nullptr, 0);
 
 	dc->PSSetShader(this->lighting_ps.Get(), nullptr, 0);
-	dc->PSSetShaderResources(0, 3, gbuffer_srv); // TODO : 지금은 2개이지만 !!!
-	dc->PSSetConstantBuffers(0, 1, context.camera_data.getComPtr().GetAddressOf());
+	dc->PSSetShaderResources(0, 3, gbuffer_srv);
 
 	dc->OMSetRenderTargets(1, rtv, nullptr);
 }

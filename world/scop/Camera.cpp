@@ -114,6 +114,11 @@ void	Camera::updateMatrices()
 	this->left = vec3(1, 0, 0) * this->view_inverse;
 	this->up = vec3(0, 1, 0) * this->view_inverse;
 	this->forward = vec3(0, 0, 1) * this->view_inverse;
+
+
+	Mat id0 = this->projection_inverse * this->projection;
+	Mat id1 = this->view_inverse * this->view;
+
 }
 
 Mat const&	Camera::getViewMatrix() const
@@ -138,6 +143,6 @@ Mat const&	Camera::getViewInverseTransposeMatrix() const
 
 Mat const& Camera::getProjectionInverseMatrix() const
 {
-	return (this->projection_inverse.transpose());
+	return (this->projection_inverse);
 }
 

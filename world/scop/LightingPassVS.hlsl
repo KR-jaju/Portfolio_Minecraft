@@ -13,6 +13,7 @@ struct PSInput
 {
     float4 position : SV_POSITION;
     float2 uv : TEXCOORD0;
+    float2 scaled_uv : TEXCOORD1;
 };
 
 PSInput main(uint vertexID : SV_VertexID) {
@@ -31,6 +32,7 @@ PSInput main(uint vertexID : SV_VertexID) {
     };
 
     output.position = float4(positions[vertexID], 0.0, 1.0);
-    output.uv = texcoords[vertexID] * dimension;
+    output.uv = texcoords[vertexID];
+    output.scaled_uv = texcoords[vertexID] * dimension;
     return output;
 }
