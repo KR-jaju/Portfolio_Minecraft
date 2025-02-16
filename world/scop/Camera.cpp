@@ -5,10 +5,9 @@ Camera::Camera()
 	: position(0, 0, 0),
 	rotation(0, 0, 0),
 	fov(1.6f),
-	near_plane(0.3f), far_plane(500.0f),
-	width(800), height(800), aspect_ratio(1)
+	near_plane(0.3f), far_plane(500.0f)
 {
-
+	this->setSize(800, 800);
 }
 
 void	Camera::setPosition(vec3 position)
@@ -26,8 +25,9 @@ void	Camera::setFov(float fov)
 
 void	Camera::setSize(int width, int height)
 {
-	this->width = width;
-	this->height = height;
+	this->info.dimension.x = width;
+	this->info.dimension.y = height;
+	this->info.dimension.z = static_cast<float>(width) / static_cast<float>(height);
 }
 
 void	Camera::setDepthRange(float near_plane, float far_plane)
@@ -64,7 +64,6 @@ static vec4	calculatePlane(vec3 const& normal, vec3 const& point)
 
 void	Camera::update()
 {
-	this->aspect_ratio = this->width / this->height;
 	this->updateMatrices();
 	this->updateFrustum();
 }
@@ -72,7 +71,7 @@ void	Camera::update()
 void	Camera::updateFrustum()
 {
 	const float v_slope = tanf(this->fov * 0.5f);
-	const float h_slope = this->aspect_ratio * v_slope;
+	const float h_slope = this->info.dimension.z * v_slope;
 	const vec3 scaled_forward = this->near_plane * this->forward;
 	const vec3 scaled_left = this->near_plane * h_slope * this->left;
 	const vec3 scaled_up = this->near_plane * v_slope * this->up;
@@ -87,6 +86,10 @@ void	Camera::updateFrustum()
 	this->frustum.bottom_plane = calculatePlane((scaled_forward - scaled_up).Cross(this->left), this->position);
 }
 
+Camera::Info const& Camera::getInfo() const
+{
+	return (this->info);
+}
 
 Frustum const& Camera::getFrustum() const
 {
@@ -102,47 +105,43 @@ void	Camera::updateMatrices()
 	Mat inv_r = r.transpose();
 	Mat inv_t = Mat::createTranslation(-position.x, -position.y, -position.z);
 
-	this->view = inv_t * inv_r;
-	this->projection = Mat::createPerspective(this->fov, this->aspect_ratio, 0.3f, 500.0f);
-	this->view_inverse = r * t;
-	this->projection_inverse.m[0] = 1.0f / this->projection.m[0]; // 1/h
-	this->projection_inverse.m[5] = 1.0f / this->projection.m[5]; // 1/v
-	this->projection_inverse.m[11] = 1.0f;
-	this->projection_inverse.m[14] = 1.0f / this->projection.m[11];
-	this->projection_inverse.m[15] = -this->projection.m[10] / this->projection.m[11];
+	this->info.view = inv_t * inv_r;
+	this->info.projection = Mat::createPerspective(this->fov, this->info.dimension.z, 0.3f, 500.0f);
+	this->info.view_projection = this->info.view * this->info.projection;
+	this->info.view_inverse = r * t;
+	this->info.projection_inverse.m[0] = 1.0f / this->info.projection.m[0]; // 1/h
+	this->info.projection_inverse.m[5] = 1.0f / this->info.projection.m[5]; // 1/v
+	this->info.projection_inverse.m[11] = 1.0f;
+	this->info.projection_inverse.m[14] = 1.0f / this->info.projection.m[11];
+	this->info.projection_inverse.m[15] = -this->info.projection.m[10] / this->info.projection.m[11];
 
-	this->left = vec3(1, 0, 0) * this->view_inverse;
-	this->up = vec3(0, 1, 0) * this->view_inverse;
-	this->forward = vec3(0, 0, 1) * this->view_inverse;
-
-
-	Mat id0 = this->projection_inverse * this->projection;
-	Mat id1 = this->view_inverse * this->view;
-
+	this->left = vec3(1, 0, 0) * this->info.view_inverse;
+	this->up = vec3(0, 1, 0) * this->info.view_inverse;
+	this->forward = vec3(0, 0, 1) * this->info.view_inverse;
 }
 
 Mat const&	Camera::getViewMatrix() const
 {
-	return (this->view);
+	return (this->info.view);
 }
 
 Mat const&	Camera::getProjectionMatrix() const
 {
-	return (this->projection);
+	return (this->info.projection);
 }
 
 Mat const& Camera::getViewInverseMatrix() const
 {
-	return (this->view_inverse);
+	return (this->info.view_inverse);
 }
 
 Mat const&	Camera::getViewInverseTransposeMatrix() const
 {
-	return (this->view_inverse.transpose());
+	return (this->info.view_inverse.transpose());
 }
 
 Mat const& Camera::getProjectionInverseMatrix() const
 {
-	return (this->projection_inverse);
+	return (this->info.projection_inverse);
 }
 

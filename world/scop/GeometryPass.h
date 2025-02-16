@@ -23,10 +23,11 @@ public:
 		ComPtr<ID3D11DeviceContext> const& immediate_context,
 		std::mutex& context_mutex,
 		std::shared_future<void> const& visibility_ready,
-		RenderGroup const& visible_group
+		RenderGroup const& visible_group,
+		ComPtr<ID3D11Buffer> const& camera_info
 	);
 
-	void execute(ComPtr<ID3D11DeviceContext> const& context, RenderGroup const& render_group);
+	void execute(ComPtr<ID3D11DeviceContext> const& context, RenderGroup const& render_group, ComPtr<ID3D11Buffer> const& camera_info);
 	Resources const& getResources() const;
 private:
 	ThreadPool& thread_pool;

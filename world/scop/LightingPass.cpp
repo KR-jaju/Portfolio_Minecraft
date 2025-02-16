@@ -57,13 +57,14 @@ std::shared_future<void> LightingPass::dispatch(
 	ComPtr<ID3D11DeviceContext> const& immediate_context,
 	std::mutex& context_mutex,
 	std::shared_future<void> const& geometry_ready,
-	GeometryPass::Resources const& geometry_result
+	GeometryPass::Resources const& geometry_result,
+	ComPtr<ID3D11Buffer> const& camera_info
 )
 {
 	std::promise<void> result_promise;
 	std::shared_future<void> result_future = result_promise.get_future().share();
 
-	this->thread_pool.enqueue(ThreadPool::Priority::Immediate, [immediate_context, &context_mutex, promise = std::move(result_promise), this, geometry_ready, geometry_result]() mutable {
+	this->thread_pool.enqueue(ThreadPool::Priority::Immediate, [immediate_context, &context_mutex, promise = std::move(result_promise), this, geometry_ready, geometry_result, camera_info]() mutable {
 		thread_local ComPtr<ID3D11DeviceContext> deferred_context = nullptr;
 		ComPtr<ID3D11CommandList> command_list = nullptr;
 
@@ -73,7 +74,7 @@ std::shared_future<void> LightingPass::dispatch(
 
 			CHECK(hr);
 		}
-		this->execute(deferred_context, geometry_result);
+		this->execute(deferred_context, geometry_result, camera_info);
 		deferred_context->FinishCommandList(TRUE, command_list.GetAddressOf()); // Finish & clear
 		{
 			geometry_ready.get(); // Geometry Pass ´ë±â
@@ -85,7 +86,7 @@ std::shared_future<void> LightingPass::dispatch(
 	return (result_future);
 }
 
-void LightingPass::execute(ComPtr<ID3D11DeviceContext> const& context, GeometryPass::Resources const& geometry)
+void LightingPass::execute(ComPtr<ID3D11DeviceContext> const& context, GeometryPass::Resources const& geometry, ComPtr<ID3D11Buffer> const& camera_info)
 {
 	ID3D11ShaderResourceView* const gbuffer_srv[] = {
 		geometry.srv[0].Get(),
@@ -98,7 +99,9 @@ void LightingPass::execute(ComPtr<ID3D11DeviceContext> const& context, GeometryP
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	context->IASetInputLayout(nullptr);
 	context->VSSetShader(this->lighting_vs.Get(), nullptr, 0);
+	context->VSSetConstantBuffers(0, 1, camera_info.GetAddressOf());
 	context->PSSetShader(this->lighting_ps.Get(), nullptr, 0);
+	context->PSSetConstantBuffers(0, 1, camera_info.GetAddressOf());
 	context->PSSetShaderResources(0, 3, gbuffer_srv);
 	context->OMSetRenderTargets(1, this->resources.rtv.GetAddressOf(), nullptr);
 	context->Draw(4, 0);

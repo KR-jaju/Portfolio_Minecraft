@@ -9,6 +9,15 @@ TODO : 위치가 애매함, 개선 예정
 class Camera
 {
 public:
+	struct Info
+	{
+		Mat view;
+		Mat projection;
+		Mat view_projection;
+		Mat view_inverse;
+		Mat projection_inverse;
+		ivec4 dimension;
+	};
 	Camera();
 	void	setPosition(vec3 position);
 	void	setRotation(vec3 position);
@@ -26,13 +35,10 @@ public:
 	Mat const&	getViewInverseMatrix() const;
 	Mat const&	getViewInverseTransposeMatrix() const;
 	Mat const&	getProjectionInverseMatrix() const;
+	Info const& getInfo() const;
 	Frustum const& getFrustum() const;
 private:
-	Mat view;
-	Mat projection;
-	Mat view_inverse;
-	Mat view_inverse_transpose;
-	Mat projection_inverse;
+	Info info;
 	Frustum frustum;
 	vec3 left;
 	vec3 up;
@@ -45,9 +51,6 @@ private:
 	float fov;
 	float near_plane;
 	float far_plane;
-	float width;
-	float height;
-	float aspect_ratio;
 	
 	void	updateFrustum();
 	void	updateMatrices();

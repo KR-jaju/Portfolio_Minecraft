@@ -9,7 +9,6 @@ cbuffer CameraMatrices : register(b0)
     int2   dimension;
 };
 
-
 cbuffer WorldMatrix : register(b1)
 {
     int3 position;
@@ -32,33 +31,12 @@ struct VS_INPUT
 struct PS_INPUT
 {
     float4 position : SV_Position;
-    float3 normal : NORMAL;
-    float3 uv : TEXCOORD;
 };
 
-float3 toNormal(uint direction)
+float4 main(VS_INPUT input) : SV_Position
 {
-    if (direction == 0) //east
-        return float3(1, 0, 0);
-    if (direction == 1)
-        return float3(-1, 0, 0);
-    if (direction == 2)
-        return float3(0, 1, 0);
-    if (direction == 3)
-        return float3(0, -1, 0);
-    if (direction == 4)
-        return float3(0, 0, 1);
-    return float3(0, 0, -1);
-}
-
-PS_INPUT main(VS_INPUT input)
-{
-    PS_INPUT output;
     float4 ws_position = float4(input.pos + position * 16, 1.0);
     float4 vs_position = mul(ws_position, view);
 
-    output.position = mul(vs_position, projection);
-    output.uv = float3(input.uv, input.texture_id);
-    output.normal = mul(toNormal(input.direction), transpose(view_inverse));
-    return output;
+    return mul(vs_position, projection);
 }

@@ -112,9 +112,6 @@
     <Filter Include="소스 파일\Shader\ShadowPass">
       <UniqueIdentifier>{99eeb22e-2263-43d7-b53c-aa9553f2d451}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Shader\SkyPass">
-      <UniqueIdentifier>{d65d1c8e-1e19-46d2-a1cd-21a27f4c778c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Entity">
       <UniqueIdentifier>{38377e96-a1ac-4dfe-8422-36fbc7d13d99}</UniqueIdentifier>
     </Filter>
@@ -174,6 +171,9 @@
     </Filter>
     <Filter Include="소스 파일\Utils\DataStructure">
       <UniqueIdentifier>{98766055-afaf-4ecc-a625-b7e861988876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shader\HiZPass">
+      <UniqueIdentifier>{d65d1c8e-1e19-46d2-a1cd-21a27f4c778c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -363,9 +363,6 @@
     <ClInclude Include="RenderPass.h">
       <Filter>소스 파일\System\RenderSystem\RenderPass</Filter>
     </ClInclude>
-    <ClInclude Include="RenderPipeline.h">
-      <Filter>소스 파일\System\RenderSystem\RenderPipeline</Filter>
-    </ClInclude>
     <ClInclude Include="RenderingContext.h">
       <Filter>소스 파일\System\RenderSystem\RenderPipeline</Filter>
     </ClInclude>
@@ -404,9 +401,6 @@
     </ClInclude>
     <ClInclude Include="ControlBlock.h">
       <Filter>소스 파일\Utils\Multithread\Promise</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectionalShadowCaster.h">
-      <Filter>소스 파일\System\RenderSystem</Filter>
     </ClInclude>
     <ClInclude Include="MainCamera.h">
       <Filter>소스 파일\System\RenderSystem</Filter>
@@ -602,9 +596,6 @@
     <ClCompile Include="Transform.cpp">
       <Filter>소스 파일\Entity\Mob</Filter>
     </ClCompile>
-    <ClCompile Include="RenderPipeline.cpp">
-      <Filter>소스 파일\System\RenderSystem\RenderPipeline</Filter>
-    </ClCompile>
     <ClCompile Include="RenderingContext.cpp">
       <Filter>소스 파일\System\RenderSystem\RenderPipeline</Filter>
     </ClCompile>
@@ -628,9 +619,6 @@
     </ClCompile>
     <ClCompile Include="PerlinNoise.cpp">
       <Filter>소스 파일\Utils\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectionalShadowCaster.cpp">
-      <Filter>소스 파일\System\RenderSystem</Filter>
     </ClCompile>
     <ClCompile Include="MainCamera.cpp">
       <Filter>소스 파일\System\RenderSystem</Filter>
@@ -725,11 +713,20 @@
     <FxCompile Include="ShadowPassVS.hlsl">
       <Filter>소스 파일\Shader\ShadowPass</Filter>
     </FxCompile>
-    <FxCompile Include="SkyPassVS.hlsl">
-      <Filter>소스 파일\Shader\SkyPass</Filter>
-    </FxCompile>
     <FxCompile Include="SkyPassPS.hlsl">
-      <Filter>소스 파일\Shader\SkyPass</Filter>
+      <Filter>소스 파일\Shader\LightingPass</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyPassVS.hlsl">
+      <Filter>소스 파일\Shader\LightingPass</Filter>
+    </FxCompile>
+    <FxCompile Include="HiZPassCS.hlsl">
+      <Filter>소스 파일\Shader\HiZPass</Filter>
+    </FxCompile>
+    <FxCompile Include="DepthPassSubchunkPS.hlsl">
+      <Filter>소스 파일\Shader\HiZPass</Filter>
+    </FxCompile>
+    <FxCompile Include="DepthPassSubchunkVS.hlsl">
+      <Filter>소스 파일\Shader\HiZPass</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

@@ -24,3 +24,8 @@ std::vector<RenderGroup::Subchunk> const& RenderGroup::getSubchunks() const
 {
 	return (this->subchunks);
 }
+
+void	RenderGroup::swap(RenderGroup& other)
+{
+	this->subchunks.swap(other.subchunks);
+}

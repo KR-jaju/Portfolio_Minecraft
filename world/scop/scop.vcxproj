@@ -178,7 +178,6 @@
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MultiLevelQueue.h" />
     <ClInclude Include="Promise.h" />
-    <ClInclude Include="DirectionalShadowCaster.h" />
     <ClInclude Include="RenderGroup.h" />
     <ClInclude Include="SubchunkMeshGenerator.h" />
     <ClInclude Include="ChunkSection.h" />
@@ -219,7 +218,6 @@
     <ClInclude Include="RasterizerState.h" />
     <ClInclude Include="RenderingContext.h" />
     <ClInclude Include="RenderPass.h" />
-    <ClInclude Include="RenderPipeline.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="AssetManager.h" />
@@ -266,7 +264,6 @@
     <ClCompile Include="ConstantRegistry.cpp" />
     <ClCompile Include="Cubemap.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
-    <ClCompile Include="DirectionalShadowCaster.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityGeometry.cpp" />
     <ClCompile Include="EntityRegistry.cpp" />
@@ -300,7 +297,6 @@
     <ClCompile Include="RenderGroup.cpp" />
     <ClCompile Include="SubchunkMesh.cpp" />
     <ClCompile Include="RenderingContext.cpp" />
-    <ClCompile Include="RenderPipeline.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="main.cpp" />
@@ -339,6 +335,18 @@
     <Image Include="steve.png" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="DepthPassSubchunkPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="DepthPassSubchunkVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="EntityGeometryPassPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
@@ -363,6 +371,16 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="HiZPassCS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="LightingPassPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

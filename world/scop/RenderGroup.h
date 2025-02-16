@@ -20,6 +20,7 @@ public:
 	void	add(int x, int y, int z, SubchunkMesh const& mesh);
 	void	add(Subchunk const& subchunk);
 	std::vector<Subchunk> const& getSubchunks() const;
+	void	swap(RenderGroup& other);
 private:
 	std::vector<Subchunk> subchunks;
 };

@@ -20,9 +20,10 @@ public:
 		ComPtr<ID3D11DeviceContext> const& immediate_context,
 		std::mutex& context_mutex,
 		std::shared_future<void> const& geometry_result_future,
-		GeometryPass::Resources const& geometry_result
+		GeometryPass::Resources const& geometry_result,
+		ComPtr<ID3D11Buffer> const& camera_info
 	);
-	void execute(ComPtr<ID3D11DeviceContext> const& context, GeometryPass::Resources const& geometry_result);
+	void execute(ComPtr<ID3D11DeviceContext> const& context, GeometryPass::Resources const& geometry_result, ComPtr<ID3D11Buffer> const& camera_info);
 	Resources const& getResources() const;
 private:
 	ThreadPool& thread_pool;

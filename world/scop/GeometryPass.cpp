@@ -13,12 +13,12 @@ std::shared_future<void> GeometryPass::dispatch(
 	ComPtr<ID3D11DeviceContext> const& immediate_context,
 	std::mutex& context_mutex,
 	std::shared_future<void> const& visibility_ready,
-	RenderGroup const& visible_group)
+	RenderGroup const& visible_group, ComPtr<ID3D11Buffer> const& camera_info)
 {
 	std::promise<void> result_promise;
 	std::shared_future<void> result_future = result_promise.get_future().share();
 
-	this->thread_pool.enqueue(ThreadPool::Priority::Immediate, [immediate_context, &context_mutex, this, visibility_ready, visible_group]() {
+	this->thread_pool.enqueue(ThreadPool::Priority::Immediate, [immediate_context, &context_mutex, this, visibility_ready, visible_group, camera_info]() {
 		thread_local ComPtr<ID3D11DeviceContext> deferred_context = nullptr;
 		ComPtr<ID3D11CommandList> command_list = nullptr;
 
@@ -29,7 +29,7 @@ std::shared_future<void> GeometryPass::dispatch(
 			CHECK(hr);
 		}
 		visibility_ready.get();
-		this->execute(deferred_context, visible_group);
+		this->execute(deferred_context, visible_group, camera_info);
 		deferred_context->FinishCommandList(TRUE, command_list.GetAddressOf()); // Finish & clear
 		std::unique_lock<std::mutex> context_lock(context_mutex);
 		immediate_context->ExecuteCommandList(command_list.Get(), FALSE);
@@ -37,7 +37,7 @@ std::shared_future<void> GeometryPass::dispatch(
 	return (result_future);
 }
 
-void GeometryPass::execute(ComPtr<ID3D11DeviceContext> const& context, RenderGroup const& render_group)
+void GeometryPass::execute(ComPtr<ID3D11DeviceContext> const& context, RenderGroup const& render_group, ComPtr<ID3D11Buffer> const& camera_info)
 {
 	D3D11_VIEWPORT const viewport = { 0, 0, 800, 800, 0, 1 };
 		//context.viewport_width, context.viewport_height, 0.0f, 1.0f };
@@ -54,6 +54,7 @@ void GeometryPass::execute(ComPtr<ID3D11DeviceContext> const& context, RenderGro
 	context->IASetInputLayout(this->subchunk_il.Get());
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	context->VSSetShader(this->subchunk_vs.Get(), nullptr, 0);
+	context->VSSetConstantBuffers(0, 1, camera_info.GetAddressOf());
 	context->PSSetShader(this->subchunk_ps.Get(), nullptr, 0);
 	context->PSSetSamplers(0, 1, this->subchunk_ss.GetAddressOf());
 	context->PSSetShaderResources(0, 1, this->block_textures->getComPtr().GetAddressOf());
@@ -252,7 +253,8 @@ void	GeometryPass::initializeSubchunkData(ComPtr<ID3D11Device> const& device)
 		desc.ByteWidth = 16; // (x, y, z, padding)
 		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		data.pSysMem = &initial_data;
-		device->CreateBuffer(&desc, &data, this->subchunk_cb.GetAddressOf());
+		HRESULT hr = device->CreateBuffer(&desc, &data, this->subchunk_cb.GetAddressOf());
+		CHECK(hr);
 	}
 	{// RS
 		D3D11_RASTERIZER_DESC desc = {};

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "RenderPipeline.h"
 #include "VisibilityProcessor.h"
 #include "RenderGroup.h"
 
@@ -21,8 +20,7 @@ private:
 
 	VisibilityProcessor visibility;
 	RenderGroup	past_render_group;
-	CameraMatrices camera_matrices;
-	ConstantBuffer camera_data;
+	ComPtr<ID3D11Buffer> camera_info;
 
 	GeometryPass geometry_pass;
 	LightingPass lighting_pass;

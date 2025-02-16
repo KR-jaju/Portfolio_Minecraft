@@ -5,12 +5,9 @@
 #include "EntityReigstry.h"
 #include "ChunkRegistry.h"
 
-#include "DirectionalShadowCaster.h"
 #include "MainCamera.h"
 
 #include "RenderingContext.h"
-
-#include "RenderPipeline.h"
 
 class Graphics;
 
@@ -29,7 +26,6 @@ private:
 	Graphics& graphics;
 
 	RenderingContext context;
-	//DirectionalShadowCaster directional_shadow_caster; // shadow_caster
 	MainCamera main_camera; // Main Camera
 };
 
