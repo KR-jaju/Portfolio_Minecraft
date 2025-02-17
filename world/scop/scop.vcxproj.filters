@@ -728,6 +728,9 @@
     <FxCompile Include="DepthPassSubchunkVS.hlsl">
       <Filter>소스 파일\Shader\HiZPass</Filter>
     </FxCompile>
+    <FxCompile Include="HiZOcclusionCullingCS.hlsl">
+      <Filter>소스 파일\Shader\HiZPass</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

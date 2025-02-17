@@ -22,7 +22,7 @@ MainCamera::MainCamera(ThreadPool& thread_pool, Graphics& graphics, AssetManager
 		HRESULT hr = device->CreateBuffer(&desc, nullptr, this->camera_info.GetAddressOf());
 		CHECK(hr);
 	}
-	this->visibility.initialize(device, asset_manager, 800, 800);
+	this->visibility.initialize(device, asset_manager, 512, 512);
 	this->geometry_pass.initialize(device, asset_manager);
 	this->lighting_pass.initialize(device, asset_manager);
 	this->tone_mapping_pass.initialize(device, asset_manager);
@@ -54,17 +54,6 @@ void MainCamera::render(Camera& camera, RenderGroup const& render_group)
 	int height = 800;
 
 	float const aspect_ratio = width / height;
-	//CameraMatrices& vp = this->camera_matrices;
-
-	//vp.view = camera.getViewMatrix();
-	//vp.projection = camera.getProjectionMatrix();
-	//vp.view_projection = vp.view * vp.projection;
-	//vp.view_inverse_transpose = camera.getViewInverseTransposeMatrix();
-	//vp.projection_inverse = camera.getProjectionInverseMatrix();
-	//vp.dimension = ivec4(width, height, 0, 0);
-
-
-	//this->render_pipeline.render(result); // ·»´õ;
 	ComPtr<ID3D11DeviceContext> immediate_context = graphics.getContext();
 	//std::mutex context_mutex;
 
@@ -87,6 +76,9 @@ void MainCamera::render(Camera& camera, RenderGroup const& render_group)
 
 	this->visibility.process(immediate_context, render_group, camera, this->past_render_group, this->camera_info);
 	this->visibility.getResult(this->past_render_group);
+	
+	std::cout << this->past_render_group.getSubchunks().size() << " Subchunks were drawn\n";
+
 	this->geometry_pass.execute(immediate_context, this->past_render_group, this->camera_info);
 	this->lighting_pass.execute(immediate_context, this->geometry_pass.getResources(), this->camera_info);
 	this->tone_mapping_pass.execute(immediate_context, this->lighting_pass.getResources());

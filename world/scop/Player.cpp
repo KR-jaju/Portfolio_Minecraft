@@ -35,6 +35,7 @@ void	Player::update(float dt)
 	else // in air
 		this->airMovement(this->input_registry, dt);
 	this->camera.update();
+	//this->velocity.y = 40;
 }
 
 void	Player::groundMovement(InputRegistry& input_registry, float dt)

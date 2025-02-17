@@ -22,5 +22,6 @@ public:
 	std::vector<Subchunk> const& getSubchunks() const;
 	void	swap(RenderGroup& other);
 private:
+
 	std::vector<Subchunk> subchunks;
 };
