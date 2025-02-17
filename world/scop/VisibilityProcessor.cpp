@@ -266,17 +266,9 @@ void VisibilityProcessor::applyOcclusionCulling(ComPtr<ID3D11DeviceContext> cons
 	D3D11_MAPPED_SUBRESOURCE resource;
 	HRESULT hr;
 
-	{
-		hr = context->Map(this->hi_z_info_cb.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
-		CHECK(hr);
-		int& max_mip_level = *reinterpret_cast<int*>(resource.pData);
-
-		max_mip_level = 9; // TODO: 하드코딩 해결
-		context->Unmap(this->hi_z_info_cb.Get(), 0);
-	}
 	context->CSSetShader(this->occlusion_cs.Get(), nullptr, 0);
 	context->CSSetConstantBuffers(0, 1, camera_info_cb.GetAddressOf());
-	context->CSSetConstantBuffers(1, 1, this->hi_z_info_cb.GetAddressOf());
+	context->CSSetSamplers(0, 1, this->hi_z_ss.GetAddressOf());
 	context->CSSetShaderResources(0, 1, this->hi_z_srv.GetAddressOf());
 	for (int offset = 0; offset < occludees.size(); offset += 1024)
 	{
@@ -352,16 +344,17 @@ void VisibilityProcessor::initializeOcclusionCullingData(ComPtr<ID3D11Device> co
 		HRESULT hr = device->CreateBuffer(&desc, nullptr, this->occludee_cb.GetAddressOf());
 		CHECK(hr);
 	}
-	{ // Occludee Constant Buffer (Input)
-		D3D11_BUFFER_DESC desc = {};
-		D3D11_SHADER_RESOURCE_VIEW_DESC srv_desc = {};
+	{ // Hi-Z buffer sampler
+		D3D11_SAMPLER_DESC sampDesc = {};
+		sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+		sampDesc.MinLOD = 0;
+		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-		desc.Usage = D3D11_USAGE_DYNAMIC;
-		desc.ByteWidth = 16; // 최대 1024개 + 물체 개수
-		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-
-		HRESULT hr = device->CreateBuffer(&desc, nullptr, this->hi_z_info_cb.GetAddressOf());
+		HRESULT hr = device->CreateSamplerState(&sampDesc, this->hi_z_ss.GetAddressOf());
 		CHECK(hr);
 	}
 	{ // Visibility Structured Buffer (Output)

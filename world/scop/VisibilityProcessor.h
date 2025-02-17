@@ -35,7 +35,7 @@ private:
     ComPtr<ID3D11CommandList> hi_z_commands;
 
     ComPtr<ID3D11Buffer> occludee_cb;
-    ComPtr<ID3D11Buffer> hi_z_info_cb;
+    ComPtr<ID3D11SamplerState> hi_z_ss;
     ComPtr<ID3D11Buffer> visibility_sb;
     ComPtr<ID3D11UnorderedAccessView> visibility_uav;
     ComPtr<ID3D11Buffer> visibility_staging;

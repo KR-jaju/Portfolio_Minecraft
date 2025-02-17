@@ -22,7 +22,7 @@ MainCamera::MainCamera(ThreadPool& thread_pool, Graphics& graphics, AssetManager
 		HRESULT hr = device->CreateBuffer(&desc, nullptr, this->camera_info.GetAddressOf());
 		CHECK(hr);
 	}
-	this->visibility.initialize(device, asset_manager, 512, 512);
+	this->visibility.initialize(device, asset_manager, 800, 800);
 	this->geometry_pass.initialize(device, asset_manager);
 	this->lighting_pass.initialize(device, asset_manager);
 	this->tone_mapping_pass.initialize(device, asset_manager);

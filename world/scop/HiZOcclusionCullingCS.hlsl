@@ -1,5 +1,6 @@
 RWStructuredBuffer<uint> visibility : register(u0);
 Texture2D depth_texture : register(t0);
+SamplerState depth_sampler : register(s0);
 
 cbuffer CameraMatrices : register(b0)
 {
@@ -11,18 +12,11 @@ cbuffer CameraMatrices : register(b0)
     int2   dimension;
 };
 
-
-cbuffer DepthTextureInfo : register(b1)
-{
-    int max_mip_level;
-};
-
-cbuffer Settings : register(b2)
+cbuffer Occludees : register(b2)
 {
     int occludee_count;
     float4 occludees[1024];
 };
-
 
 uint HiZOcclusionTest(float4 occludee)
 {
@@ -54,27 +48,41 @@ uint HiZOcclusionTest(float4 occludee)
     float2 P0_uv = (P0.xy / P0.w * float2(0.5, -0.5) + float2(0.5, 0.5));
     float2 P1_uv = (P1.xy / P1.w * float2(0.5, -0.5) + float2(0.5, 0.5)); // y뒤집어야함
     float occludee_depth = (P2.z / P2.w); // NDC depth
-    float diameter = distance(P0_uv, P1_uv); // UV 스페이스에서 지름 (1:1 비율이라서 이미지 크기만 곱하면 한번만 구해도 됨)
-    int mip_level = max_mip_level - clamp(floor(-log2(diameter)), 0, max_mip_level); // diameter가 1 ~ 0.5 + delta 이면 최대레벨, 0.5 ~ 0.25 + delta면 최대레벨 - 1레벨;
-    int mip_size = pow(2, max_mip_level - mip_level);
-    float2 center_scaled = (P0_uv + P1_uv) * 0.5 * mip_size;
-    
-    int2 sample_point_base = int2(floor(center_scaled - float2(0.5, 0.5)));
+    float diameter = distance(P0_uv, P1_uv); // UV 스페이스에서 지름
+    float radius = 0.5 * diameter;
+    /*
+    True Positive -> 그려야할 물체가 제대로 그려짐
+    True Negative -> 그려지지 말아야할 물체가 제대로 제거됨
+    False Positive -> 그려지지 말아야할 물체가 그려짐
+    False Negative -> 그려져야할 물체가 그려지지 않음
 
-    int2 sample_point0 = clamp(sample_point_base, (0).xx, (mip_size - 1).xx);
-    int2 sample_point1 = clamp(sample_point_base + int2(1, 0), (0).xx, (mip_size - 1).xx);
-    int2 sample_point2 = clamp(sample_point_base + int2(0, 1), (0).xx, (mip_size - 1).xx);
-    int2 sample_point3 = clamp(sample_point_base + int2(1, 1), (0).xx, (mip_size - 1).xx);
+    길이 < i레벨 픽셀 하나의 크기
+    - 이 조건을 만족하는 제일 작은 i를 찾는 것이 목표
 
-    if (occludee_depth <= depth_texture.Load(int3(sample_point0, mip_level)).x) // 보여야함
+    i레벨 픽셀 하나 크기 = 1.0 / floor(dimension * pow(0.5, level))
+    이미지 크기는 항상 정수이므로 floor를 사용한다.
+
+    레벨을 예측할 때는 floor를 쓰지 않는데, floor는 수학 계산이 어렵기 때문이다(불가능).
+    계산식에서는 floor를 쓸 때에 비해 분모가 항상 크거나 같아지므로 예측은 항상 실제에 비해 보수적으로 하게 된다.(더 높은 레벨을 선택하려고 함)
+    하지만 보수적 예측은 최악의 경우 False-Positive만 일으키므로 그래픽 디펙트는 없다.
+
+    길이 <= 1.0 / dimension * 0.5 ^ level
+    -> 길이 * dimension <= 2 ^ level
+    -> log2(길이 * dimension) <= level
+    ceil(log2(길이 * dimension)) <= level // 예측된 레벨, 보수적 선택(ceil)
+    */
+    int mip_level = ceil(log2(diameter * max(dimension.x, dimension.y)));
+    float2 center_uv = (P0_uv + P1_uv) * 0.5;
+
+    if (occludee_depth <= depth_texture.SampleLevel(depth_sampler, center_uv + dot(diameter.xx, float2(0.5, 0.5)), mip_level).x)
         return (1);
-    if (occludee_depth <= depth_texture.Load(int3(sample_point1, mip_level)).x)
+    if (occludee_depth <= depth_texture.SampleLevel(depth_sampler, center_uv + dot(diameter.xx, float2(-0.5, 0.5)), mip_level).x)
         return (1);
-    if (occludee_depth <= depth_texture.Load(int3(sample_point2, mip_level)).x)
+    if (occludee_depth <= depth_texture.SampleLevel(depth_sampler, center_uv + dot(diameter.xx, float2(0.5, -0.5)), mip_level).x)
         return (1);
-    if (occludee_depth <= depth_texture.Load(int3(sample_point3, mip_level)).x)
+    if (occludee_depth <= depth_texture.SampleLevel(depth_sampler, center_uv + dot(diameter.xx, float2(-0.5, -0.5)), mip_level).x)
         return (1);
-    return (0);
+    return (0); // Hi-Z Occlusion Culling Test Fail
 }
 
 [numthreads(64, 1, 1)]
